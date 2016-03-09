@@ -42,7 +42,8 @@ make makefiles CCARGS="-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -DUSE_TLS \
 echo "======================"
 echo "Now run:"
 echo "  \$ make [-j N]"
-echo "  \$ sudo make upgrade (requires an existing /etc/postfix/main.cf)"
+echo "  \$ sudo make upgrade"
+echo "  \$   (requires an existing /etc/postfix/main.cf)"
 echo "======================"
 
 
