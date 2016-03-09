@@ -26,7 +26,7 @@ fi
 make tidy
 make makefiles CCARGS="-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -DUSE_TLS \
   -I/usr/local/include/sasl -I/opt/openssl/include" \
-  AUXLIBS="-L/usr/local/lib -lsasl2 -L/opt/openssl/lib -lssl -lcrypto"
+  AUXLIBS="-L/usr/local/lib -lsasl2 -L/opt/openssl/lib -Wl,-rpath=/opt/openssl/lib -lssl -lcrypto"
 
 # If at any time in the build process you get messages like: "make:
 # don't know how to ..." you should be able to recover by running the
