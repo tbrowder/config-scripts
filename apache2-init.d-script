@@ -1,0 +1,45 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          apache2
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: apache2
+# Description: Start apache2
+### END INIT INFO
+
+# install this script as '/etc/init.d/apache2'
+#   chmod 755 apache2
+#   update-rc.d apache2 defaults
+
+APACHE_BINDIR=/usr/local/apache2/bin
+
+case "$1" in
+start)
+        echo "Starting Apache ..."
+        # Change the location to your specific location
+        $APACHE_BINDIR/apachectl start
+;;
+stop)
+        echo "Stopping Apache ..."
+        # Change the location to your specific location
+        $APACHE_BINDIR/apachectl stop
+;;
+graceful)
+        echo "Restarting Apache gracefully..."
+        # Change the location to your specific location
+        $APACHE_BINDIR/apachectl graceful
+;;
+restart)
+        echo "Restarting Apache ..."
+        # Change the location to your specific location
+        $APACHE_BINDIR/apachectl restart
+;;
+*)
+        echo "Usage: '$0' {start|stop|restart|graceful}"
+        exit 64
+;;
+esac
+exit 0
