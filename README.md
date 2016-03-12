@@ -10,3 +10,11 @@ Use the 'get-src.pl6' script to download the source
 packages. (Requires Perl 6; see <http://perl6.org> for installation
 instructions.
 
+TODO
+
+Provide systemd version scripts of the init.d scripts.  See the
+following link for some help:
+
+  https://fedoramagazine.org/systemd-converting-sysvinit-scripts/
+
+
