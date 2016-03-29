@@ -6,7 +6,7 @@
 #    https://localhost:10000
 
 if [[ -z "$1" ]] ; then
-  echo "Usage: $0 <host> <ssh user> <ssh password>"
+  echo "Usage: $0 <host> <ssh user>"
   echo
   echo "Runs an ssh tunnel to the remote host."
   echo "Then use a browser to navigate to 'https://localhost:10000'"
@@ -16,6 +16,5 @@ fi
 
 HOST=$1
 USR=$2
-PASSWD=$3
 
-ssh -L 15000:localhost:10000 $USR\@$HOST:10000 
+ssh -L 15000:localhost:10000 "$USR"\@"$HOST" 
