@@ -7,15 +7,33 @@ if [ -z "$1" ] ; then
   exit
 fi
 
+# stable xemacs
+PREFIX=/usr/local
+# for xemacs-beta:
+PREFIX=/usr/local/opt
+
 ./configure \
-  --with-openssl=$OPENSSL_HOME \
-  --with-configdir=/usr/local/lib/sasl2 \
-  --with-plugindir=/usr/local/lib/sasl2
+  --with-prefix=$PREFIX \
+  --with-mule
 
 # make
+# make check
 # sudo make install
 # sudo ldconfig
 
-# make clean
-
-# make uninstall
+# POST-INSTALL
+#   then place a copy of two package files:
+#
+#     xemacs-mule-sumo.tar.bz2
+#     xemacs-sumo.tar.bz2
+#
+#   in directory '/usr/local/lib/xemacs' and unpack them:
+#
+#   # cp xemacs-mule-sumo.tar.bz2 xemacs-sumo.tar.bz2 /usr/local/lib/xemacs
+#   # cd /usr/local/lib/xemacs
+#   # tar -xvjf xemacs-mule-sumo.tar.bz2
+#   # tar -xvjf xemacs-sumo.tar.bz2
+#
+#   the archive files may be deleted after unpacking
+#
+#   don't forget the .xemacs directory in $HOME
