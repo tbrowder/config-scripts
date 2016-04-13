@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# use latest gcc
-GCCVER=5.2.0
-GCCBINDIR=/usr/local/gcc/${GCCVER}/bin
-CC=${GCCBINDIR}/gcc
-CXX=${GCCBINDIR}/g++
-CPP=${GCCBINDIR}/cpp
-
 if [ -z "$1" ] ; then
   echo "Usage: $0 go"
   echo
@@ -14,8 +7,19 @@ if [ -z "$1" ] ; then
   exit
 fi
 
-# [the source for this file is in the
-# tbrowde-home-bzr/usrlocal'
+# use latest gcc?
+USE_LATEST=
+if [[ -z "$USE_LATEST" ]] ; then
+  GCCVER=5.2.0
+  GCCBINDIR=/usr/local/gcc/${GCCVER}/bin
+  CC=${GCCBINDIR}/gcc
+  CXX=${GCCBINDIR}/g++
+  CPP=${GCCBINDIR}/cpp
+else
+  CC=gcc
+  CXX=g++
+  CPP=cpp
+fi
 
 # see Ivan Ristics "Bulletproof SSL and TLS," p. 316
 
