@@ -9,7 +9,7 @@ fi
 
 # use latest gcc?
 USE_LATEST=
-if [[ -z "$USE_LATEST" ]] ; then
+if [[ -n "$USE_LATEST" ]] ; then
   GCCVER=5.2.0
   GCCBINDIR=/usr/local/gcc/${GCCVER}/bin
   CC=${GCCBINDIR}/gcc
@@ -27,7 +27,7 @@ fi
 # we must use the shared library for some Apache friends
 # do NOT use patented algorithms without permission:
 
-SSLDIR=/opt/openssl
+SSLDIR=/usr/local/opt/openssl
 
 ./config \
     no-ec2m                         \
