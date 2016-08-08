@@ -14,7 +14,10 @@ if [[ -z "$1" ]] ; then
   exit
 fi
 
+# the source for this file is in:
+#   /usr/local/git-repos/github/config-scripts/
+
 HOST=$1
 USR=$2
 
-ssh -L 15000:localhost:10000 "$USR"\@"$HOST" 
+ssh -L 15000:localhost:10000 "$USR"\@"$HOST"

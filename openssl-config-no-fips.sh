@@ -7,6 +7,9 @@ if [ -z "$1" ] ; then
   exit
 fi
 
+# the source for this file is in:
+#   /usr/local/git-repos/github/config-scripts/
+
 # use latest gcc?
 USE_LATEST=
 if [[ -n "$USE_LATEST" ]] ; then

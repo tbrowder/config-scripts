@@ -7,15 +7,15 @@ if [ -z "$1" ] ; then
   exit
 fi
 
-# [the source for this file is in the
-# tbrowde-home-bzr/usrlocal'
+# the source for this file is in:
+#   /usr/local/git-repos/github/config-scripts/
 
 # NOTE: add the following environment variable and value to handle the
 # plugins properly (set it in file '/etc/environment':
 #   SASL_PATH=/usr/local/lib/sasl2
 
 # use local openssl if needed
-OPENSSL_HOME=/opt/openssl
+OPENSSL_HOME=/usr/local/opt/openssl
 
 ./configure \
   --with-openssl=$OPENSSL_HOME \

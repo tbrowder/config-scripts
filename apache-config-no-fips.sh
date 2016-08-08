@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# the source for this file is in:
+#   /usr/local/git-repos/github/config-scripts/
+
 # make sure this points to the right source dir:
 VER=2.4.18
 LDIR=/usr/local/src

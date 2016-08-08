@@ -7,6 +7,9 @@ if [ -z "$1" ] ; then
   exit
 fi
 
+# the source for this file is in:
+#   /usr/local/git-repos/github/config-scripts/
+
 # stable xemacs
 PREFIX=/usr/local
 # for xemacs-beta:
