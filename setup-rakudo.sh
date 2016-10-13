@@ -10,6 +10,12 @@
 check_bash_version
 
 ARCH=star-2016.07.tar.gz
+ARCHDIR=`get_archdir $ARCH`
+
+echo "ARCH: '$ARCH'";
+echo "ARCHDIR: '$ARCHDIR'";
+debug_exit 3
+
 INSTDIR=/usr/local/rakudo.d
 BINDIR=$INSTDIR/bin
 if [[ -z "$1" ]] ; then
@@ -32,4 +38,9 @@ EOF
   exit 0
 fi
 
+echo "Unpack '$ARCH'?"
 get_approval
+
+tar -xvzf $ARCH
+
+echo "Configuring..."
