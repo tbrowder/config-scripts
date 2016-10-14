@@ -4,6 +4,9 @@
 #   /usr/local/git-repos/github/config-scripts/
 # run, as root, to set up rakudo on a Debian host
 
+# Debian package requirements:
+#   build-essential
+
 # don't forget the needed bash functions
 . ./bash-funcs.sh
 # requires bash 3.2 (e.g., bash --version)
