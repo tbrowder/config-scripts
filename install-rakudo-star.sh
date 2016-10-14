@@ -53,7 +53,7 @@ fi
 # get input vars first
 for o in $@
 do
-    echo "input var '$o'"
+    #echo "input var '$o'"
 case $o in
     -g|g|-go)
     GO=1
@@ -94,10 +94,10 @@ if [[ -n "$UNK" ]] ; then
     exit 2
 fi
 
-#if [[ -z $TEST  && $UID != "0" ]] ; then
-#  echo "You are not root!  Exiting...."
-#  exit
-#fi
+if [[ -z $TEST  && $UID != "0" ]] ; then
+  echo "You are not root!  Exiting...."
+  exit
+fi
 
 echo "Unpack '$ARCH'?"
 get_approval $YES
@@ -159,9 +159,18 @@ fi
 
 # final message
 cat <<HERE
-Installation complete.  Put the following lines in your environment:
+Installation complete.  You need to place one or more
+of the newly installed rakudo bin directories in your
+path.  Here is one way to do it: add the following lines
+in your bash_aliases file::
 
-
+RAKDIR=$INSTDIR
+P6B1=\$RAKDIR/bin
+P6B2=\$RAKDIR/share/perl6/bin
+P6B3=\$RAKDIR/share/perl6/site/bin
+P6B4=\$RAKDIR/share/perl6/vendor/bin
+PERL6BINDIRS=\$P6B1:\$P6B2:\$P6B3:\$P6B4
+export PATH=\$PERL6BINDIRS:\$PATH
 HERE
 
 exit 0
