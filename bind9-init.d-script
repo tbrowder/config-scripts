@@ -1,0 +1,494 @@
+#!/bin/sh -e
+
+### BEGIN INIT INFO
+# Provides:          bind9
+# Required-Start:    $remote_fs
+# Required-Stop:     $remote_fs
+# Should-Start:      $network $syslog
+# Should-Stop:       $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start and stop bind9
+# Description:       bind9 is a Domain Name Server (DNS)
+#        which translates ip addresses to and from internet names
+### END INIT INFO
+
+# Note that we need several config files:
+#   RNDC (see man rndc.conf}
+#   /etc/rndc.conf  sample:
+#
+#     options {
+#         default-server  localhost;
+#         default-key     samplekey;
+#     };
+#
+#     server localhost {
+#         key             samplekey;
+#     };
+#
+#     key samplekey {
+#         algorithm       hmac-sha256;
+#         secret          "6FMfj43Osz4lyb24OIe2iGEz9lf1llJO+lz";
+#     };
+
+#   NAMED (see man named.conf)
+#   /etc/bind/named.conf  sample:
+
+#PATH=/sbin:/bin:/usr/sbin:/usr/bin
+PATH=/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin
+
+NAMED_BIN=/usr/local/sbin/named
+RNDC_BIN=/usr/local/sbin/rndc
+UNAME_BIN=/bin/uname
+
+# for a chrooted server: "-u bind -t /var/lib/named"
+# Don't modify this line, change or create /etc/default/bind9.
+OPTIONS=""
+#RESOLVCONF=no
+RESOLVCONF=no
+
+test -f /etc/default/bind9 && . /etc/default/bind9
+
+DEBUG=1
+DEBUG=
+
+if [ -n "$DEBUG" ] ; then
+    echo "DEBUG: options = '$OPTIONS'"
+    echo "       TPUT = '$TPUT'"
+fi
+
+#test -x /usr/sbin/rndc || exit 0
+test -x ${RNDC_BIN} || exit 0
+
+#. /lib/lsb/init-functions
+PIDFILE=/var/run/named/named.pid
+
+if [ -n "$DEBUG" ] ; then
+    echo "DEBUG: pidfile = '$PIDFILE'"
+fi
+
+check_network() {
+    if [ -x ${UNAME_BIN} ] && [ "X$(${UNAME_BIN} -o)" = XSolaris ]; then
+	IFCONFIG_OPTS="-au"
+    else
+	IFCONFIG_OPTS=""
+    fi
+
+    if [ -n "$DEBUG" ] ; then
+	echo "DEBUG: ifconfig_opts = '$IFCONFIG_OPTS'"
+    fi
+
+    if [ -z "$(/sbin/ifconfig $IFCONFIG_OPTS)" ]; then
+
+	if [ -n "$DEBUG" ] ; then
+	    echo "DEBUG: No networks configured."
+	fi
+
+	log_action_msg "No networks configured."
+	return 1
+    fi
+
+    if [ -n "$DEBUG" ] ; then
+	echo "DEBUG: Found networks configured."
+    fi
+
+    return 0
+}
+
+#================================
+# LSB functions
+#================================
+
+pidofproc () {
+    local pidfile base status specified pid OPTIND
+    pidfile=
+    specified=
+
+    OPTIND=1
+    while getopts p: opt ; do
+        case "$opt" in
+            p)  pidfile="$OPTARG"
+                specified="specified"
+		;;
+        esac
+    done
+    shift $(($OPTIND - 1))
+    if [ $# -ne 1 ]; then
+        echo "$0: invalid arguments" >&2
+        return 4
+    fi
+
+    base=${1##*/}
+    if [ ! "$specified" ]; then
+        pidfile="/var/run/$base.pid"
+    fi
+
+    if [ -n "${pidfile:-}" ]; then
+     if [ -e "$pidfile" ]; then
+      if [ -r "$pidfile" ]; then
+        read pid < "$pidfile"
+        if [ -n "${pid:-}" ]; then
+            if $(kill -0 "${pid:-}" 2> /dev/null); then
+                echo "$pid" || true
+                return 0
+            elif ps "${pid:-}" >/dev/null 2>&1; then
+                echo "$pid" || true
+                return 0 # program is running, but not owned by this user
+            else
+                return 1 # program is dead and /var/run pid file exists
+            fi
+        fi
+      else
+        return 4 # pid file not readable, hence status is unknown.
+      fi
+     else
+       # pid file doesn't exist, try to find the pid nevertheless
+       if [ -x /bin/pidof ] && [ ! "$specified" ]; then
+         status="0"
+         /bin/pidof -o %PPID -x $1 || status="$?"
+         if [ "$status" = 1 ]; then
+             return 3 # program is not running
+         fi
+         return 0
+       fi
+       return 3 # specified pid file doesn't exist, program probably stopped
+     fi
+    fi
+    if [ "$specified" ]; then
+        return 3 # almost certain it's not running
+    fi
+    return 4 # Unable to determine status
+}
+# Return LSB status
+status_of_proc () {
+    local pidfile daemon name status OPTIND
+
+    pidfile=
+    OPTIND=1
+    while getopts p: opt ; do
+        case "$opt" in
+            p)  pidfile="$OPTARG";;
+        esac
+    done
+    shift $(($OPTIND - 1))
+
+    if [ -n "$pidfile" ]; then
+        pidfile="-p $pidfile"
+    fi
+    daemon="$1"
+    name="$2"
+
+    status="0"
+    pidofproc $pidfile $daemon >/dev/null || status="$?"
+    if [ "$status" = 0 ]; then
+        log_success_msg "$name is running"
+        return 0
+    elif [ "$status" = 4 ]; then
+        log_failure_msg "could not access PID file for $name"
+        return $status
+    else
+        log_failure_msg "$name is not running"
+        return $status
+    fi
+}
+
+# int log_begin_message (char *message)
+log_begin_msg () {
+    log_begin_msg_pre "$@"
+    if [ -z "${1:-}" ]; then
+        return 1
+    fi
+    echo -n "$@" || true
+    log_begin_msg_post "$@"
+}
+# int log_end_message (int exitstatus)
+log_end_msg () {
+    # If no arguments were passed, return
+    if [ -z "${1:-}" ]; then
+        return 1
+    fi
+
+    local retval
+    retval=$1
+
+    log_end_msg_pre "$@"
+
+    # Only do the fancy stuff if we have an appropriate terminal
+    # and if /usr is already mounted
+    if log_use_fancy_output; then
+        RED=$( $TPUT setaf 1)
+        YELLOW=$( $TPUT setaf 3)
+        NORMAL=$( $TPUT op)
+    else
+        RED=''
+        YELLOW=''
+        NORMAL=''
+    fi
+
+    if [ $1 -eq 0 ]; then
+        echo "." || true
+    elif [ $1 -eq 255 ]; then
+        /bin/echo -e " ${YELLOW}(warning).${NORMAL}" || true
+    else
+        /bin/echo -e " ${RED}failed!${NORMAL}" || true
+    fi
+    log_end_msg_post "$@"
+    return $retval
+}
+
+log_action_msg () {
+    log_action_msg_pre "$@"
+    echo "$@." || true
+    log_action_msg_post "$@"
+}
+
+log_daemon_msg () {
+    if [ -z "${1:-}" ]; then
+        return 1
+    fi
+    log_daemon_msg_pre "$@"
+
+    if [ -z "${2:-}" ]; then
+        echo -n "$1:" || true
+        return
+    fi
+
+    echo -n "$1: $2" || true
+    log_daemon_msg_post "$@"
+}
+
+log_success_msg () {
+    if [ -n "${1:-}" ]; then
+        log_begin_msg $@
+    fi
+    log_end_msg 0
+}
+
+log_failure_msg () {
+    if [ -n "${1:-}" ]; then
+        log_begin_msg $@ "..."
+    fi
+    log_end_msg 1 || true
+}
+log_end_msg_pre () {
+    if log_use_fancy_output; then
+        RED=$( $TPUT setaf 1)
+        GREEN=$( $TPUT setaf 2)
+        YELLOW=$( $TPUT setaf 3)
+        NORMAL=$( $TPUT op)
+
+        $TPUT civis || true
+        $TPUT sc && \
+        $TPUT hpa 0 && \
+        if [ $1 -eq 0 ]; then
+            /bin/echo -ne "[${GREEN} ok ${NORMAL}" || true
+        elif [ $1 -eq 255 ]; then
+            /bin/echo -ne "[${YELLOW}warn${NORMAL}" || true
+        else
+            /bin/echo -ne "[${RED}FAIL${NORMAL}" || true
+        fi && \
+        $TPUT rc || true
+        $TPUT cnorm || true
+    fi
+}
+
+# Default info blocks put to the left of the screen
+log_daemon_msg_pre () {
+    if log_use_fancy_output; then
+        echo -n "[....] " || true
+    fi
+}
+log_begin_msg_pre () {
+    log_daemon_msg_pre "$@"
+}
+log_end_msg_pre () {
+    if log_use_fancy_output; then
+        RED=$( $TPUT setaf 1)
+        GREEN=$( $TPUT setaf 2)
+        YELLOW=$( $TPUT setaf 3)
+        NORMAL=$( $TPUT op)
+
+        $TPUT civis || true
+        $TPUT sc && \
+        $TPUT hpa 0 && \
+        if [ $1 -eq 0 ]; then
+            /bin/echo -ne "[${GREEN} ok ${NORMAL}" || true
+        elif [ $1 -eq 255 ]; then
+            /bin/echo -ne "[${YELLOW}warn${NORMAL}" || true
+        else
+            /bin/echo -ne "[${RED}FAIL${NORMAL}" || true
+        fi && \
+        $TPUT rc || true
+        $TPUT cnorm || true
+    fi
+}
+log_action_msg_pre () {
+    if log_use_fancy_output; then
+        CYAN=$( $TPUT setaf 6)
+        NORMAL=$( $TPUT op)
+        /bin/echo -ne "[${CYAN}info${NORMAL}] " || true
+    fi
+}
+log_action_begin_msg_pre () {
+    log_daemon_msg_pre "$@"
+}
+log_action_end_msg_pre () {
+    log_end_msg_pre "$@"
+}
+
+log_use_fancy_output () {
+    TPUT=/usr/bin/tput
+    EXPR=/usr/bin/expr
+    if  [ -t 1 ] &&
+	[ "x${TERM:-}" != "x" ] &&
+	[ "x${TERM:-}" != "xdumb" ] &&
+	[ -x $TPUT ] && [ -x $EXPR ] &&
+	$TPUT hpa 60 >/dev/null 2>&1 &&
+	$TPUT setaf 1 >/dev/null 2>&1
+    then
+        [ -z $FANCYTTY ] && FANCYTTY=1 || true
+    else
+        FANCYTTY=0
+    fi
+    case "$FANCYTTY" in
+        1|Y|yes|true)   true;;
+        *)              false;;
+    esac
+}
+
+## Pre&Post empty function declaration, to be overriden from /lib/lsb/init-functions.d/*
+log_daemon_msg_post () { :; }
+log_end_msg_post () { :; }
+#log_use_fancy_output () { :; }
+
+#log_daemon_msg_pre () { :; }
+#log_begin_msg_pre () { :; }
+#log_begin_msg_post () { :; }
+#log_end_msg_pre () { :; }
+#log_action_msg_pre () { :; }
+log_action_msg_post () { :; }
+#log_action_begin_msg_pre () { :; }
+#log_action_begin_msg_post () { :; }
+#log_action_end_msg_pre () { :; }
+#log_action_end_msg_post () { :; }
+
+#================================
+# end LSB functions
+#================================
+
+
+case "$1" in
+    start)
+	log_daemon_msg "Starting domain name service..." "bind9"
+
+	modprobe capability >/dev/null 2>&1 || true
+
+	# dirs under /var/run can go away on reboots.
+	mkdir -p /var/run/named
+	chmod 775 /var/run/named
+	chown root:bind /var/run/named >/dev/null 2>&1 || true
+
+	#if [ ! -x /usr/sbin/named ]; then
+	if [ ! -x ${NAMED_BIN} ]; then
+	    log_action_msg "named binary missing - not starting"
+	    log_end_msg 1
+	fi
+
+	if ! check_network; then
+	    log_action_msg "no networks configured"
+	    log_end_msg 1
+	fi
+
+	#if start-stop-daemon --start --oknodo --quiet --exec /usr/sbin/named \
+	if start-stop-daemon --start --oknodo --quiet --exec ${NAMED_BIN} \
+		--pidfile ${PIDFILE} -- $OPTIONS; then
+	    if [ "X$RESOLVCONF" != "Xno" ] && [ -x /sbin/resolvconf ] ; then
+		echo "nameserver 127.0.0.1" | /sbin/resolvconf -a lo.named
+	    fi
+	    log_end_msg 0
+	else
+	    log_end_msg 1
+	fi
+    ;;
+
+    stop)
+	log_daemon_msg "Stopping domain name service..." "bind9"
+	if ! check_network; then
+	    log_action_msg "no networks configured"
+	    log_end_msg 1
+	fi
+
+	if [ "X$RESOLVCONF" != "Xno" ] && [ -x /sbin/resolvconf ] ; then
+	    /sbin/resolvconf -d lo.named
+	fi
+	#pid=$(/usr/sbin/rndc stop -p | awk '/^pid:/ {print $2}') || true
+	pid=$($RNDC_BIN stop -p | awk '/^pid:/ {print $2}') || true
+	if [ -z "$pid" ]; then		# no pid found, so either not running, or error
+	    #pid=$(pgrep -f ^/usr/sbin/named) || true
+	    pid=$(pgrep -f ^$NAMED_BIN) || true
+	    #start-stop-daemon --stop --oknodo --quiet --exec /usr/sbin/named \
+	    start-stop-daemon --stop --oknodo --quiet --exec $NAMED_BIN \
+		    --pidfile ${PIDFILE} -- $OPTIONS
+	fi
+	if [ -n "$pid" ]; then
+	    sig=0
+	    n=1
+	    while kill -$sig $pid 2>/dev/null; do
+		if [ $n -eq 1 ]; then
+		    echo "waiting for pid $pid to die"
+		fi
+		if [ $n -eq 11 ]; then
+		    echo "giving up on pid $pid with kill -0; trying -9"
+		    sig=9
+		fi
+		if [ $n -gt 20 ]; then
+		    echo "giving up on pid $pid"
+		    break
+		fi
+		n=$(($n+1))
+		sleep 1
+	    done
+	fi
+	log_end_msg 0
+    ;;
+
+    reload|force-reload)
+	log_daemon_msg "Reloading domain name service..." "bind9"
+	if ! check_network; then
+	    log_action_msg "no networks configured"
+	    log_end_msg 1
+	fi
+
+	#/usr/sbin/rndc reload >/dev/null && log_end_msg 0 || log_end_msg 1
+	$RNDC_BIN reload >/dev/null && log_end_msg 0 || log_end_msg 1
+    ;;
+
+    restart)
+	if ! check_network; then
+	    log_action_msg "no networks configured"
+	    exit 1
+	fi
+
+	$0 stop
+	$0 start
+    ;;
+
+    status)
+    	ret=0
+	#status_of_proc -p ${PIDFILE} /usr/sbin/named -u bind 2>/dev/null || ret=$?
+	status_of_proc -p ${PIDFILE} ${NAMED_BIN} bind 2>/dev/null || ret=$?
+
+	if [ -n "$DEBUG" ] ; then
+	    echo "DEBUG: ret = '$ret'"
+	fi
+
+	exit $ret
+	;;
+
+    *)
+	log_action_msg "Usage: /etc/init.d/bind9 {start|stop|reload|restart|force-reload|status}"
+	exit 1
+    ;;
+esac
+
+exit 0
