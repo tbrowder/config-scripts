@@ -38,23 +38,9 @@ function debug_exit {
 
 function get_archdir {
     ARCH=$1
-    # trim '.tar.gz' or '.zip' or ???
-    for s in '.zip' '.tar.gz'
-    do
-	# echo "suffix is '$s'"
-	# last if we get a match
-	if [[ "$ARCH" =~ $s$ ]] ; then
-	    echo "DEBUG: found a suffix match: '$s'"
-	    # trim the suffix and return the result
-	    L=`expr length $ARCH`
-	    I=`expr index $ARCH $s`
-	    echo "DEBUG: length of string '$ARCH' is $L"
-	    echo "DEBUG: index of substring '$s' in '$ARCH' is $I"
-	    R=${ARCH##s}
-	    echo "DEBUG: remainder of string '$ARCH' is $R"
-	    debug_exit 1
-	fi
-    done
-    debug_exit 2
+
+    # cheat and use a short Perl script
+    echo `perl ./get-archdir.pl $ARCH`
+    #debug_exit 2
     #echo -n $1
 }

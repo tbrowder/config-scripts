@@ -44,3 +44,15 @@ get_approval
 tar -xvzf $ARCH
 
 echo "Configuring..."
+
+# go to src dir
+cd $ARCHDIR
+
+# configure
+CONF=""
+
+echo "config cmd: '$CONF'"
+echo "Configure?"
+get_approval
+$CONF
+
