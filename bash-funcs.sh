@@ -1,5 +1,10 @@
 #### bash functions to be sourced by using bash scripts ####
 function get_approval {
+    if [[ -n $1 ]] ; then
+	echo "Continuing with auto '-yes'..."
+	return 0
+    fi
+
     echo -n "Continue? Enter 'y' or 'Y' and press [RETURN]: ";
     read RESPONSE
     if  [[ "$RESPONSE" =~ ^[yY] ]]; then
