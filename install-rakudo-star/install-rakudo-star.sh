@@ -6,6 +6,7 @@
 
 # Debian package requirements:
 #   build-essential
+#   time
 
 # don't forget the needed bash functions
 . ./bash-funcs.sh
@@ -126,7 +127,6 @@ fi
 echo "Configuring: going to dir '$ARCHDIR'..."
 
 # go to src dir ====================================
-pushd `pwd`
 cd $ARCHDIR
 
 # configure
@@ -138,7 +138,7 @@ get_approval $YES
 if [[ -n $TEST ]] ; then
     echo "cmd: '$CONF'"
 else
-`echo $CONF`
+    `echo time $CONF`
 fi
 
 # go to config dir ====================================
@@ -157,7 +157,7 @@ get_approval $YES
 if [[ -n $TEST ]] ; then
     echo "cmd: 'echo time make install'"
 else
-`echo time make install`
+    `echo time make install`
 fi
 
 # final message
