@@ -8,6 +8,9 @@
 #   build-essential
 #   time
 
+# Note that an existing Perl 6 installation in $HOME/.rakudobrew may
+# interfere with a successful installation of the Rakudo Star package.
+
 # don't forget the needed bash functions
 . ./bash-funcs.sh
 # requires bash 3.2 (e.g., bash --version)
