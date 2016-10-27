@@ -62,21 +62,21 @@ for o in $@
 do
     #echo "input var '$o'"
 case $o in
-    -g|g|-go)
+    -g|g|-go|go)
     GO=1
     shift # past argument=value
     ;;
-    -t|t|-test)
+    -t|t|-test|test)
     TEST=1
     GO=1
     shift # past argument=value
     ;;
-    -d|d|-debug)
+    -d|d|-debug|debug)
     DEBUG=1
     GO=1
     shift # past argument=value
     ;;
-    -y|y|-yes)
+    -y|y|-yes|yes)
     YES=1
     GO=1
     shift # past argument=value
