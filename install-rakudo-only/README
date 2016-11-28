@@ -1,0 +1,19 @@
+This package is used to completely install a complete Rakudo-only
+distribution into a desired site-wide location controlled by
+the root user.
+
+The installation also adds an apprpriate script into /etc/profile.d
+to add the approriate rakudo paths to the PATH environment variable
+for all users.
+
+Note that, after a first installation, the installing user must log
+out and log in again to ensure access to rakudo binaries.
+
+For updated installations, the original structure is retained and
+new versions of files over-write old versions. No consideration
+is made for any file that may no longer be used since we assume
+the distribution archive is idempotent.
+
+After an installation, a separate script is used to install or
+update zef, the recommended module installer, and then read
+a list of publicly-available modules to install or update.
