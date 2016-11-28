@@ -16,7 +16,7 @@
 # requires bash 3.2 (e.g., bash --version)
 check_bash_version
 
-ARCH=rakudo-star-2016.07.tar.gz
+ARCH=rakudo-2016.11.tar.gz
 ARCHDIR=`get_archdir $ARCH`
 
 #echo "ARCH: '$ARCH'";
@@ -37,9 +37,9 @@ if [[ -z "$1" ]] ; then
 Usage: $0 go | [-test][-debug][-yes]
 
 As root, sets up a new Rakudo installation using a tgz release
-  from <http://rakudo.org/downloads/star>.
+  from <http://rakudo.org/downloads/rakudo/>.
 
-Start in a clean directory with the desired Rakudo Star archive.
+Start in a clean directory with the desired Rakudo archive.
 
 Internal variables (and current values) which may be changed as
 desired:

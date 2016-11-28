@@ -1,0 +1,71 @@
+===> Found via /usr/local/rakudo-git.d/share/perl6
+CORE:ver('6.c'):auth('perl')
+===> Found via /usr/local/rakudo-git.d/share/perl6/site
+panda:ver('2016.02')
+Terminal::ANSIColor
+IO::Capture::Simple
+DateTime::TimeZone
+Native::Resources:ver('0.1.0'):auth('Rob Hoelz')
+DBIish:ver('0.5.9')
+Net::IP::Lite:ver('0.1.4')
+OpenSSL:ver('0.1.5'):auth('github:sergot')
+Cache::LRU:ver('0.1.0')
+JSON::RPC:ver('0.17.1'):auth('Pawel Pabian')
+XML::Writer
+HTTP::Easy:ver('1.1.0')
+IO::Socket::SSL:auth('github:sergot')
+IO::Blob
+zef:auth('github:ugexe')
+META6:ver('0.0.10'):auth('github:jonathanstowe')
+Stats:ver('0.0.4'):auth('Matt Oates')
+DateTime::Format
+JSON::Fast:ver('0.4')
+Encode:ver('0.0.2'):auth('github:sergot')
+p6doc
+URI:ver('0.1.1')
+Grammar::Debugger
+JSON::Name:ver('0.0.2'):auth('github:jonathanstowe')
+Linenoise:ver('0.1.0'):auth('Rob Hoelz')
+Test::Mock
+LWP::Simple:ver('0.087'):auth('Cosimo Streppone')
+Pod::To::Markdown:ver('0.0.1'):auth('Jorn van Engelen')
+PSGI:ver('1.2.0')
+Math::Trig
+File::Find:ver('0.1')
+DateTime::Utils
+POSIX:ver('0.1.1'):auth('Cory Spencer')
+JSON::Marshal:ver('0.0.10'):auth('github:jonathanstowe')
+Test::META:ver('0.0.6'):auth('github:jonathanstowe')
+SVG::Plot
+META6:ver('0.0.11'):auth('github:jonathanstowe')
+Task::Star
+MIME::Base64:ver('1.2'):auth('github:retupmoca')
+Pod::To::BigPage:ver('0.1.1'):auth('Wenzel P. P. Peppmeyer')
+Getopt::Std:ver('0.1.1.dev1')
+Template::Mojo:ver('0.1')
+JSON::Unmarshal:ver('0.05')
+Grammar::Profiler::Simple:ver('0.01'):auth('Jonathan Scott Duff')
+File::Directory::Tree:auth('labster')
+Getopt::Std:ver('1.0.0.dev1')
+DateTime::Math
+Digest:ver('0.3.4'):auth('Lucien Grondin')
+Digest::MD5:ver('0.05'):auth('Cosimo Streppone')
+Debugger::UI::CommandLine
+JSON::Class:ver('0.0.8'):auth('github:jonathanstowe')
+JSON::Tiny
+WebService::GitHub:ver('0.1.0'):auth('github:fayland')
+HTTP::UserAgent:ver('1.1.22'):auth('github:sergot')
+SVG
+LibraryMake:ver('1.0.0'):auth('github:retupmoca')
+Digest::xxHash
+NativeHelpers::Blob:ver('0.1.10'):auth('github:salortiz')
+Test::Deeply::Relaxed:ver('0.1.0')
+HTTP::Status
+File::Temp
+Shell::Command
+Pod::To::HTML:ver('0.2.4')
+DateTime::Parse:ver('0.0.1')
+CGI::Application
+Misc::Utils:ver('0.1.0')
+Test::META:ver('0.0.7'):auth('github:jonathanstowe')
+ufo
