@@ -166,9 +166,9 @@ fi
 # final message
 cat <<HERE
 Installation complete.  You need to place one or more
-of the newly installed rakudo bin directories in your
-path.  Here is one way to do it: add the following lines
-in your bash_aliases file::
+of installed rakudo bin directories in your path.  Here
+is one way to do it: add the following lines into a
+file named, say, /etc/profile.d/set-rakudo-paths.sh:
 
 RAKDIR=$INSTDIR
 P6B1=\$RAKDIR/bin

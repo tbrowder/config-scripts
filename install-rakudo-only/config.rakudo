@@ -1,0 +1,8 @@
+# controlling user:
+user: root
+
+# installation directory:
+location: /usr/local/rakudo.d
+
+# what backend to use (only 'moar' is available currently):
+backend: moar

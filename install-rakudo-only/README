@@ -1,19 +1,90 @@
-This package is used to completely install a complete Rakudo-only
-distribution into a desired site-wide location controlled by
+This package is used to build Rakudo from source and completely
+install or upgrade a Rakudo-only distribution into a desired location
+controlled by the user.  The package is currently only usable on a
+POSIX operating system (e.g., Debian Linux).
+
+The package also contains scripts and instructions for installing or
+upgrading desired Perl 6 modules, and it includes a suggested list of
+modules in file "modules."
+
+NEW INSTALLATION
+================
+
+Requirements
+------------
+
+- a C compiler
+- a "make" utility
+- Perl 5.10 or newer
+- a git client
+- active internet connection
+- CPAN package "libwww-perl"
+
+See details in the file "INSTALL.txt" in the directory where the
+downloaded archive is unpacked.
+
+Procedures
+----------
+
+1. Decide on the user who will own and control the installation.  For
+a site-wide installation for all users, it is recommended the user be
 the root user.
 
-The installation also adds an apprpriate script into /etc/profile.d
-to add the approriate rakudo paths to the PATH environment variable
-for all users.
+WARNING: Do not change the owning user for the life of an
+         installation.
 
-Note that, after a first installation, the installing user must log
-out and log in again to ensure access to rakudo binaries.
+2. Edit file "config.rakudo" to set the desired controlling user, the
+location of the directory to contain all the Rakudo files and
+installed modules, and build options.  The controlling user must own
+the installation location.
 
-For updated installations, the original structure is retained and
-new versions of files over-write old versions. No consideration
-is made for any file that may no longer be used since we assume
-the distribution archive is idempotent.
+NOTE: The default user (root), Rakudo location (/usr/local/rakudo.d),
+      and build options are already established in the configuration
+      file and may be changed as desired.
 
-After an installation, a separate script is used to install or
+WARNING: Once the location is set and the new installation is
+         completed, the user should not change the configuration file
+         again without understanding the consequences.  In all
+         likelihood, the old installation will have to be completely
+         removed, and a new installation will have to be made from
+         scratch.
+
+3. The new installation is accomplished by executing a Perl 5 script, as
+the selected user:
+
+  ./99-install-rakudo-new.pl
+
+Note that the script will not take any build or upgrade actions if it
+finds the current installation is the latest available.  The current
+build information is kept in hidden file ".rakudo-version" but the
+system can be forced to build and install either by removing that file
+of using the "--force" option to the script.
+
+
+If the user is root, the installation also adds an appropriate path
+setting in a new file, "/etc/profile.d/set-rakudo-paths.sh", to add
+the approriate rakudo paths to the PATH environment variable for all
+users; otherwise, a suggested PATH setting is written to local file
+"set-rakudo-paths.sh" for use as desired.
+
+Note that, after the new installation, the installing user must log
+out and log in again to ensure access to rakudo binaries and continue
+installing or updating modules.
+
+UPGRADE INSTALLATION
+--------------------
+
+To upgrade a Rakudo installation, the original structure is retained
+and new versions of files over-write old versions. No consideration is
+made for any file that may no longer be used since we assume the
+distribution archive is idempotent.
+
+After any installation, a separate script is used to install or
 update zef, the recommended module installer, and then read
 a list of publicly-available modules to install or update.
+
+INSTALLING OR UPGRADING MODULES
+-------------------------------
+
+Edit the file "modules" to add or delete modules as desired.  The run
+the script "1-install-upgrade-modules.p6."
