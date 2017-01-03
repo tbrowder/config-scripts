@@ -60,16 +60,14 @@ build information is kept in hidden file ".rakudo-version" but the
 system can be forced to build and install either by removing that file
 of using the "--force" option to the script.
 
+The installation also writes a suggested PATH setting to local file
+"set-rakudo-paths.txt" for use as desired, e.g., adding the data to
+users' .bash_aliases file.
 
-If the user is root, the installation also adds an appropriate path
-setting in a new file, "/etc/profile.d/set-rakudo-paths.sh", to add
-the approriate rakudo paths to the PATH environment variable for all
-users; otherwise, a suggested PATH setting is written to local file
-"set-rakudo-paths.sh" for use as desired.
-
-Note that, after the new installation, the installing user must log
-out and log in again to ensure access to rakudo binaries and continue
-installing or updating modules.
+Note that, after the new installation and adding the rakudo paths to
+the user's PATH, the installing user must log out and log in again to
+ensure access to rakudo binaries and continue installing or updating
+modules.
 
 UPGRADE INSTALLATION
 --------------------
