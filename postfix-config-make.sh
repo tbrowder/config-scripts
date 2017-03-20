@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # make sure this points to the right source dir
-VER=3.1.0
+VER=3.2.0
 LDIR=/usr/local/src
 SRCDIR=${LDIR}/postfix-${VER}
 
