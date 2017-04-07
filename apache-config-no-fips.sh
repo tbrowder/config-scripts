@@ -91,8 +91,7 @@ fi
 #
 #
 #      ../apache-config-no-fips.sh go
-#      make
-#      make check
+#      make [-jN]
 #      sudo make install
 #
 # post installation:
@@ -161,7 +160,7 @@ $SRCDIR/configure                          \
     --with-perl                            \
 \
     --with-included-apr                    \
-    --with-postgresql                      \
+    --with-pgsql                           \
     --with-sqlite3                         \
 \
     --with-python                          \
