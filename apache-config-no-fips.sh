@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# the source for this file is in:
-#   /usr/local/git-repos/github/config-scripts/
-
 # make sure this points to the right source dir:
-VER=2.4.18
+VER=2.4.25
 LDIR=/usr/local/src
 SRCDIR=${LDIR}/httpd-$VER
 
@@ -53,7 +50,10 @@ fi
 #   Deb packages:
 #     ntp ntp-doc ntpdate
 #     libtool libexpat1-dev libxml2-dev
-#     lua and friends?
+#     lua and friends (5.2 for now)
+#     sqlite3 dev
+#     perl dev
+#     postgresql dev
 #
 #   Source libraries:
 #
@@ -110,7 +110,6 @@ fi
 #     proxycachedir: ${localstatedir}/proxy
 # </Layout>
 
-# lua >= 5.1      # will not use
 # distcache?      # will not use
 # ldap?           # will not use
 # --with-crypto?  # yes!
@@ -126,7 +125,6 @@ fi
 # Note this line:
 #    --with-openssl=/opt/openssl            \
 # is required if there is NO system openssl.
-
 
 # we build all modules for now (all shared except mod_ssl)
 #export LDFLAGS="-L${SSLDIR}/lib"
@@ -144,7 +142,10 @@ $SRCDIR/configure                          \
 \
     --enable-mods-shared=reallyall         \
     --with-perl                            \
+    --with-postgresql \
+    --with-sqlite3 \
     --with-python                          \
+    --with-lua=/usr                        \
     --enable-layout=Apache                 \
     --with-pcre=/usr/local/bin/pcre-config \
     --without-ldap                         \
