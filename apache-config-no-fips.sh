@@ -51,9 +51,10 @@ fi
 #     ntp ntp-doc ntpdate
 #     libtool libexpat1-dev libxml2-dev
 #     lua and friends (5.2 for now)
-#     sqlite3 dev
-#     perl dev
-#     postgresql dev
+#       liblua5.2-dev liblua5.2-0 lua5.2
+#     libsqlite3-dev
+#     libperl-dev
+#     postgresql-server-dev-all
 #
 #   Source libraries:
 #
@@ -73,11 +74,27 @@ fi
 #       APR       (see below also)  <latest>
 #       APR-Utils (see below also)  <latest>
 #
-#        ./configure
-#        make
-#        make check
-#        sudo make install
-
+#       Make sure you have APR and APR-Util already installed on your
+#       system. If you don't, or prefer to not use the system-provided
+#       versions, download the latest versions of both APR and
+#       APR-Util from Apache APR, unpack them into
+#
+#         /httpd_source_tree_root/srclib/apr and
+#         /httpd_source_tree_root/srclib/apr-util
+#
+#       (be sure the directory names do not have version numbers; for
+#       example, the APR distribution must be under
+#       /httpd_source_tree_root/srclib/apr/) and use ./configure's
+#       --with-included-apr option. On some platforms, you may have to
+#       install the corresponding -dev packages to allow httpd to
+#       build against your installed copy of APR and APR-Util.
+#
+#
+#      ../apache-config-no-fips.sh go
+#      make
+#      make check
+#      sudo make install
+#
 # post installation:
 #
 #     From: http://code.google.com/p/modwsgi/ [need for Django]
@@ -142,8 +159,11 @@ $SRCDIR/configure                          \
 \
     --enable-mods-shared=reallyall         \
     --with-perl                            \
-    --with-postgresql \
-    --with-sqlite3 \
+\
+    --with-included-apr                    \
+    --with-postgresql                      \
+    --with-sqlite3                         \
+\
     --with-python                          \
     --with-lua=/usr                        \
     --enable-layout=Apache                 \
