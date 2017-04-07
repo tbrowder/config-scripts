@@ -52,9 +52,11 @@ fi
 #     libtool libexpat1-dev libxml2-dev
 #     lua and friends (5.2 for now)
 #       liblua5.2-dev liblua5.2-0 lua5.2
-#     libsqlite3-dev
-#     libperl-dev
-#     postgresql-server-dev-all
+#     libaprutil1-dbd-pgsql
+#     libaprutil1-dbd-sqlite3
+#     libaprutil1-dbd-ldap
+#     libapr1-dev libapreq2-dev libaprutil1-dev lua-apr-dev
+#     libapache2-mod-apreq2 lksctp-tools
 #
 #   Source libraries:
 #
@@ -127,7 +129,6 @@ fi
 # </Layout>
 
 # distcache?      # will not use
-# ldap?           # will not use
 # --with-crypto?  # yes!
 # privileges?     # Solaris only
 
@@ -159,7 +160,6 @@ $SRCDIR/configure                          \
     --enable-mods-shared=reallyall         \
     --with-perl                            \
 \
-    --with-included-apr                    \
     --with-pgsql                           \
     --with-sqlite3                         \
 \
@@ -167,7 +167,7 @@ $SRCDIR/configure                          \
     --with-lua=/usr                        \
     --enable-layout=Apache                 \
     --with-pcre=/usr/local/bin/pcre-config \
-    --without-ldap                         \
+    --with-ldap                            \
     --enable-session-crypto                \
     --enable-session \
     --with-crypto                \
