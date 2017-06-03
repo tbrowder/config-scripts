@@ -10,7 +10,7 @@ fi
 # the source for this file is in:
 #   /usr/local/git-repos/github/config-scripts/
 
-# tbrowde-home-bzr/usrlocal'
+# tbrowde-home-bzr/usrlocal
 
 # need Debian packages:
 #   python-ply
