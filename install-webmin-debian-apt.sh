@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo NOT READY YET
-exit
-
 # run as root to install Webmin on a Debian-based host with apt-get
 
 APTFIL=/etc/apt/sources.list.d/webmin.list
@@ -24,7 +21,7 @@ fi
 # the source for this file is in:
 #   /usr/local/git-repos/github/config-scripts/
 
-# Procedures follow installation steps on the Webmin site (webmin.com).
+# Procedures follow installation steps on the Webmin doc site (http://doxfer.webmin.com/Webmin/Installation).
 # Note that 'sarge' is still correct as of jessie (Debian 8):
 KEYFIL=jcameron-key.asc
 KEYLOC=http://www.webmin.com
@@ -34,5 +31,8 @@ rm $KEYFIL
 echo "deb http://download.webmin.com/download/repository sarge contrib" > $APTFIL
 
 apt-get update
-apt-get ??
 apt-get install webmin
+
+echo "======================================================================"
+echo "See post-installation steps in script: 'config-webmin-post-install.sh'"
+echo "======================================================================"

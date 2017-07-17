@@ -1,0 +1,69 @@
+Given a file and a detached gpg signature, e.g.,
+
+file: bind-9.11.1-P3.tar.gz
+sig:  bind-9.11.1-P3.tar.gz.sig
+
+
+Verify the file:
+
+  $ gpg --verify bind-9.11.1-P3.tar.gz.sig bind-9.11.1-P3.tar.gz
+  gpg: Signature made Fri Jul  7 19:49:14 2017 CDT using RSA key ID 5CF02E57
+  gpg: Can't check signature: public key not found
+
+
+Install the key if not already installed:
+----------------------------------------
+
+  $ gpg --import key.file
+
+Reverify:
+--------
+
+  $ gpg2 --verify bind-9.11.1-P3.tar.gz.sig bind-9.11.1-P3.tar.gz
+  gpg: Signature made Fri Jul  7 19:49:14 2017 CDT using RSA key ID 5CF02E57
+  gpg: Good signature from "Internet Systems Consortium, Inc. (Signing key, 2017-2018) <codesign@isc.org>" [unknown]
+  gpg: WARNING: This key is not certified with a trusted signature!
+  gpg:          There is no indication that the signature belongs to the owner.
+  Primary key fingerprint: BE0E 9748 B718 253A 28BB  89FF F1B1 1BF0 5CF0 2E57
+
+Trustedness:
+-----------
+
+  $ gpg2 --edit-key 5CF02E57
+  gpg (GnuPG) 2.0.26; Copyright (C) 2013 Free Software Foundation, Inc.
+  This is free software: you are free to change and redistribute it.
+  There is NO WARRANTY, to the extent permitted by law.
+
+
+  pub  4096R/5CF02E57  created: 2016-10-05  expires: 2019-02-01  usage: SC
+                       trust: unknown       validity: unknown
+  sub  4096R/9ACCCB00  created: 2016-10-05  expires: 2019-02-01  usage: E
+  [ unknown] (1). Internet Systems Consortium, Inc. (Signing key, 2017-2018) <codesign@isc.org>
+
+  gpg> trust
+  pub  4096R/5CF02E57  created: 2016-10-05  expires: 2019-02-01  usage: SC
+                       trust: unknown       validity: unknown
+  sub  4096R/9ACCCB00  created: 2016-10-05  expires: 2019-02-01  usage: E
+  [ unknown] (1). Internet Systems Consortium, Inc. (Signing key, 2017-2018) <codesign@isc.org>
+
+  Please decide how far you trust this user to correctly verify other users' keys
+  (by looking at passports, checking fingerprints from different sources, etc.)
+
+    1 = I don't know or won't say
+    2 = I do NOT trust
+    3 = I trust marginally
+    4 = I trust fully
+    5 = I trust ultimately
+    m = back to the main menu
+
+  Your decision? 1
+
+  pub  4096R/5CF02E57  created: 2016-10-05  expires: 2019-02-01  usage: SC
+                       trust: undefined     validity: unknown
+  sub  4096R/9ACCCB00  created: 2016-10-05  expires: 2019-02-01  usage: E
+  [ unknown] (1). Internet Systems Consortium, Inc. (Signing key, 2017-2018) <codesign@isc.org>
+  Please note that the shown key validity is not necessarily correct
+  unless you restart the program.
+
+  gpg> q
+  $
