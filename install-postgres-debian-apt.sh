@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo NOT READY YET
+exit
+
 # run as root to install Postgresql on a Debian-based host with apt-get
 
 APTFIL=/etc/apt/sources.list.d/webmin.list
