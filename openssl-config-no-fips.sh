@@ -1,7 +1,8 @@
 #!/bin/bash
 
+VER=$1
 if [ -z "$1" ] ; then
-  echo "Usage: $0 go"
+  echo "Usage: $0 <version>"
   echo
   echo "  Configures openssl source (without FIPS)."
   exit

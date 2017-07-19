@@ -1,17 +1,5 @@
 #!/bin/bash
 
-# make sure this points to the right source dir:
-VER=2.4.27
-LDIR=/usr/local/src
-SRCDIR=${LDIR}/httpd-$VER
-
-# use the latest gcc
-GCCVER=5.2.0
-GCCBINDIR=/usr/local/gcc/${GCCVER}/bin
-CC=${GCCBINDIR}/gcc
-CXX=${GCCBINDIR}/g++
-CPP=${GCCBINDIR}/cpp
-
 # NOTE: THIS CONFIGURATION IS WITH NO SYSTEM OPENSSL
 #       AND IT USES THE LATEST INSTALLED APR AND APR-UTILS.
 
@@ -21,19 +9,32 @@ CPP=${GCCBINDIR}/cpp
 # recommended for all hosts:
 SSLDIR=/opt/openssl
 
-USAGE="Usage: $0 go"
+USAGE="Usage: $0 <version: x.y.z>"
 
-if [[ ! -d $SRCDIR ]] ; then
-  echo "ERROR:  No dir '$SRCDIR' found."
+KNOWN_VERS="2.4.23 2.4.25 2.4.27"
+if [[ -z $1 ]] ; then
+  echo $USAGE
+  echo "  Uses SSL/TLS without FIPS."
+  echo "  Uses openssl at '$SSLDIR'."
+  echo "  Builds httpd version: x.y.z"
+  echo "    from known versions: '$KNOWN_VERS'"
   exit
 fi
 
-if [[ -z $1 ]] ; then
-  echo $USAGE
-  echo "  Uses SRCDIR '$SRCDIR'."
-  echo "  Uses SSL/TLS without FIPS."
-  echo "  Uses openssl at '$SSLDIR'."
-  exit
+# make sure this points to the right source dir:
+VER=$1
+LDIR=/usr/local/src
+SRCDIR=${LDIR}/httpd-$VER
+GOODVER=
+for vers $KNOWN_VERS
+do
+    if [[ $1 = $ver ]] ; then
+        GOODVER=$ver
+    fi
+done
+if [[ -z $GOODVER ]] ; then
+    echo "FATAL:  Version $VER is not known."
+    exit
 fi
 
 # make sure openssl exists
@@ -147,14 +148,12 @@ fi
 # BUGS:
 #   no pcre2 capability
 
-# Note this line:
-#    --with-openssl=/opt/openssl            \
-# is required if there is NO system openssl.
+# Note this configure line:
+#    --with-openssl=${SSLDIR}
+# is required to be added if there is NO system openssl;
+# otherwise, don't use it.
 
 # we build all modules for now (all shared except mod_ssl)
-#export LDFLAGS="-L${SSLDIR}/lib"
-
-#    --with-openssl=${SSLDIR}/lib
 
 export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
 $SRCDIR/configure                          \
@@ -178,8 +177,8 @@ $SRCDIR/configure                          \
     --with-ldap                            \
     --enable-session-crypto                \
     --enable-session \
-    --with-crypto                \
-    --with-openssl=${SSLDIR}
+    --with-crypto                
 
+# make depend
 # make
 # sudo make install
