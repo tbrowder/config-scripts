@@ -30,7 +30,12 @@ fi
 # we must use the shared library for some Apache friends
 # do NOT use patented algorithms without permission:
 
-SSLDIR=/usr/local/opt/openssl
+# use package zlib1g-dev
+
+# used only for my local host juvat2:
+#SSLDIR=/usr/local/opt/openssl
+# recommend for all other hosts:
+SSLDIR=/opt/openssl
 
 ./config \
     no-ec2m                         \
@@ -41,11 +46,12 @@ SSLDIR=/usr/local/opt/openssl
     shared                          \
     --prefix=${SSLDIR}              \
     --openssldir=${SSLDIR}          \
-    enable-ec_nistp_64_gcc_128      \
-
+    enable-ec_nistp_64_gcc_128
 
 # make depend
 # make
 # make test
 # sudo make install
 # make clean
+
+# make uninstall

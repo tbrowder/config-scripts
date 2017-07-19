@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # make sure this points to the right source dir:
-VER=2.4.25
+VER=2.4.27
 LDIR=/usr/local/src
 SRCDIR=${LDIR}/httpd-$VER
 
@@ -18,6 +18,7 @@ CPP=${GCCBINDIR}/cpp
 # see Ivan Ristics "Bulletproof SSL and TLS," p. 382
 # using static openssl with Apache
 
+# recommended for all hosts:
 SSLDIR=/opt/openssl
 
 USAGE="Usage: $0 go"
@@ -31,7 +32,14 @@ if [[ -z $1 ]] ; then
   echo $USAGE
   echo "  Uses SRCDIR '$SRCDIR'."
   echo "  Uses SSL/TLS without FIPS."
+  echo "  Uses openssl at '$SSLDIR'."
   exit
+fi
+
+# make sure openssl exists
+if [[ ! -d $SSLDIR ]] ; then
+    echo "FATAL:  openssl dir '$SSLDIR' doesn't exist."
+    exit
 fi
 
 ## APACHE HAS TO BE BUILT IN THE SOURCE DIR AT THE MOMENT

@@ -46,7 +46,7 @@ iptables-restore < /tmp/tabsav
 -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
 -A INPUT -j REJECT --reject-with icmp-host-prohibited
 -A FORWARD -j REJECT --reject-with icmp-host-prohibited
-COMMIT
+COMMITiptables
 # Completed on 2017-07-17
 
 #  Firewalld

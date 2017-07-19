@@ -26,10 +26,9 @@ fi
 KEYFIL=jcameron-key.asc
 KEYLOC=http://www.webmin.com
 wget -qO - $KEYLOC/$KEYFIL | apt-key add -
-rm $KEYFIL
 
 echo "deb http://download.webmin.com/download/repository sarge contrib" > $APTFIL
-
+x
 apt-get update
 apt-get install webmin
 
