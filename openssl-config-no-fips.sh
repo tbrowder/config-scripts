@@ -1,29 +1,34 @@
 #!/bin/bash
 
-VER=$1
+KNOWN_VERS="1.1.0e 1.1.0f"
 if [ -z "$1" ] ; then
-  echo "Usage: $0 <version>"
+  echo "Usage: $0 <openssl version>"
   echo
-  echo "  Configures openssl source (without FIPS)."
+  echo "  Configures openssl source (without FIPS)"
+  echo "    from known versions: '$KNOWN_VERS'"
+  echo "    and installs it into directory"
+  echo "    '/opt/openssl-<version>'."
+  echo
   exit
 fi
 
+VER=$1
+GOODVER=
+for ver in $KNOWN_VERS
+do
+    if [[ $1 = $ver ]] ; then
+        GOODVER=$ver
+    fi
+done
+if [[ -z $GOODVER ]] ; then
+    echo "FATAL:  Openssl version $VER is not known."
+    exit
+fi
+
+SSLDIR=/opt/openssl-$VER
+
 # the source for this file is in:
 #   /usr/local/git-repos/github/config-scripts/
-
-# use latest gcc?
-USE_LATEST=
-if [[ -n "$USE_LATEST" ]] ; then
-  GCCVER=5.2.0
-  GCCBINDIR=/usr/local/gcc/${GCCVER}/bin
-  CC=${GCCBINDIR}/gcc
-  CXX=${GCCBINDIR}/g++
-  CPP=${GCCBINDIR}/cpp
-else
-  CC=gcc
-  CXX=g++
-  CPP=cpp
-fi
 
 # see Ivan Ristics "Bulletproof SSL and TLS," p. 316
 
@@ -33,10 +38,6 @@ fi
 
 # use package zlib1g-dev
 
-# used only for my local host juvat2:
-#SSLDIR=/usr/local/opt/openssl
-# recommend for all other hosts:
-SSLDIR=/opt/openssl
 
 ./config \
     no-ec2m                         \
@@ -49,10 +50,18 @@ SSLDIR=/opt/openssl
     --openssldir=${SSLDIR}          \
     enable-ec_nistp_64_gcc_128
 
-# make depend
+# make depend [don't normally need this]
 # make
 # make test
 # sudo make install
 # make clean
+
+# create file
+#   /etc/ld.so.conf.d/openssl.conf
+# containing the line:
+#   /opt/openssl-<version>/lib
+#   (ensure there is only ONE file pointing to ONE openssl version)
+# then execute:
+#   ldconfig
 
 # make uninstall
