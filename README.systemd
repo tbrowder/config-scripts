@@ -1,0 +1,59 @@
+From:
+  https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/sect-Managing_Services_with_systemd-Unit_Files.html
+
+Put user-generated <name>.service files in:
+
+  /etc/systemd/system/
+
+Example for postfix:
+-------------------
+
+[Unit]
+Description=Postfix Mail Transport Agent
+After=syslog.target network.target
+Conflicts=sendmail.service exim.service
+
+[Service]
+Type=forking
+PIDFile=/var/spool/postfix/pid/master.pid
+EnvironmentFile=-/etc/sysconfig/network
+ExecStartPre=-/usr/libexec/postfix/aliasesdb
+ExecStartPre=-/usr/libexec/postfix/chroot-update
+ExecStart=/usr/sbin/postfix start
+ExecReload=/usr/sbin/postfix reload
+ExecStop=/usr/sbin/postfix stop
+
+[Install]
+WantedBy=multi-user.target
+
+------------------------------
+
+Notify systemd that a new name.service file exists by executing the
+following command as root:
+
+  # systemctl daemon-reload
+  # systemctl start name.service
+
+Commands
+--------
+
+systemctl start <name>.service             # starts a service
+
+systemctl stop <name>.service              # stops a service
+
+systemctl restart <name>.service           # restarts a service
+
+systemctl try-restart <name>.service       # restarts a service only if it
+                                           # is running
+
+systemctl reload <name>.service            # reloads configuration
+
+*systemctl status <name>.service           # checks if a service is running
+
+*systemctl is-active <name>.service        # checks if a service is running
+
+*systemctl list-units --type service --all # displays status of all services
+
+--------
+* Commands that an ordinary user can execute. All others must be executed
+  by root.
