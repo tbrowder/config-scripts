@@ -154,7 +154,7 @@ fi
 # we build all modules for now (all shared except mod_ssl)
 
 export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
-$SRCDIR/configure                          \
+./configure                                \
     --prefix=/usr/local/apache2            \
     --with-apr=$APRPATH                    \
 \

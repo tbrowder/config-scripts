@@ -75,6 +75,7 @@ fi
 #    --with-ndbm=PATH        Find the NDBM header and library in `PATH/include'
 ./configure          \
 --with-apr=$APRPATH  \
+--with-crypto        \
 --with-pgsql         \
 --with-sqlite3       \
 --with-berkeley-db   \

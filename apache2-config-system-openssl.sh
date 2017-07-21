@@ -1,47 +1,24 @@
 #!/bin/bash
 
-# NOTE: THIS CONFIGURATION IS FOR A USER-INSTALLED OPENSSL,
+# NOTE: THIS CONFIGURATION IS FOR A SYSTEM OPENSSL,
 #       AND IT USES THE LATEST INSTALLED APR AND APR-UTILS.
 
 # see Ivan Ristics "Bulletproof SSL and TLS," p. 382
 # using static openssl with Apache
 
-USAGE="Usage: $0 <openssl version>"
+USAGE="Usage: $0 go"
 
-KNOWN_VERS="1.1.0e 1.1.0f"
 APRPATH=/usr/local/apr
 if [[ -z $1 ]] ; then
   echo $USAGE
   echo "  Uses SSL/TLS without FIPS."
-  echo "  Builds httpd with openssl"
-  echo "    from known versions: '$KNOWN_VERS'"
-  echo "    and the latest Apr and Apr-util"
+  echo "  Builds httpd with the latest Apr and Apr-util"
   echo "    located in '$APRPATH'."
   echo
   exit
 fi
 
-VER=$1
-GOODVER=
-for ver in $KNOWN_VERS
-do
-    if [[ $1 = $ver ]] ; then
-        GOODVER=$ver
-    fi
-done
-if [[ -z $GOODVER ]] ; then
-    echo "FATAL:  Openssl version $VER is not known."
-    exit
-fi
-
-SSLDIR=/opt/openssl-$VER
-# make sure openssl exists
-if [[ ! -d $SSLDIR ]] ; then
-    echo "FATAL:  openssl directory '$SSLDIR' doesn't exist."
-    exit
-fi
-
-# and apr
+# ensure apr path exists
 if [[ ! -d $APRPATH ]] ; then
     echo "FATAL:  Apr and Apr-util directory '$APRPATH' doesn't exist."
     exit
@@ -65,16 +42,11 @@ fi
 #     libtool libexpat1-dev libxml2-dev
 #     lua and friends (5.2 for now)
 #       liblua5.2-dev liblua5.2-0 lua5.2
-#     libaprutil1-dbd-pgsql
-#     libaprutil1-dbd-sqlite3
-#     libaprutil1-dbd-ldap
-#     libapr1-dev libapreq2-dev libaprutil1-dev lua-apr-dev
+#     lua-apr-dev
 #     libapache2-mod-apreq2 lksctp-tools
+#     openssl-dev ????
 #
 #   Source libraries:
-#
-#     From: http://www.openssl.org/
-#       OpenSSL                     <latest>
 #
 #     From: http://www.pcre.org/
 #       PCRE                        <latest>
@@ -146,23 +118,21 @@ fi
 
 # note: build mod_wsgi after installing apache
 
-#export LDFLAGS="-L/opt/openssl/lib"
-
 # BUGS:
 #   no pcre2 capability
 
 # we build all modules for now (all shared except mod_ssl)
 
 export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
-$SRCDIR/configure                          \
+./configure                                \
     --prefix=/usr/local/apache2            \
     --with-apr=$APRPATH                    \
+    --with-apr-util=$APRPATH               \
 \
     --enable-ssl                           \
     --enable-ssl-staticlib-deps            \
     --enable-mods-static=ssl               \
-    --with-ssl=${SSLDIR}                   \
-    --with-openssl=${SSLDIR}               \
+    --with-ssl                             \
 \
     --enable-mods-shared=reallyall         \
     --with-perl                            \
@@ -176,7 +146,7 @@ $SRCDIR/configure                          \
     --with-pcre=/usr/local/bin/pcre-config \
     --with-ldap                            \
     --enable-session-crypto                \
-    --enable-session \
+    --enable-session                       \
     --with-crypto
 
 # make depend [don't normally need this]
