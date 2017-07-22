@@ -24,16 +24,9 @@ fi
 # if bind is installed as a package, try to remove these packages:
 #   bind9-doc bind9-host bind9utils bindgraph libbind-dev libbind9-90
 
-# use only for my local host juvat2:
-# recommended for all hosts:
-
-# didn't work with deb 8 on dedi2
-# bit DID work on deb 9 on ns2
-#OPENSSL_HOME=/opt/openssl
-#  --with-openssl=$OPENSSL_HOME \
-
 # run "make distclean" after config changes
 
+# use system openssl
 ./configure \
   --with-openssl=yes \
   --with-pkcs11                \
