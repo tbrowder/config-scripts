@@ -1,0 +1,76 @@
+Now using the acme clients at:
+
+  https://kristaps.bsd.lv/acme-client/
+
+Github source
+
+  https://github.com/kristapsdz/acme-client-portable
+
+Versions:
+  libressl-2.5.5
+  libbsd-0.8.6.tar.xz
+  acme-client-portable-0.1.16
+
+======================================
+
+  install prereqs below
+
+  configure some files
+
+    see the README.md on the github site
+    (https://github.com/kristapsdz/acme-client-portable), but that
+    info is NOT in the source directory, issue files on github
+
+From the README.md on configuration:
+
+  In the latter [config.h] , you can set the NOBODY_USER value to be
+  the name of an unprivileged user for privilege dropping. You can
+  also set DEFAULT_CA_FILE for the location of the certificate file
+  loaded by libtls. There's also PATH_VAR_EMPTY, which should be an
+  empty directory into which we can create our jail.
+
+  changes required in config.h for my installation:
+
+    #define PATH_VAR_EMPTY "/var/acme-client/chroot"
+    #define DEFAULT_CA_FILE "/usr/local/etc/ssl/cert.pem"
+
+Requires (for Linux):
+********************
+
+* LibreSSL:  http://www.libressl.org/
+
+    ./configure
+    make                [about 5 min]
+    make check          [about 1 min]
+    sudo make install
+    sudo make uninstall
+
+* libbsd:    https://libbsd.freedesktop.org/wiki/
+    ./configure
+    make                [about 1 min]
+    make check          [about 1 min]
+    sudo make install
+
+=======================================================
+* libsecomp: https://github.com/seccomp/libseccomp
+  optional, but recommended if it passes the live tests (see below)
+
+    build
+    -----
+    ./configure
+    make
+
+    regression tests
+    ----------------
+    make check  [about 6 minutes]
+
+    live test on the current kernel
+    -------------------------------
+    make check-build
+    (cd tests; ./regression -T live)
+
+    install (if live tests pass)
+    ----------------------------
+    sudo make install
+
+    LIVE TESTS FAILED - DON'T USE
