@@ -2,8 +2,10 @@
 
 # make sure this points to the right source dir
 VER=3.2.0
+SSLVER=1.1.0l
 LDIR=/usr/local/src
 SRCDIR=${LDIR}/postfix-${VER}
+SSLDIR=/opt/openssl-${SSLVER}
 
 if [ -z $1 ] ; then
   echo "Usage: $0 go"
@@ -16,13 +18,18 @@ if [ ! -d $SRCDIR ] ; then
   exit
 fi
 
+if [ ! -d $SSLDIR ] ; then
+  echo "ERROR:  No dir '$SSLDIR' found."
+  exit
+fi
+
 # uses weird make system
 #   debian packages needed:
 #     libdb-dev
 #     libicu-dev
 #
 
-# uses current openssl in /opt/openssl
+# uses current openssl in /opt/openssl-n.n.ny
 # add current TLS handling?? YES
 # add current Cyrus SASL library?? 
 # if so, add some value to the SASL variable
@@ -33,13 +40,14 @@ make tidy
 if [[ -z $SASL ]] ; then
   # DON'T use SASL
   make makefiles CCARGS="-DUSE_TLS \
-    -I/usr/local/include/sasl -I/opt/openssl/include" \
-    AUXLIBS="-L/usr/local/lib -L/opt/openssl/lib -Wl,-rpath=/opt/openssl/lib -lssl -lcrypto"
+    -I${SSLDIR}/include" \
+    AUXLIBS="-L/usr/local/lib -L${SSLDIR}/lib -Wl,-rpath=${SSLDIR}/lib -lssl -lcrypto"
 else
   # yes, use SASL
   make makefiles CCARGS="-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -DUSE_TLS \
-    -I/usr/local/include/sasl -I/opt/openssl/include" \
-    AUXLIBS="-L/usr/local/lib -lsasl2 -L/opt/openssl/lib -Wl,-rpath=/opt/openssl/lib -lssl -lcrypto"
+    -I${SSLDIR}/include" \
+    -I/usr/local/include/sasl \
+    AUXLIBS="-L/usr/local/lib -lsal2 -L${SSLDIR}/lib -Wl,-rpath=${SSLDIR}/lib -lssl -lcrypto"
 
 fi
 
