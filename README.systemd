@@ -37,6 +37,8 @@ following command as root:
 Commands
 --------
 
+Note: The ".service" extension seems not to be required.
+
 systemctl start <name>.service             # starts a service
 
 systemctl stop <name>.service              # stops a service

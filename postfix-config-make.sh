@@ -21,12 +21,28 @@ fi
 #     libdb-dev
 #     libicu-dev
 #
-# add current Cyrus SASL library?? YES
+
+# uses current openssl in /opt/openssl
 # add current TLS handling?? YES
+# add current Cyrus SASL library?? 
+# if so, add some value to the SASL variable
+SASL=
+
 make tidy
-make makefiles CCARGS="-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -DUSE_TLS \
-  -I/usr/local/include/sasl -I/opt/openssl/include" \
-  AUXLIBS="-L/usr/local/lib -lsasl2 -L/opt/openssl/lib -Wl,-rpath=/opt/openssl/lib -lssl -lcrypto"
+
+if [[ -z $SASL ]] ; then
+  # DON'T use SASL
+  make makefiles CCARGS="-DUSE_TLS \
+    -I/usr/local/include/sasl -I/opt/openssl/include" \
+    AUXLIBS="-L/usr/local/lib -L/opt/openssl/lib -Wl,-rpath=/opt/openssl/lib -lssl -lcrypto"
+else
+  # yes, use SASL
+  make makefiles CCARGS="-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -DUSE_TLS \
+    -I/usr/local/include/sasl -I/opt/openssl/include" \
+    AUXLIBS="-L/usr/local/lib -lsasl2 -L/opt/openssl/lib -Wl,-rpath=/opt/openssl/lib -lssl -lcrypto"
+
+fi
+
 
 # If at any time in the build process you get messages like: "make:
 # don't know how to ..." you should be able to recover by running the
