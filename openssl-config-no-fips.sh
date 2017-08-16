@@ -8,6 +8,10 @@ if [ -z "$1" ] ; then
   echo "    from known versions: '$KNOWN_VERS'"
   echo "    and installs it into directory"
   echo "    '/opt/openssl-<version>'."
+  echo "  Note this script is designed to be in the directory"
+  echo "    above the source directory and called from within"
+  echo "    that directory which should be named:"
+  echo "    'openssl-<version>'"
   echo
   exit
 fi
@@ -38,7 +42,20 @@ SSLDIR=/opt/openssl-$VER
 
 # use package zlib1g-dev
 
-
+# where are we?
+SRCDIR=openssl-$VER
+INSRCDIR="../$SRCDIR"
+if [[ -d $INSRCDIR ]] ; then
+    echo "Working in proper dir '$INSRCDIR'..."
+elif [[ -d $SRCDIR ]] ; then
+    echo "You are in the directory above dir '$SRCDIR'."
+    echo "You must cd into it to execute this script."
+    exit
+else
+    echo "Source directory '$SRCDIR' cannot be found."
+    exit
+fi
+ 
 ./config \
     no-ec2m                         \
     no-rc5                          \
@@ -49,6 +66,11 @@ SSLDIR=/opt/openssl-$VER
     --prefix=${SSLDIR}              \
     --openssldir=${SSLDIR}          \
     enable-ec_nistp_64_gcc_128
+
+# should be finished with building the makefils
+echo
+echo "===================================================="
+echo "Now execute 'make && make test && sudo make install'"
 
 # make depend [don't normally need this]
 # make

@@ -2,7 +2,7 @@
 
 # make sure this points to the right source dir
 VER=3.2.0
-SSLVER=1.1.0l
+SSLVER=1.1.0f
 LDIR=/usr/local/src
 SRCDIR=${LDIR}/postfix-${VER}
 SSLDIR=/opt/openssl-${SSLVER}
@@ -31,7 +31,7 @@ fi
 
 # uses current openssl in /opt/openssl-n.n.ny
 # add current TLS handling?? YES
-# add current Cyrus SASL library?? 
+# add current Cyrus SASL library??
 # if so, add some value to the SASL variable
 SASL=
 
@@ -69,6 +69,3 @@ echo "  \$ make [-j N]"
 echo "  \$ sudo make upgrade"
 echo "  \$   (requires an existing /etc/postfix/main.cf)"
 echo "======================"
-
-
-
