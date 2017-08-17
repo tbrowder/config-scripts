@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# set the latest known version
+# set the latest known or desirable version
+#LATEST=3.2.2
 LATEST=3.3-20170730
 
 SITE="ftp://ftp.porcupine.org/mirrors/postfix-release"
@@ -10,7 +11,7 @@ if [[ -z $1 ]] ; then
     echo "Downloads postfix source and signature data from site '$SITE'."
     echo
     echo "The 'go' uses version '$LATEST', or you can choose another version."
-    echo "The 'v' verifies only." 
+    echo "The 'v' verifies only."
     echo
     exit
 fi
@@ -31,17 +32,17 @@ re="[0-9]+\.[0-9]+\.[0-9]+"
 if [[ $VER =~ $re ]] ; then
     echo "$VER is an official release"
     SRCDIR=$SITE/official
-else 
+else
     echo "$VER is an experimental release"
     SRCDIR=$SITE/experimental
 fi
 
 SNAME=postfix-$VER.tar.gz
-GNAME="${SNAME}.gpg2" 
+GNAME="${SNAME}.gpg2"
 KNAME=wietse.pgp
 
 SRC="$SRCDIR/$SNAME"
-GPG="$SRCDIR/$GNAME" 
+GPG="$SRCDIR/$GNAME"
 KEY="$SITE/$KNAME"
 
 if [[ -z $VERIFY ]] ; then
@@ -50,7 +51,7 @@ echo "Downloading src file '$SNAME'..."
 curl $SRC -o $SNAME
 
 echo "Downloading gpg file '$GNAME'..."
-curl $GPG -o $GNAME 
+curl $GPG -o $GNAME
 
 echo "Downloading Wietse's key file '$KNAME'..."
 curl $KEY -o $KNAME

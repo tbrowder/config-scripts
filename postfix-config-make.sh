@@ -1,31 +1,57 @@
 #!/bin/bash
 
-# make sure this points to the right source dir
-VER=3.2.0
-SSLVER=1.1.0f
+# make sure this points to the desired source dir
+VER=3.3-20170730
+#VER=3.2.2
 LDIR=/usr/local/src
 SRCDIR=${LDIR}/postfix-${VER}
+
+# we use the latest OPENSSL from openssl.org =====================
+SSLVER=1.1.0f
 SSLDIR=/opt/openssl-${SSLVER}
 
 if [ -z $1 ] ; then
-  echo "Usage: $0 go"
-  echo "Uses SRCDIR '$SRCDIR'"
-  exit
+    echo "Usage: $0 go"
+    echo
+    echo "  Builds a Makefile for postfix version '$VER'."
+    echo
+    echo "  Note this script is designed to be in the directory"
+    echo "    above the source directory and called from within"
+    echo "    that directory which should be named:"
+    echo "    '$SRCDIR'"
+    echo
+    echo "  Note also we use openssl version '$SSLVER'."
+    echo
+    exit
 fi
 
 if [ ! -d $SRCDIR ] ; then
-  echo "ERROR:  No dir '$SRCDIR' found."
+  echo "ERROR:  No postfix src dir '$SRCDIR' found."
   exit
 fi
 
-if [ ! -d $SSLDIR ] ; then
-  echo "ERROR:  No dir '$SSLDIR' found."
-  exit
+#if [ ! -d $SSLDIR ] ; then
+#  echo "ERROR:  No openssl dir '$SSLDIR' found."
+#  exit
+#fi
+
+# where are we?
+LSRCDIR=postfix-$VER
+INSRCDIR="../$LSRCDIR"
+if [[ -d $INSRCDIR ]] ; then
+    echo "Working in proper dir '$INSRCDIR'..."
+elif [[ -d $LSRCDIR ]] ; then
+    echo "You are in the directory above dir '$LSRCDIR'."
+    echo "You must cd into it to execute this script."
+    exit
+else
+    echo "Source directory '$LSRCDIR' cannot be found."
+    exit
 fi
 
 # uses weird make system
 #   debian packages needed:
-#     libdb-dev
+#     libdb5-dev
 #     libicu-dev
 #
 
@@ -37,17 +63,18 @@ SASL=
 
 make tidy
 
+TLSARGS=
+TLSLIBS=
+SASLARGS=
+SASLLIBS=
 if [[ -z $SASL ]] ; then
-  # DON'T use SASL
-  make makefiles CCARGS="-DUSE_TLS \
-    -I${SSLDIR}/include" \
-    AUXLIBS="-L/usr/local/lib -L${SSLDIR}/lib -Wl,-rpath=${SSLDIR}/lib -lssl -lcrypto"
+    # DON'T use SASL
+    make makefiles CCARGS="-DUSE_TLS -DNO_IP_CYRUS_SASL_AUTH -I${SSLDIR}/include" \
+    	 AUXLIBS="-L${SSLDIR}/lib -Wl,-rpath=${SSLDIR}/lib -lssl -lcrypto"
 else
-  # yes, use SASL
-  make makefiles CCARGS="-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -DUSE_TLS \
-    -I${SSLDIR}/include" \
-    -I/usr/local/include/sasl \
-    AUXLIBS="-L/usr/local/lib -lsal2 -L${SSLDIR}/lib -Wl,-rpath=${SSLDIR}/lib -lssl -lcrypto"
+    # yes, use SASL
+    make makefiles CCARGS="-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -DUSE_TLS -I/usr/local/include/sasl -I${SSLDIR}/include" \
+	 AUXLIBS="-L/usr/local/lib -lsal2 -L${SSLDIR}/lib -Wl,-rpath=${SSLDIR}/lib -lssl -lcrypto"
 
 fi
 
