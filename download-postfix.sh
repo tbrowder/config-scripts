@@ -1,6 +1,21 @@
 #!/bin/bash
 
+# a regex to determine e or o
+re="[0-9]+\.[0-9]+\.[0-9]+"
+if [[ $1 =~ $re ]] ; then
+    echo "$1 is an official release"
+else 
+    echo "$1 is an experimental release"
+fi
+exit
+
+# set the latest known version
+LATEST=3.3-20170730
+# set the type (o - official, e - experimental)
+TYPE=e
+
 SITE="ftp://ftp.porcupine.org/mirrors/postfix-release"
+if [[ $TYPE = 'e
 SRCDIR=$SITE/official
 SRCDIR=$SITE/experimental
 KEY=$SITE/wietse.pgp
