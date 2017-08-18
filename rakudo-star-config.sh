@@ -43,7 +43,6 @@ echo
 RM=
 for subdir in $SUBDIRS
 do
-
     if [[ -d "$PREFIX/$subdir" ]] ; then
 	if [[ -z $RM ]] ; then
 	    echo "WARNING: Found one or more existing subdirectories to remove:"
