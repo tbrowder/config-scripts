@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# run as root to install or check Postgresql on a Debian-based host with apt-get
+# run as root to install Postgresql on a Debian-based host with
+# apt-get
 
 VERSION=9.6
 APTFIL=/etc/apt/sources.list.d/pgdg.list
-if [[ -e $APTFIL ]] ; then
+if [[ -f $APTFIL ]] ; then
   echo "NOTE: Apt sources file '$APTFIL' exists, so this"
   echo "      script is not very useful.  Exiting...."
   echo
@@ -15,7 +16,7 @@ if [[ -z "$1" ]] ; then
   echo "Usage: $0 8 | 9"
   echo
   echo "As root, this script will install Postgresql ${VERSION} for Debian"
-  echo "  8 (jessie) or 9 (atretch), amd64."
+  echo "  8 (jessie) or 9 (tretch), amd64."
   echo
   exit
 fi
@@ -49,10 +50,13 @@ echo "Installing Postgresql $VERSION for Debian $1 ($DISTRO)..."
 KEYFIL=ACCC4CF8.asc
 KEYLOC=https://www.postgresql.org/media/keys
 wget -qO - $KEYLOC/$KEYFIL | apt-key add -
-rm $KEYFIL
 
 echo "deb http://apt.postgresql.org/pub/repos/apt/ ${DISTRO}-pgdg main" > $APTFIL
 apt-get update
+
+echo "Now install or check postgresql packages with script:"
+echo "  'install-postgres-debian packages.sh'."
+exit
 
 # install most all the packages
 # -----------------------------
@@ -68,4 +72,4 @@ apt-get update
 apt-get install postgresql-$VERSION
 apt-get install postgresql-client-$VERSION
 apt-get install postgresql-contrib-$VERSION
-apt-get install pgadmin3`
+apt-get install pgadmin3
