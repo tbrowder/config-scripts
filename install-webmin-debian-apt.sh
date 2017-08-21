@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # run as root to install Webmin on a Debian-based host with apt-get
 

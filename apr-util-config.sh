@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # must check for its existence:
 APRPATH=/usr/local/apr

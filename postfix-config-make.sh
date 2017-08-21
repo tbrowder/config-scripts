@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # make sure this points to the desired source dir
 VER=3.3-20170730

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 echo "this file ($0) needs work"; exit
 
 SITE="ftp://ftp.porcupine.org/mirrors/postfix-release"

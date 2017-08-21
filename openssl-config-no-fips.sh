@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 KNOWN_VERS="1.1.0e 1.1.0f"
 if [ -z "$1" ] ; then

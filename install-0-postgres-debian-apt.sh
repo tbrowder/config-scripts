@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # created based on instructions found here:
 #   https://www.postgresql.org/download/linux/debian/

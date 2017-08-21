@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # set the latest known or desirable version
 #LATEST=3.2.2

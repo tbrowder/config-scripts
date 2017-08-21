@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # the source for this file is in:
 #   /usr/local/git-repos/github/config-scripts/

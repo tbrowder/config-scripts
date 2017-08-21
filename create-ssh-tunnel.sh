@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # run to establish an ssh tunnel to run apps on a Debian-based host
 
