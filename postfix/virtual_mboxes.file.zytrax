@@ -1,0 +1,36 @@
+# from:
+#   http://www.zytrax.com/tech/survival/postfix.html
+
+# virtual_mboxes file
+# ===================
+#
+# For use with virtual_mailbox_domains and specified by
+# virtual_mailbox_maps in main.cf - defines the location and type of
+# storage (mbox or Maildir).
+#
+# Example file format:
+
+# EXAMPLE.COM DOMAIN virtual_mboxes file
+# defines path to local account mail, added to virtual_mailbox_base to
+# create full path
+
+# uses Maildir format (end slash is vital)
+info@example.com example.com/info/Maildir/
+
+# multiple entries may be defined for same account
+# this is another way of doing aliasing and perhaps avoids defining a
+# virtual_alias_domains entry
+sales-info@example.com example.com/info/Maildir/
+# here is another common example
+jsmith@example.com example.com/jsmith/Maildir/
+john.smith@example.com example.com/jsmith/Maildir/
+
+# this format without a trailing slash uses mailbox format
+sales@example.com exmple.com/sales
+# mailbox and Maildir may be used on a mailbox-by-mailbox basis
+
+# when file is updated run
+[fc]postmap /etc/postfix/virtual_aliases
+[bsd]postmap /usr/local/etc/postfix/virtual_aliases
+# then
+postfix reload

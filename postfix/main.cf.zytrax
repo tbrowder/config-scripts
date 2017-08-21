@@ -1,0 +1,78 @@
+# from:
+#   http://www.zytrax.com/tech/survival/postfix.html
+
+# Postfix Basic Configuration
+# ===========================
+#
+# There are many parameters controlling the behavior of postfix - this
+# ends up being both a strength and a weakness. Adding to the confusion
+# is that, like PERL, there is usually more than one way to do
+# anything. The following files show the minimum parameters required to
+# get postfix running with one or more virtual domains as a CLOSED MTA
+# (does not allow relaying of external mail). The sample distribution
+# file is big and well documented but can be a bit daunting. The
+# following is the minimum required:
+#
+# Word of Caution: Get a basic configuration running and deliverying
+# email before you attempt anything else.
+
+# main.cf - minimal file
+# you can always read the values of all postfix parameters
+# including defaults by using
+# postconf [all values]
+# postconf -n [only those defined by user]
+
+# only change the next two lines if the default username (nobody) does
+# not exist. On many systems installation creates a unique postfix
+# account and group which should be used instead
+default_privs = nobody
+mail_owner = nobody
+
+# next two lines can be omitted since they will default to
+# servers name and domain name
+myhostname = hostname.example.com
+mydomain = example.com
+
+# added to unqualified mailbox addresses - used by local mail service
+# can be ommitted if a valid aliases file exists since this does the
+# same thing
+myorigin = $mydomain
+
+# local aliases normal default value - aliases file MUST be edited
+alias_maps = hash:/usr/local/etc/postfix/aliases
+# same thing again
+alias_database = hash:/usr/local/etc/postfix/aliases
+
+# next line is the default so could be omitted
+inet_interfaces = all
+
+# defines local network which is permitted by default to relay mail
+# hereafter the key word mynetworks refers to this IP or IPs
+mynetworks = 192.168.2.0/28, 10.5.0.0/16
+
+# controls email sent to postmaster
+# default is shown below - omit if this is OK
+notify_classes = resource,software
+# can also include - bounce, 2bounce, delay, policy, protocol
+
+#
+# VIRTUAL DOMAIN Definitions
+#
+# VIRTUAL ALIAS DOMAINS
+# if no address manipulation required omit this section
+# continue on new line if required but MUST start with a space
+virtual_alias_domains = example.com
+
+# next line defines the aliasing for each mailbox address
+virtual_alias_maps = hash:/etc/postfix/virtual_aliases
+
+# VIRTUAL MAILBOX DOMAINS
+# for all domains that have mailboxes on this server/filesystem
+# continue on new line if required but MUST start with a space
+virtual_mailbox_domains = example.org example.net
+
+# base for delivery to virtual_mailbox_domains
+virtual_mailbox_base = /var/email/domains
+
+# defines the location of each mailbox
+virtual_mailbox_maps = hash:/etc/postfix/virtual_mboxes

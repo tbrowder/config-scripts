@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # set the latest known or desirable version
 LATEST=2017.07
@@ -19,7 +19,7 @@ if [[ $1 =~ "g" ]] ; then
     VER=$LATEST
     #echo "first arg ($1) is 'go'"
 else
-    VER=$1
+`    VER=$1
     #echo "first arg ($1) should be a version"
 fi
 #echo "debug exit"; exit

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# created based on instructions found here:
+#   https://www.postgresql.org/download/linux/debian/
+
 # run as root to install Postgresql on a Debian-based host with
 # apt-get
 
@@ -15,8 +18,8 @@ fi
 if [[ -z "$1" ]] ; then
   echo "Usage: $0 8 | 9"
   echo
-  echo "As root, this script will install Postgresql ${VERSION} for Debian"
-  echo "  8 (jessie) or 9 (tretch), amd64."
+  echo "As root, this script will add Postgresql ${VERSION} apt sources for Debian"
+  echo "  8 (jessie) or 9 (stretch), amd64."
   echo
   exit
 fi
@@ -39,7 +42,7 @@ else
   echo
   exit
 fi
-echo "Installing Postgresql $VERSION for Debian $1 ($DISTRO)..."
+echo "Installing Postgresql $VERSION apt sources for Debian $1 ($DISTRO)..."
 
 
 # the source for this file is in:
@@ -57,19 +60,3 @@ apt-get update
 echo "Now install or check postgresql packages with script:"
 echo "  'install-postgres-debian packages.sh'."
 exit
-
-# install most all the packages
-# -----------------------------
-# install these
-#   postgresql-9.6 - core database server
-#   postgresql-client-9.6 - client libraries and client binaries
-#   postgresql-contrib-9.6 - additional supplied modules
-#   pgadmin3 - pgAdmin III graphical administration utility
-# don't normally install these:
-#   libpq-dev - libraries and headers for C language frontend development
-#   postgresql-server-dev-9.6 - libraries and headers for C language backend development
-
-apt-get install postgresql-$VERSION
-apt-get install postgresql-client-$VERSION
-apt-get install postgresql-contrib-$VERSION
-apt-get install pgadmin3

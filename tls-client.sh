@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 DOC=index
 if [[ -z $1 ]] ; then

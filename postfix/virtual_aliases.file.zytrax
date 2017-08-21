@@ -1,0 +1,29 @@
+# from:
+#   http://www.zytrax.com/tech/survival/postfix.html
+
+# virtual_aliases file
+# ====================
+#
+# Defines the alias operation to be performed on a users mailbox - for
+# use with virtual_alias_domains.
+#
+# Example File format:
+
+# maps to example.com to example.net which may be
+# local (a local virtual_mailbox_domain) or remote
+joe@example.com joe@example.net
+
+# maps to multiple delivery mailboxes
+sales@example.com fred@example.com,bill@example.com
+
+# maps to a local system mailbox
+sharon@example.com sharon
+
+# maps any other mailbox to any@example.com
+@example.com any@example.com
+
+# when file is updated run
+[fc]postmap /etc/postfix/virtual_aliases
+[bsd]postmap /usr/local/etc/postfix/virtual_aliases
+# then
+postfix reload
