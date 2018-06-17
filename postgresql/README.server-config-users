@@ -1,0 +1,29 @@
+How to set up users for access
+==============================
+
+It's easiest to use the postgres user's psql commands:
+
+# change to the superuser's shell
+$ sudo -u postgres -s
+
+Creating a superuser:
+
+$ createuser -P -s -e tbrowde
+...
+
+Creating a normal user:
+
+$ createuser -DRS tbrowde
+...
+
+Create the user's default database:
+
+$ createdb -O tbrowde tbrowde
+
+Exit the superuser's shell:
+
+$ ctl-d
+
+Scripting a normal user's privileges
+====================================
+
