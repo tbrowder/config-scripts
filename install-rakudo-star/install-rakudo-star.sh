@@ -18,14 +18,7 @@
 # requires bash 3.2 (e.g., bash --version)
 check_bash_version
 
-ARCH=rakudo-star-2016.07.tar.gz
-ARCHDIR=`get_archdir $ARCH`
-
-#echo "ARCH: '$ARCH'";
-#echo "ARCHDIR: '$ARCHDIR'";
-#debug_exit 3
-
-INSTDIR=/usr/local/rakudo.d
+INSTDIR=/opt/rakudo.d
 BINDIR=$INSTDIR/bin
 
 GO=
@@ -33,20 +26,20 @@ TEST=
 DEBUG=
 YES=
 UNK=
+ARCH=
 
 if [[ -z "$1" ]] ; then
     cat <<EOF
 Usage: $0 go | [-test][-debug][-yes]
 
 As root, sets up a new Rakudo Star installation using a tgz release
-  from <http://rakudo.org/downloads/star>.
+  from <http://rakudo.org/latest/star/source>.
 
-Start in a clean directory with the desired Rakudo Star archive.
+Start in a clean directory with no other files but this script.
 
 Internal variables (and current values) which may be changed as
 desired:
 
-  ARCH    - '$ARCH'
   INSTDIR - '$INSTDIR'
   BINDIR  - '$BINDIR'
 
@@ -108,7 +101,7 @@ if [[ -z $TEST  && $UID != "0" ]] ; then
   exit
 fi
 
-echo "Unpack '$ARCH'?"
+echo "Unpack 'rakudo*gz'?"
 get_approval $YES
 
 # ensure we have an INSTDIR
@@ -122,7 +115,7 @@ if [ ! -d $INSTDIR ] ; then
     fi
 fi
 if [[ -n $TEST ]] ; then
-    echo "cmd: 'tar -xvzf $ARCH'"
+    echo "cmd: 'tar -xvzf rak'"
 else
     tar -xvzf $ARCH
 fi
