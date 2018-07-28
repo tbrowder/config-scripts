@@ -13,8 +13,11 @@
 # The default installation directory is partially removed to ensure
 # the current nqp and moarvm are built along with Perl 6.
 
+#=begin insert ./funcs/bash-funcs.sh
 # don't forget to source the needed bash functions
-. ./.bash-funcs.sh
+. ./funcs/bash-funcs.sh
+#=end insert bash-funcs.sh
+
 # requires bash 3.2 (e.g., bash --version)
 check_bash_version
 
