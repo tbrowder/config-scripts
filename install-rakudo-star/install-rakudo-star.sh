@@ -38,7 +38,7 @@ if [[ -z "$1" ]] ; then
     cat <<EOF
 Usage: $0 go | [-test][-debug][-yes]
 
-As root, sets up a new Rakudo installation using a tgz release
+As root, sets up a new Rakudo Star installation using a tgz release
   from <http://rakudo.org/downloads/star>.
 
 Start in a clean directory with the desired Rakudo Star archive.
@@ -65,28 +65,28 @@ do
     #echo "input var '$o'"
 case $o in
     -g|g|-go|go)
-    GO=1
-    shift # past argument=value
-    ;;
+        GO=1
+        shift # past argument=value
+        ;;
     -t|t|-test|test)
-    TEST=1
-    GO=1
-    shift # past argument=value
-    ;;
+        TEST=1
+        GO=1
+        shift # past argument=value
+        ;;
     -d|d|-debug|debug)
-    DEBUG=1
-    GO=1
-    shift # past argument=value
-    ;;
+        DEBUG=1
+        GO=1
+        shift # past argument=value
+        ;;
     -y|y|-yes|yes)
-    YES=1
-    GO=1
-    shift # past argument=value
-    ;;
+        YES=1
+        GO=1
+        shift # past argument=value
+        ;;
     *)
-    UNK=$o # unknown option
-    shift # past argument=value
-    ;;
+        UNK=$o # unknown option
+        shift # past argument=value
+        ;;
 esac
 done
 
