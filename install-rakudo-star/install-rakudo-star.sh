@@ -1,8 +1,8 @@
 #!/bin/bash
 # requires bash 3.2 (e.g., bash --version)
-# the source for this file is in:
-#   /usr/local/git-repos/github/config-scripts/
-# run, as root, to set up rakudo on a Debian host
+# the source for this file (and support files) is in:
+#   https://github.com/tbrowder/config-scripts/
+# run, as root, to set up the latest Rakudo Star on a Debian host
 
 # Debian package requirements:
 #   build-essential
@@ -10,9 +10,11 @@
 
 # Note that an existing Perl 6 installation in $HOME/.rakudobrew may
 # interfere with a successful installation of the Rakudo Star package.
+# The default installation directory is partially removed to ensure
+# the current nqp and moarvm are built along with Perl 6.
 
-# don't forget the needed bash functions
-. ./bash-funcs.sh
+# don't forget to source the needed bash functions
+. ./.bash-funcs.sh
 # requires bash 3.2 (e.g., bash --version)
 check_bash_version
 
