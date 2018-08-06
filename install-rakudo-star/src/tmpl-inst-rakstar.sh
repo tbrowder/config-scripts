@@ -8,6 +8,7 @@
 #   build-essential
 #   time
 #   git
+#   curl
 
 # Note that an existing Perl 6 installation in $HOME/.rakudobrew may
 # interfere with a successful installation of the Rakudo Star package.

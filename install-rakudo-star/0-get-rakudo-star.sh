@@ -8,7 +8,7 @@ if [[ -z $1 ]]; then
     exit
 fi
 
-#curl -LJO https://rakudo.org/latest/star/source
+curl -LJO https://rakudo.org/latest/star/source
 
 ARCH=`ls -d rakudo-star-*gz`
 ARCHDIR=${ARCH:0:19} # `ls rakudo-star-????.??*`
