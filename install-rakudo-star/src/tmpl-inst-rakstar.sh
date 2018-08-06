@@ -7,15 +7,16 @@
 # Debian package requirements:
 #   build-essential
 #   time
+#   git
 
 # Note that an existing Perl 6 installation in $HOME/.rakudobrew may
 # interfere with a successful installation of the Rakudo Star package.
 # The default installation directory is partially removed to ensure
 # the current nqp and moarvm are built along with Perl 6.
 
-#=begin insert ./funcs/bash-funcs.sh
+#=begin insert ./bash-funcs.sh
 # don't forget to source the needed bash functions
-. ./funcs/bash-funcs.sh
+. ./bash-funcs.sh
 #=end insert bash-funcs.sh
 
 # requires bash 3.2 (e.g., bash --version)
@@ -29,16 +30,18 @@ TEST=
 DEBUG=
 YES=
 UNK=
-ARCH=
 
 if [[ -z "$1" ]] ; then
     cat <<EOF
 Usage: $0 go | [-test][-debug][-yes]
 
-As root, sets up a new Rakudo Star installation using a tgz release
-  from <http://rakudo.org/latest/star/source>.
+Run by the owner of '$INSTDIR', sets up a new Rakudo Star
+  installation using a tgz release from
+  <http://rakudo.org/latest/star/source>.
 
-Start in a clean directory with no other files but this script.
+Start in the unpacked source archive directory with this script in
+the parent directory and run it like this:
+  ../a clean directory with no other files but this script.
 
 Internal variables (and current values) which may be changed as
 desired:
@@ -99,13 +102,11 @@ if [[ -n "$UNK" ]] ; then
     exit 2
 fi
 
-if [[ -z $TEST  && $UID != "0" ]] ; then
-  echo "You are not root!  Exiting...."
-  exit
-fi
-
-echo "Unpack 'rakudo*gz'?"
-get_approval $YES
+# restict to root?
+#if [[ -z $TEST  && $UID != "0" ]] ; then
+#  echo "You are not root!  Exiting...."
+#  exit
+#fi
 
 # ensure we have an INSTDIR
 if [ ! -d $INSTDIR ] ; then
@@ -117,18 +118,8 @@ if [ ! -d $INSTDIR ] ; then
 	mkdir -p $INSTDIR
     fi
 fi
-if [[ -n $TEST ]] ; then
-    echo "cmd: 'tar -xvzf rak'"
-else
-    tar -xvzf $ARCH
-fi
 
-
-
-echo "Configuring: going to dir '$ARCHDIR'..."
-
-# go to src dir ====================================
-cd $ARCHDIR
+echo "Configuring..."
 
 # configure
 CONF="perl Configure.pl --backend=moar --gen-moar --prefix=$INSTDIR"
@@ -161,12 +152,25 @@ else
     `echo time make install`
 fi
 
+FILE="perl6paths.source"
+
+# final message
+cat > $FILE <<HERE
+RAKDIR=$INSTDIR
+P6B1=\$RAKDIR/bin
+P6B2=\$RAKDIR/share/perl6/bin
+P6B3=\$RAKDIR/share/perl6/site/bin
+P6B4=\$RAKDIR/share/perl6/vendor/bin
+PERL6BINDIRS=\$P6B1:\$P6B2:\$P6B3:\$P6B4
+export PATH=\$PERL6BINDIRS:\$PATH
+HERE
+
 # final message
 cat <<HERE
 Installation complete.  You need to place one or more
 of the newly installed rakudo bin directories in your
 path.  Here is one way to do it: add the following lines
-in your bash_aliases file::
+in your '.bash_aliases' file:
 
 RAKDIR=$INSTDIR
 P6B1=\$RAKDIR/bin
@@ -176,5 +180,9 @@ P6B4=\$RAKDIR/share/perl6/vendor/bin
 PERL6BINDIRS=\$P6B1:\$P6B2:\$P6B3:\$P6B4
 export PATH=\$PERL6BINDIRS:\$PATH
 HERE
+
+echo
+echo "Those lines have been placed in file '$FILE' for sourcing,"
+echo "  referencing, or copying into your '.bash_aliases' file."
 
 exit 0
