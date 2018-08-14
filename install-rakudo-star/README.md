@@ -1,22 +1,26 @@
-## This directory has two scripts, the second one created with the Perl 6 program in directory "util/":
+# This directory has two scripts, the second one created with the Perl 6 program in directory "util/":
 
-0-download-rakudo-star.sh
-  # Downloads a tgz archive of the latest Rakudo Perl 6 package
-  # (which is usually updated quarterly) and unpacks it in
-  # the current directory.
-install-rakudo-star.sh
-  # An install script to be run from inside the directory created
-  #   by the previous script.
-  # The script will install the Perl 6 files, along with a
-  #   a collection of useful modules, into directory:
-  #     /opt/rakudo.d
-  # The script will also output a script to be sourced top
-  #   update the user's path to use the new files.
+1. 0-download-rakudo-star.sh
+
+    + Downloads a tgz archive of the latest Rakudo Perl 6 package (which
+      is usually updated quarterly) and unpacks it in the current
+      directory.
+
+2. install-rakudo-star.sh
+
+    + An install script to be run from inside the directory created by the previous script.
+
+    + The script will install the Perl 6 files, along with a collection of useful modules, into directory:
+
+        /opt/rakudo.d
+
+    +  The script will also output a script to be sourced to update the user's path to use the new files.
 
 
-## The following text is from the Rakudo Perl 6 website:
+# The following text is from the Rakudo Perl 6 website:
   https://rakudo.org/files/star/source
 
+```
 =============================================================================
 The exact steps required may differ, depending on your operating system:
 
@@ -39,3 +43,4 @@ make install
 echo "export PATH=$(pwd)/install/bin/:$(pwd)/install/share/perl6/site/bin:\$PATH" >> ~/.bashrc
 source ~/.bashrc
 =============================================================================
+```
