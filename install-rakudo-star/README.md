@@ -1,4 +1,8 @@
-## This directory has two scripts, the second one created with the Perl 6 program in directory "util/":
+# Installation scripts for the Rakudo Perl 6 Star distribution
+
+The **Rakudo Perl 6 Star** distribution is released quarterly from <https://rakudo.org>.
+
+### This directory has two scripts, the second one created with the Perl 6 program in directory "util/":
 
 1. 0-download-rakudo-star.sh
 
@@ -17,7 +21,9 @@
     +  The script will also output a script to be sourced to update the user's path to use the new files.
 
 
-### The installation scripts above are based on the following text is from the Rakudo Perl 6 website: https://rakudo.org/files/star/source
+The installation scripts above are based on the following text is from
+the Rakudo Perl 6 website: https://rakudo.org/files/star/source
+
 
 ```
 =============================================================================
