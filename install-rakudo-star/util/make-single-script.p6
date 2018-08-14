@@ -3,7 +3,7 @@
 my $debug = 0;
 
 # generates a concatenated script
-my $ofile = 'install-rakudo-star.sh';
+my $ofile = '../install-rakudo-star.sh';
 
 # the base script:
 my $b1 = @*ARGS.shift;

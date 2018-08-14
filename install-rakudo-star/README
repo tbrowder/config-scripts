@@ -1,10 +1,10 @@
-Produce two scripts with the p6 prog in "util/":
+## This directory has two scripts, the second one created with the Perl 6 program in directory "util/":
 
 0-download-rakudo-star.sh
   # Downloads a tgz archive of the latest Rakudo Perl 6 package
   # (which is usually updated quarterly) and unpacks it in
   # the current directory.
-1-install-rakudo-star.sh
+install-rakudo-star.sh
   # An install script to be run from inside the directory created
   #   by the previous script.
   # The script will install the Perl 6 files, along with a
@@ -14,10 +14,8 @@ Produce two scripts with the p6 prog in "util/":
   #   update the user's path to use the new files.
 
 
-Text from:
+## The following text is from the Rakudo Perl 6 website:
   https://rakudo.org/files/star/source
-
-
 
 =============================================================================
 The exact steps required may differ, depending on your operating system:
