@@ -2,7 +2,8 @@
 
 The **Rakudo Perl 6 Star** distribution is released quarterly from <https://rakudo.org>.
 
-### This directory has two scripts, the second one created with the Perl 6 program in directory "util/":
+#### This directory has two scripts, the second one created with the
+     Perl 6 program in directory "util/":
 
 1. 0-download-rakudo-star.sh
 
