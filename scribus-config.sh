@@ -1,5 +1,32 @@
 #!/usr/bin/env bash
 
+# cmake intructions:
+#
+#   in the source dir, create a buildir
+#   cd to the builddir
+#   execute:
+#     cmake [options] ..
+#
+#   where desired options are:
+#
+#     -DCMAKE_INCLUDE_PATH=/path/to/libfoo/include
+#     -DCMAKE_LIBRARY_PATH=/path/to/libfoo/lib
+#
+#   make && make check && make install
+
+cmake \
+    -DCMALE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Core \
+    -DPOPPLER_CPP_INCLUDE_DIR=/usr/include/poppler/qt5 \
+    -DPOPPLER_INCLUDE_DIR=/usr/include/poppler/qt5 \
+    ..
+
+
+#-DQt5Core_DIR=/usr/local/Qt/5.11.1/gcc_64/lib/cmake/Qt5Core \
+#-DQt5Widgets_DIR=/usr/local/Qt/5.11.1/gcc_64/lib/cmake/Qt5Widgets \
+#..
+
+exit
+
 # requirements for 1.5+
 #
 # Install the below packages BEFORE running CMake or compiling Scribus:
@@ -12,7 +39,7 @@
 #  *libtiff >= 3.6.0
 #  *LittleCMS (liblcms) >= 2.0 (2.1+ recommended)
 #  *libjpeg (depending on how Qt is packaged)
-#   harfbuzz = > 0.9.42
+#  *harfbuzz = > 0.9.42
 #  *libicu
 #
 # Recommended (* - installed):
@@ -33,7 +60,10 @@
 # are not installed, some features will be disabled by cmake. If you
 # later install any of these dependencies, you will have to re-run cmake
 # and re-compile Scribus before the features are enabled.
-
+#
+# other prereqs:
+#   libzmf-dev >= 0.0
+#   libqxp-dev >= 0.0
 
 # WIP ...
 KNOWN_VERS="1.1.0e 1.1.0f"
