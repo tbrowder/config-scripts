@@ -15,9 +15,9 @@
 #   make && make check && make install
 
 cmake \
-    -DCMALE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Core \
+    -DCMAKE_PREFIX_PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Core \
     -DPOPPLER_CPP_INCLUDE_DIR=/usr/include/poppler/qt5 \
-    -DPOPPLER_INCLUDE_DIR=/usr/include/poppler/qt5 \
+    -DPOPPLER_INCLUDE_DIR=/usr/include/poppler \
     ..
 
 

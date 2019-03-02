@@ -12,6 +12,7 @@ fi
 
 # tbrowde-home-bzr/usrlocal
 
+# Debian 9 and bind 9.12.3-P1:
 # need Debian packages:
 #   python-ply
 #   liblmdb0
@@ -20,6 +21,13 @@ fi
 #   libjson-c-dev
 #   protobuf-c-compiler
 #   resolvconf
+#
+#   libgeoip-dev
+#   libfstrm-dev
+#   libprotobuf-c-dev
+#   libidn2-0-dev
+#   idn2
+#   libunistring-dev
 
 # if bind is installed as a package, try to remove these packages:
 #   bind9-doc bind9-host bind9utils bindgraph libbind-dev libbind9-90
@@ -41,14 +49,23 @@ fi
   --enable-fixed-rrset         \
   --with-zlib                  \
   --enable-querytrace          \
-  --with-python=/usr/bin/python
+  --with-python=/usr/bin/python \
+    \
+  --with-tuning=default  \
+  --enable-dnstap  \
+  --with-geoip  \
+  --with-gssapi  \
+  --enable-dnsrps  \
+  --enable-native-pkcs11  \
+  --with-gost  \
+  --with-eddsa
+
+#  --with-libidn2=/usr/local/lib/libidn2.so
+
+
 
   # may need this for python:
   # --with-python=PATH
-
-# these two need other libraries not yet found:
-#  --enable-native-pkcs11      \
-#  --enable-dnstap             \
 
 # make (Do not use a parallel "make".)
 #   takes about 7 min

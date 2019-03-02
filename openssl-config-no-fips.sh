@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-KNOWN_VERS="1.1.0e 1.1.0f"
+KNOWN_VERS="1.1.1b"
 if [ -z "$1" ] ; then
   echo "Usage: $0 <openssl version>"
   echo
@@ -55,7 +55,7 @@ else
     echo "Source directory '$SRCDIR' cannot be found."
     exit
 fi
- 
+
 ./config \
     no-ec2m                         \
     no-rc5                          \
