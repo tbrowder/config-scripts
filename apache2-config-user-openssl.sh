@@ -8,7 +8,7 @@
 
 USAGE="Usage: $0 <openssl version>"
 
-KNOWN_VERS="1.1.0e 1.1.0f"
+KNOWN_VERS="1.1.1b"
 APRPATH=/usr/local/apr
 if [[ -z $1 ]] ; then
   echo $USAGE
