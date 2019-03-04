@@ -3,9 +3,6 @@
 # NOTE: THIS CONFIGURATION IS FOR A SYSTEM OPENSSL,
 #       AND IT USES THE LATEST INSTALLED APR AND APR-UTILS.
 
-# see Ivan Ristics "Bulletproof SSL and TLS," p. 382
-# using static openssl with Apache
-
 USAGE="Usage: $0 go"
 
 APRPATH=/usr/local/apr
