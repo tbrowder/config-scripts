@@ -9,9 +9,11 @@ if [ -z "$1" ] ; then
 fi
 
 #  Optional Features:
-MAKEMAP=$PREFIX/makemap
-NEWALIASES=$PREFIX//newaliases
-POSTALIAS=$PREFIX/postalias
+MAKEMAP=/usr/sbin/makemap
+NEWALIASES=/usr/sbin/newaliases
+# this should be found:
+#POSTALIAS=$PREFIX/postalias
+# this should be found:
 POSTMAP=$PREFIX/postmap
 
 ./configure \
@@ -22,9 +24,9 @@ POSTMAP=$PREFIX/postmap
   --with-unitsdir=/lib/systemd/system \
                \
   --with-makemap=$MAKEMAP \
-  --with-newaliases=$NEWALIASES \
-  --with-postalias=$POSTALIAS \
-  --with-postmap=$POSTMAP
+  --with-newaliases=$NEWALIASES
+#  --with-postalias=$POSTALIAS \
+#  --with-postmap=$POSTMAP
 
 # make
 # sudo make install
