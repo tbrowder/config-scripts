@@ -1,22 +1,31 @@
 unit module MySympa;
 
-enum Typ { 'noreply', 'normal' }
-our %dom-lists = %(
-    canterburycircle.us => {
+our enum Typ is export <noreply normal>;
+our %dom-lists is export = %(
+    'canterburycircle.us' => {
         news    => noreply, 
         friends => normal,
     },
-    nwflug.org => [
-        'news', 'members',
-    ],
-    computertechnwf.org => [
-        'news', 'friends', 'presenters',
-    ],
-    novco1968tbs.com => [
-        'news', 'marines', 'board',
-    ],
-    usafa-1965.org => [
-        'news', 'graytags', 'csreps',
-    ],
+    'nwflug.org' => {
+        news => noreply, 
+        members => normal,
+    },
+    'computertechnwf.org' => {
+        news => noreply, 
+        friends => normal, 
+        presenters => normal,
+        board => normal,
+    },
+    'novco1968tbs.com' => {
+        news => noreply, 
+        marines => normal, 
+        board => normal,
+    },
+    'usafa-1965.org' => {
+        news => noreply, 
+        graytags => normal, 
+        csreps => normal,
+        officers => normal,
+    },
 );
 
