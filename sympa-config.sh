@@ -11,22 +11,18 @@ fi
 #  Optional Features:
 MAKEMAP=/usr/sbin/makemap
 NEWALIASES=/usr/sbin/newaliases
-# this should be found:
-#POSTALIAS=$PREFIX/postalias
-# this should be found:
-POSTMAP=$PREFIX/postmap
+#  These binaries should be auto-found:
+#    postalias
+#    postmap
 
 ./configure \
-  --enable-fhs \
-  --prefix=/usr/local/sympa \
-  --with-confdir=/etc/sympa \
-  --without-initdir \
-  --with-unitsdir=/lib/systemd/system \
-               \
+  --prefix=$PREFIX \
+  --with-confdir=$PREFIX/etc \
   --with-makemap=$MAKEMAP \
-  --with-newaliases=$NEWALIASES
-#  --with-postalias=$POSTALIAS \
-#  --with-postmap=$POSTMAP
+  --with-newaliases=$NEWALIASES \
+  --enable-fhs \
+  --without-initdir \
+  --with-unitsdir=/lib/systemd/system
 
 # make
 # sudo make install
