@@ -1,5 +1,8 @@
 #!/usr/bin/env perl6
 
+use lib '.';
+use MySymp;
+
 if !@*ARGS {
     say qq:to/HERE/;
     Usage:  $*PROGRAM <domain.tld>
