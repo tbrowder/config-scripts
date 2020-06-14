@@ -8,8 +8,22 @@
 
 USAGE="Usage: $0 <openssl version>"
 
-KNOWN_VERS="1.1.1b"
+KNOWN_VERS="1.1.1g"
 APRPATH=/usr/local/apr
+SSLDIR=/opt/openssl-$VER
+# make sure openssl exists
+if [[ ! -d $SSLDIR ]] ; then
+    echo "FATAL:  openssl directory '$SSLDIR' doesn't exist."
+    exit
+fi
+
+# and apr
+if [[ ! -d $APRPATH ]] ; then
+    echo "FATAL:  Apr and Apr-util directory '$APRPATH' doesn't exist."
+    exit
+fi
+
+
 if [[ -z $1 ]] ; then
   echo $USAGE
   echo "  Uses SSL/TLS without FIPS."
@@ -34,19 +48,6 @@ if [[ -z $GOODVER ]] ; then
     exit
 fi
 
-SSLDIR=/opt/openssl-$VER
-# make sure openssl exists
-if [[ ! -d $SSLDIR ]] ; then
-    echo "FATAL:  openssl directory '$SSLDIR' doesn't exist."
-    exit
-fi
-
-# and apr
-if [[ ! -d $APRPATH ]] ; then
-    echo "FATAL:  Apr and Apr-util directory '$APRPATH' doesn't exist."
-    exit
-fi
-
 ## APACHE HAS TO BE BUILT IN THE SOURCE DIR AT THE MOMENT
 ## make sure we're not in src dir
 #CWD=`pwd`
@@ -65,6 +66,8 @@ fi
 #     libtool libexpat1-dev libxml2-dev
 #     lua and friends (5.2 for now)
 #       liblua5.2-dev liblua5.2-0 lua5.2
+#
+#   The following are NOT needed if APR is installed from source:
 #     libaprutil1-dbd-pgsql
 #     libaprutil1-dbd-sqlite3
 #     libaprutil1-dbd-ldap

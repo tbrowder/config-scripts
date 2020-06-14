@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# use downloaded and installed
+#   openssl
+
+./configure
+
+# make
+# make install
+
+# NOW INSTALL APRUTIL
+
 if [ -z "$1" ] ; then
   echo "Usage: $0 go"
   echo
@@ -54,10 +64,3 @@ fi
 #    --with-sendfile         Override decision to use sendfile
 #    --with-egd[=DIR]        use EGD-compatible socket
 #    --with-devrandom[=DEV]  use /dev/random or compatible [searches by default]
-
-./configure
-
-# make
-# make install
-
-# NOW INSTALL APRUTIL
