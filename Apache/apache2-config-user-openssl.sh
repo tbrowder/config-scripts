@@ -137,7 +137,7 @@ export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
     --enable-layout=Apache                 \
     --with-ldap                            \
     --with-crypto                          \
-
+    --enable-systemd                       \
 
 # make depend [don't normally need this]
 
