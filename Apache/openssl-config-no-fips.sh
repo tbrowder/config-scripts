@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-KNOWN_VERS="1.1.1b"
+KNOWN_VERS="1.1.1g"
 if [ -z "$1" ] ; then
   echo "Usage: $0 <openssl version>"
   echo
@@ -76,7 +76,7 @@ echo "Now execute 'make && make test && sudo make install'"
 # make
 # make test
 # sudo make install
-# make clean
+# make distclean
 
 # create file
 #   /etc/ld.so.conf.d/openssl.conf

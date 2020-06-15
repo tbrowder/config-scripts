@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
+OPENSSLDIR=/opt/openssl-1.1.1g
+
 # must check for its existence:
 APRPATH=/usr/local/apr
+
+# debian packages:
+#   libgdbm-dev
 
 if [ -z "$1" ] ; then
   echo "Usage: $0 go"
@@ -75,16 +80,13 @@ fi
 #    --with-ndbm=PATH        Find the NDBM header and library in `PATH/include'
 ./configure          \
 --with-apr=$APRPATH  \
---with-openssl=OPENSSLDIR \
---with-crypto        \
---with-pgsql         \
---with-sqlite3       \
---with-berkeley-db   \
---with-gdbm          \
---with-ndbm
+--with-openssl=$OPENSSLDIR \
+--with-crypto        
 
 # make
-# make install
+# make test
+# sudo make install
+# make distclean
 
 # create file
 #   /etc/ld.so.conf.d/apr.conf

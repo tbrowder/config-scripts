@@ -1,27 +1,20 @@
 Procedures for installing Apache2
 =================================
 
+In this order:
+
 Install openssl from source and install in:
-
     /opt/openssl-x.y.z.a
-
     use the local script
 
 Install APR from source in:
-
     /usr/local   # default
-
     use the local script
 
 Install APR-UTIL from source in:
-
     /usr/local   # default
-
     use the local script
 
 Install apache2 from source and install in:
 
     use the local script
-
-
-

@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
+
 echo "this file ($0) needs work"; exit
+
+if [[ -z $1 ]] ; then
+    echo "Usage: $0 go
+    echo
+    echo "Downloads Apache2 and pre-reqs source and signature data"
+    echo
+    exit
+fi
 
 SITE="ftp://ftp.porcupine.org/mirrors/postfix-release"
 SRCDIR=$SITE/official
@@ -11,18 +20,18 @@ if [[ -z $1 ]] ; then
     echo
     echo "Downloads postfix source and signature data from site '$SITE'."
     echo
-    echo "The 'v' verifies only." 
+    echo "The 'v' verifies only."
     exit
 fi
 
 VER=$1
 VERIFY=$2
- 
+
 SNAME=postfix-$VER.tar.tgz
-GNAME=postfix-$VER.tar.gz.gpg2 
+GNAME=postfix-$VER.tar.gz.gpg2
 KNAME=wietse.pgp
 SRC="$SRCDIR/postfix-$VER.tar.gz"
-GPG="$SRCDIR/postfix-$VER.tar.gz.gpg2" 
+GPG="$SRCDIR/postfix-$VER.tar.gz.gpg2"
 
 if [[ -z $VERIFY ]] ; then
 
@@ -30,7 +39,7 @@ echo "Downloading src file '$SNAME'..."
 curl $SRC -o $SNAME
 
 echo "Downloading gpg file '$GNAME'..."
-curl $GPG -o $GNAME 
+curl $GPG -o $GNAME
 
 echo "Downloading Wietse's key file '$KNAME'..."
 curl $KEY -o $KNAME

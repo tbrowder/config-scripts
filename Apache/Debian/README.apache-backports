@@ -1,0 +1,12 @@
+For Debian Buster the backports provide Apache 2.43 which is suitable
+for my use.
+
+Debian instructions from:
+
+  https://backports.debian.org/Instructions/#index2h2
+
+Backports entry:
+
+  deb http://deb.debian.org/debian buster-backports main
+
+Install a package

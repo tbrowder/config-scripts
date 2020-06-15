@@ -10,16 +10,10 @@ USAGE="Usage: $0 <openssl version>"
 
 KNOWN_VERS="1.1.1g"
 APRPATH=/usr/local/apr
-SSLDIR=/opt/openssl-$VER
-# make sure openssl exists
-if [[ ! -d $SSLDIR ]] ; then
-    echo "FATAL:  openssl directory '$SSLDIR' doesn't exist."
-    exit
-fi
 
 # and apr
 if [[ ! -d $APRPATH ]] ; then
-    echo "FATAL:  Apr and Apr-util directory '$APRPATH' doesn't exist."
+    echo "FATAL:  Apr and Apr-util dir '$APRPATH' doesn't exist."
     exit
 fi
 
@@ -36,6 +30,13 @@ if [[ -z $1 ]] ; then
 fi
 
 VER=$1
+SSLDIR=/opt/openssl-$VER
+# make sure openssl exists
+if [[ ! -d $SSLDIR ]] ; then
+    echo "FATAL:  openssl directory '$SSLDIR' doesn't exist."
+    exit
+fi
+
 GOODVER=
 for ver in $KNOWN_VERS
 do
@@ -64,8 +65,8 @@ fi
 #   Deb packages:
 #     ntp ntp-doc ntpdate
 #     libtool libexpat1-dev libxml2-dev
-#     lua and friends (5.2 for now)
-#       liblua5.2-dev liblua5.2-0 lua5.2
+#     liblua5.2-dev liblua5.2-0 lua5.2
+#     libpcre2-dev
 #
 #   The following are NOT needed if APR is installed from source:
 #     libaprutil1-dbd-pgsql
@@ -74,47 +75,7 @@ fi
 #     libapr1-dev libapreq2-dev libaprutil1-dev lua-apr-dev
 #     libapache2-mod-apreq2 lksctp-tools
 #
-#   Source libraries:
-#
-#     From: http://www.openssl.org/
-#       OpenSSL                     <latest>
-#
-#     From: http://www.pcre.org/
-#       PCRE                        <latest>
-#       Note: as root run ldconfig after installation.
-#
-#       ./configure
-#        make
-#        make check
-#        sudo make install
-#
-#     From: https://apr.apache.org/
-#       APR      (see below also)  <latest>
-#       APR-Util (see below also)  <latest>
-#
-#       Make sure you have APR and APR-Util already installed on your
-#       system. If you don't, or prefer to not use the system-provided
-#       versions, download the latest versions of both APR and
-#       APR-Util from Apache APR, unpack them into
-#
-#         /httpd_source_tree_root/srclib/apr and
-#         /httpd_source_tree_root/srclib/apr-util
-#
-#       (be sure the directory names do not have version numbers; for
-#       example, the APR distribution must be under
-#       /httpd_source_tree_root/srclib/apr/) and use ./configure's
-#       --with-included-apr option. On some platforms, you may have to
-#       install the corresponding -dev packages to allow httpd to
-#       build against your installed copy of APR and APR-Util.
-#
-#      ../apache-config.sh <openssl version>
-#      make [-jN]
-#      sudo make install
-#
 # post installation:
-#
-#     From: http://code.google.com/p/modwsgi/ [need for Django]
-#       mod_wsgi                    mod_wsgi-3.4.tar.gz
 #
 #     In /etc/ntp.conf make sure you have the US time servers.
 #
@@ -151,19 +112,17 @@ fi
 
 #export LDFLAGS="-L/opt/openssl/lib"
 
-# BUGS:
-#   no pcre2 capability
-
 # we build all modules for now (all shared except mod_ssl)
 
 export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
 ./configure                                \
     --prefix=/usr/local/apache2            \
     --with-apr=$APRPATH                    \
+    --with-apr-util=$APRPATH               \
 \
     --enable-ssl                           \
-    --enable-ssl-staticlib-deps            \
     --enable-mods-static=ssl               \
+    --enable-ssl-staticlib-deps            \
     --with-ssl=${SSLDIR}                   \
     --with-openssl=${SSLDIR}               \
 \
@@ -176,11 +135,9 @@ export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
     --with-python                          \
     --with-lua=/usr                        \
     --enable-layout=Apache                 \
-    --with-pcre=/usr/local/bin/pcre-config \
     --with-ldap                            \
-    --enable-session-crypto                \
-    --enable-session \
-    --with-crypto
+    --with-crypto                          \
+
 
 # make depend [don't normally need this]
 

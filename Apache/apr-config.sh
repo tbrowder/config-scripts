@@ -19,7 +19,9 @@ fi
 echo "========================="
 echo " now run:"
 echo "   make"
+echo "   make test"
 echo "   sudo make install"
+echo "   make distclean"
 echo "========================="
 
 #  Optional Features:
