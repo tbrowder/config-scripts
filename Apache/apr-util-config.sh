@@ -6,7 +6,7 @@ APRPATH=/usr/local/apr
 if [ -z "$1" ] ; then
   echo "Usage: $0 go"
   echo
-  echo "  Configures Apr-util."
+  echo "  Configures Apache APR-UTIL for /usr/local."
   echo "  Expects Apr in '$APRPATH'."
   exit
 fi
@@ -75,6 +75,7 @@ fi
 #    --with-ndbm=PATH        Find the NDBM header and library in `PATH/include'
 ./configure          \
 --with-apr=$APRPATH  \
+--with-openssl=OPENSSLDIR \
 --with-crypto        \
 --with-pgsql         \
 --with-sqlite3       \

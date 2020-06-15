@@ -1,21 +1,26 @@
 #!/usr/bin/env bash
 
 # use downloaded and installed
-#   openssl
-
-./configure
-
-# make
-# make install
+#   openssl in /usr/local
 
 # NOW INSTALL APRUTIL
 
 if [ -z "$1" ] ; then
   echo "Usage: $0 go"
   echo
-  echo "  Configures Apr."
+  echo "Configures Apache APR for /usr/local."
+  echo 
+  echo "Note this MUST be installed before APR-UTIL."
   exit
 fi
+
+./configure
+ 
+echo "========================="
+echo " now run:"
+echo "   make"
+echo "   sudo make install"
+echo "========================="
 
 #  Optional Features:
 #    --disable-option-checking  ignore unrecognized --enable/--with options

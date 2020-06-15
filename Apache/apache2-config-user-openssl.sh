@@ -89,8 +89,8 @@ fi
 #        sudo make install
 #
 #     From: https://apr.apache.org/
-#       APR       (see below also)  <latest>
-#       APR-Utils (see below also)  <latest>
+#       APR      (see below also)  <latest>
+#       APR-Util (see below also)  <latest>
 #
 #       Make sure you have APR and APR-Util already installed on your
 #       system. If you don't, or prefer to not use the system-provided
