@@ -7,6 +7,7 @@ APRPATH=/usr/local/apr
 
 # debian packages:
 #   libgdbm-dev
+#   libxml2-dev
 
 if [ -z "$1" ] ; then
   echo "Usage: $0 go"
