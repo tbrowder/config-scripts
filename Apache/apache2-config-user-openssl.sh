@@ -68,6 +68,7 @@ fi
 #     liblua5.2-dev liblua5.2-0 lua5.2
 #     libpcre3-dev
 #     libsystemd-dev
+#     libwepsocketpp-dev
 #
 #   The following are NOT needed if APR is installed from source:
 #     libaprutil1-dbd-pgsql
