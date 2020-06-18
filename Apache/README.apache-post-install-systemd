@@ -1,0 +1,11 @@
+Assuming you have successfully installed Apache, more steps to do:
+
+We use the setup from Debian apache2 for the systemd service files.
+
+File layout (5 files):
+
+/etc/systemd/system/multi-user.target.wants/apache2.service
+/run/systemd/units/invocation:apache2.service
+/usr/lib/systemd/system/apache2.service
+/var/lib/systemd/deb-systemd-helper-enabled/apache2.service.dsh-also
+/var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/apache2.service

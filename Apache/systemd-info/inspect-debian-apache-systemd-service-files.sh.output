@@ -1,0 +1,33 @@
+Running ls -l on files:
+
+File 1 (links to File 3 below)
+==============================
+/etc/systemd/system/multi-user.target.wants/apache2.service
+  lrwxrwxrwx 1 root root 35 Jun 18 16:01
+  /etc/systemd/system/multi-user.target.wants/apache2.service
+  -> /lib/systemd/system/apache2.service
+
+File 2 (links to some hash)??
+=============================
+/run/systemd/units/invocation:apache2.service
+  lrwxrwxrwx 1 root root 32 Jun 18 16:01
+  /run/systemd/units/invocation:apache2.service
+  -> 5b87576fe6a04e079651d979d8a9c7f6
+
+File 3
+======
+/usr/lib/systemd/system/apache2.service
+  -rw-r--r-- 1 root root 395 Oct 13  2019
+  /usr/lib/systemd/system/apache2.service
+
+File 4
+======
+/var/lib/systemd/deb-systemd-helper-enabled/apache2.service.dsh-also
+  -rw-r--r-- 1 root root 60 Jun 18 16:01
+  /var/lib/systemd/deb-systemd-helper-enabled/apache2.service.dsh-also
+
+File 5
+======
+/var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/apache2.service
+  -rw-r--r-- 1 root root 0 Jun 18 16:01
+  /var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/apache2.service
