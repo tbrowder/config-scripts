@@ -1,20 +1,69 @@
 Procedures for installing Apache2
 =================================
 
-In this order:
+NOTE:
+
+The information in this directory applies specifically
+to installation from source on a Debian 10 Buster amd64
+host. Apache2 is not well-documented and, while these
+instructions work for me, your mileage may vary.
+
+Pre-installation preparation:
+----------------------------
+
+Ensure you have the necessary Debian packages:
+
+  as root execute bash script:
+    install-debian-buster-apache2-prereqs.sh
+
+Download and confirm the source packages (update links as required):
+
+  https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+  https://www.openssl.org/source/openssl-1.1.1g.tar.gz.sha256
+
+  https://downloads.apache.org//httpd/httpd-2.4.43.tar.gz
+  https://downloads.apache.org/httpd/httpd-2.4.43.tar.gz.sha256
+
+  https://downloads.apache.org//apr/apr-1.7.0.tar.gz
+  https://www.apache.org/dist/apr/apr-1.7.0.tar.gz.sha256
+
+  https://downloads.apache.org//apr/apr-util-1.6.1.tar.gz
+  https://www.apache.org/dist/apr/apr-util-1.6.1.tar.gz.sha256
+
+Unpack them into their own directory.
+
+Steps for compiling the four sources required:
+---------------------------------------------
+
+Compile and install in this order:
 
 Install openssl from source and install in:
     /opt/openssl-x.y.z.a
-    use the local script
 
-Install APR from source in:
-    /usr/local   # default
-    use the local script
+    cd into the source directory
+    use the local script:
+    $ ../openssl-config-no-fips.sh 1.1.1g
 
-Install APR-UTIL from source in:
+Install APR from source and install in:
     /usr/local   # default
-    use the local script
+
+    cd into the source directory
+    use the local script:
+    $ ../apr-config.sh go
+
+Install APR-UTIL from source and install in:
+    /usr/local   # default
+
+    cd into the source directory
+    use the local script:
+    $ ../apr-util-config.sh go
 
 Install apache2 from source and install in:
+    /usr/local/apache2 # default
 
-    use the local script
+    cd into the source directory
+    use the local script:
+    $ ../apache2-config-user-openssl.sh 1.1.1g
+
+Post installation:
+-----------------
