@@ -140,6 +140,8 @@ export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
     --with-ldap                            \
     --with-crypto                          \
     --enable-systemd                       \
+    --enable-md                            \
+    --enable-proxy                         \
 
 # make depend [don't normally need this]
 
