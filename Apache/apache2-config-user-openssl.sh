@@ -62,13 +62,23 @@ fi
 #
 # dependencies and requirements:
 #
-#   Deb packages:
+#   Debian packages:
 #     ntp ntp-doc ntpdate
 #     libtool libexpat1-dev libxml2-dev
 #     liblua5.2-dev liblua5.2-0 lua5.2
 #     libpcre3-dev
 #     libsystemd-dev
 #     libwepsocketpp-dev
+# libjannson-dev
+# libnghttp2-dev
+# libidn2-dev
+# librtmp-dev
+# libssh2-1-dev
+# libpsl-dev
+# krb5-multidev
+# comerr-dev
+# libldap2-dev
+
 #
 #   The following are NOT needed if APR is installed from source:
 #     libaprutil1-dbd-pgsql
@@ -142,6 +152,8 @@ export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
     --enable-systemd                       \
     --enable-md                            \
     --enable-proxy                         \
+    --enable-proxy-http2                   \
+    --enable-http2                         \
 
 # make depend [don't normally need this]
 
