@@ -2,8 +2,8 @@
 
 # the file collection that has been dowloaded:
 my @fils = <
-openssl-1.1.1g.tar.gz.sha256
 openssl-1.1.1g.tar.gz
+openssl-1.1.1g.tar.gz.sha256
 
 httpd-2.4.43.tar.gz
 httpd-2.4.43.tar.gz.sha256
@@ -23,6 +23,7 @@ if !@*ARGS {
     Checks sha256 hashes for Apache2 and pre-regs
 
     HERE
+    exit;
 }
 
 my $list  = 0;
@@ -65,5 +66,24 @@ while @fils.elems {
     if $fnam ne $hnam {
         note "FATAL: file and hash pair ('$file', '$hash') don't match";
         exit;
+    }
+    try {
+        shell "sha256sum --check $hash";
+        CATCH {
+            my $msg = .Str;
+            note "DEBUG: err is: $msg" if $debug;
+            when /openssl/ {
+                note "handling incorrect format of openssl sha256sum file...";
+                # rewrite the file and test it again
+                my $sha = slurp $hash;
+                $sha .= chomp;
+                my $sha256 = "$sha $file";
+                spurt $hash, $sha256;
+                shell "sha256sum --check $hash";
+                .resume;
+            } 
+            note "Skipping...";
+            .resume;
+        }
     }
 }
