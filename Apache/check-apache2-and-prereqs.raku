@@ -73,11 +73,13 @@ while @fils.elems {
             my $msg = .Str;
             note "DEBUG: err is: $msg" if $debug;
             when /openssl/ {
-                note "handling incorrect format of openssl sha256sum file...";
+                note "Correcting incorrect format of openssl sha256sum file...";
                 # rewrite the file and test it again
                 my $sha = slurp $hash;
-                $sha .= chomp;
+                $sha .= trim;
+                note "  Original:  $sha";
                 my $sha256 = "$sha $file";
+                note "  Corrected: $sha256";
                 spurt $hash, $sha256;
                 shell "sha256sum --check $hash";
                 .resume;
