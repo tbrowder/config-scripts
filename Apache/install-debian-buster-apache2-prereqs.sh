@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ -z $1 ]] ; then
-    echo "Usage: $0 go
+    echo "Usage: $0 go"
     echo
     echo "Run as root to install Apache2 prereq packages for Debian 10 Buster amd64"
     echo
@@ -22,8 +22,8 @@ aptitude install \
   lua5.2 \
   libpcre3-dev \
   libsystemd-dev \
-  libwepsocketpp-dev \
-  libjannson-dev \
+  libwebsocketpp-dev \
+  libjansson-dev \
   libnghttp2-dev \
   libidn2-dev \
   librtmp-dev \
@@ -32,3 +32,6 @@ aptitude install \
   krb5-multidev \
   comerr-dev \
   libldap2-dev \
+
+# end of command list
+
