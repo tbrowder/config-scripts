@@ -32,6 +32,7 @@ aptitude install \
   krb5-multidev \
   comerr-dev \
   libldap2-dev \
+  libcurl4-openssl-dev \
 
 # end of command list
 
