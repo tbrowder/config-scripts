@@ -33,9 +33,9 @@ aptitude install \
   comerr-dev \
   libldap2-dev \
   libcurl4-openssl-dev \
-  nftables \
   fail2ban \
   apt-file \
+  firewalld \
 
 # end of command list
 
