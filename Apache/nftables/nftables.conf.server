@@ -10,8 +10,6 @@
 # '''Note:''' Initially, this conf allows all inbound traffic until you
 # comment/uncomment the "From approved IP ranges only" section.
 
-nft flush ruleset
-
 # List all IPs and IP ranges of your traffic filtering proxy source.
 define SAFE_TRAFFIC_IPS = {
     x.x.x.x/xx,
