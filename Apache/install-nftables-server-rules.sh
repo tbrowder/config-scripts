@@ -1,11 +1,12 @@
 #!/bin/bash
 
 if [[ -z $1 ]] ; then
-    echo "Usage: $0 go"
+    echo "Usage: $0  s  |  w         # <== choose server or workstation"
     echo
-    echo "Run as root to install nftables rules for servers running Debian 10 Buster"
+    echo "Run as root to install nftables rules for servers or workstations"
+    echo "  running Debian 10 Buster"
     echo
-    echo "See 'README.nftabels' for more information."
+    echo "See 'README.nftables' for more information."
     echo
     exit
 fi
@@ -19,47 +20,28 @@ aptitude install \
 
 # end of aptitude install command list
 
-cp /usr/share/doc/nftables/examples/syntax/workstation /etc/nftables.conf
+if [[ $1 = 's' ]] ; then
+    echo "Copying './nftables/nftables.conf.server' to '/etc/nftables.conf'"
+    cp ./nftables/nftables.conf.server         /etc/nftables.conf
+elif [[ $1 = 'w' ]] ; then
+    echo "Copying './nftables/nftables.conf.workstation' to '/etc/nftables.conf'"
+    cp ./nftables/nftables.conf.workstation   /etc/nftables.conf
+else
+    echo "FATAL: Unknown arg '$1'...aborting."
+    exit
+fi
+
 nft -f /etc/nftables.conf
-systenctl enable nftables
+systemctl enable nftables
+systemctl start nftables
 
 # some useful commands:
 #
-#   nft list ruleset
+#   sudo nft list ruleset
 
 #========================================================================
 # Instructions from:
 #   https://ral-arturo.org/2017/05/05/debian-stretch-stable-nftables.html
-
-Once installed, you can start using the nft command:
-
-  # nft list ruleset
-
-A good starting point is to copy a simple workstation firewall configuration:
-
-  # cp /usr/share/doc/nftables/examples/syntax/workstation /etc/nftables.conf
-
-And load it:
-
-  # nft -f /etc/nftables.conf
-
-Your nftables ruleset is now firewalling your network:
-
-  # nft list ruleset
-  table inet filter {
-          chain input {
-                  type filter hook input priority 0;
-                  iif lo accept
-                  ct state established,related accept
-                  ip6 nexthdr icmpv6 icmpv6 type { nd-neighbor-solicit,  nd-router-advert, nd-neighbor-advert } accept
-                  counter drop
-          }
-  }
-
-
-Several examples can be found at /usr/share/doc/nftables/examples/.
-
-A simple systemd service is included to load your ruleset at boot
-time, which is disabled by default
-
-  # systenctl enable nftables
+# Rule sets from:
+#   https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_server
+#   https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_workstation

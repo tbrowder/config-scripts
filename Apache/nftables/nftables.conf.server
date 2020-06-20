@@ -1,0 +1,85 @@
+# original source:
+#   https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_server
+
+# Here's a very basic example of the nftables.conf file you might use on
+# a web server.  In this example, we have the option to block off all
+# incoming traffic from the server except from "safe" IP ranges. This is
+# handy if your server is behind CloudFlare, Sucuri, or other similar
+# traffic filtering services.
+#
+# '''Note:''' Initially, this conf allows all inbound traffic until you
+# comment/uncomment the "From approved IP ranges only" section.
+
+nft flush ruleset
+
+# List all IPs and IP ranges of your traffic filtering proxy source.
+define SAFE_TRAFFIC_IPS = {
+    x.x.x.x/xx,
+    x.x.x.x/xx,
+    x.x.x.x,
+    x.x.x.x
+}
+
+table inet firewall {
+
+    chain inbound {
+
+    	# By default, drop all traffic unless it meets a filter
+    	# criteria specified by the rules that follow below.
+        type filter hook input priority 0; policy drop;
+
+        # Allow traffic from established and related packets.
+        ct state established,related accept
+
+        # Drop invalid packets.
+        ct state invalid drop
+
+        # Allow loopback traffic.
+        iifname lo accept
+
+        # Allow all ICMP and IGMP traffic, but enforce a rate limit
+        # to help prevent some types of flood attacks.
+        ip protocol icmp limit rate 4/second accept
+        ip6 nexthdr ipv6-icmp limit rate 4/second accept
+        ip protocol igmp limit rate 4/second accept
+
+        # Allow SSH on port 22.
+        tcp dport 22 accept
+
+        # Allow HTTP(S).
+        # -- From anywhere
+        tcp dport { http, https } accept
+        udp dport { http, https } accept
+        # -- From approved IP ranges only
+        # tcp dport { http, https } ip saddr $SAFE_TRAFFIC_IPS accept
+        # udp dport { http, https } ip saddr $SAFE_TRAFFIC_IPS accept
+
+        # Uncomment to allow incoming traffic on other ports.
+        # -- Allow Jekyll dev traffic on port 4000.
+        # tcp dport 4000 accept
+        # -- Allow Hugo dev traffic on port 1313.
+        # tcp dport 1313 accept
+
+        # Uncomment to enable logging of denied inbound traffic
+        # log prefix "[nftables] Inbound Denied: " flags all counter drop
+
+    }
+
+    chain forward {
+
+        # Drop everything (assumes this device is not a router)
+        type filter hook forward priority 0; policy drop;
+
+        # Uncomment to enable logging of denied forwards
+        # log prefix "[nftables] Forward Denied: " flags all counter drop
+
+    }
+
+    chain outbound {
+
+        # Allow all outbound traffic
+        type filter hook output priority 0; policy accept;
+
+    }
+
+}

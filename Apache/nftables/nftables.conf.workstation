@@ -1,0 +1,57 @@
+# original source:
+#   https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_workstation
+table ip filter {
+     chain input {
+          type filter hook input priority 0;
+
+          # accept traffic originated from us
+          ct state established,related accept
+
+          # accept any localhost traffic
+          iif lo accept
+
+          # count and drop any other traffic
+          counter drop
+     }
+}
+
+table ip6 filter {
+        chain input {
+                 type filter hook input priority 0;
+
+                 # accept any localhost traffic
+                 iif lo accept
+
+                 # accept traffic originated from us
+                 ct state established,related accept
+
+                 # accept neighbour discovery otherwise connectivity
+                 # breaks
+                 icmpv6 type { nd-neighbor-solicit, echo-request, nd-router-advert, nd-neighbor-advert } accept
+
+                 # count and drop any other traffic
+                 counter drop
+        }
+}
+
+# The inet table is available from Linux kernel 3.14 and allow to use a
+# dual-stack IPv4/IPv6 table. There is mostly a single change compared
+# to previous ruleset which is the ''inet'' keyword.
+
+table inet filter {
+        chain input {
+                 type filter hook input priority 0;
+
+                 # accept any localhost traffic
+                 iif lo accept
+
+                 # accept traffic originated from us
+                 ct state established,related accept
+
+                 # accept neighbour discovery otherwise connectivity breaks
+                 ip6 nexthdr icmpv6 icmpv6 type { nd-neighbor-solicit, echo-request, nd-router-advert, nd-neighbor-advert } accept
+
+                 # count and drop any other traffic
+                 counter drop
+        }
+}
