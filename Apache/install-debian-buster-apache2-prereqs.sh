@@ -35,7 +35,7 @@ aptitude install \
   libcurl4-openssl-dev \
   fail2ban \
   apt-file \
-  firewalld \
+  libsqlite3-dev
 
 # end of command list
 

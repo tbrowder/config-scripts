@@ -79,10 +79,12 @@ fi
 #    --with-berkeley-db=PATH Find the Berkeley DB header and library in
 #    --with-gdbm=DIR         enable GDBM support
 #    --with-ndbm=PATH        Find the NDBM header and library in `PATH/include'
-./configure          \
---with-apr=$APRPATH  \
+./configure                \
+--with-apr=$APRPATH        \
 --with-openssl=$OPENSSLDIR \
---with-crypto        
+--with-pgsql=/usr/lib/postgresql/12/lib \
+--with-sqlite3=/usr/lib/x86_64-linux-gnu \
+--with-crypto                     
 
 # make
 # make test
