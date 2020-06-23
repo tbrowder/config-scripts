@@ -1,6 +1,5 @@
 #!/usr/bin/env raku
 
-
 use File::Find;
 
 # dir to search h*3/docs/manual/mod -name "mod_*html.en"
@@ -12,7 +11,7 @@ my $dir    = "$srcdir/docs/manual/mod";
 my $ofil   = "modules.$ver.list";
 if !@*ARGS {
     say qq:to/HERE/;
-    Usage: {$*PROGRAM.basename} go | 'x.y.z'
+    Usage: {$*PROGRAM.basename} go | 'x.y.z' [debug]
 
     The default action is to extract module file info from Apache2 source dir '$dir'
         and write into file '$ofil'.

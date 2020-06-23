@@ -1,0 +1,19 @@
+
+Open ports for smtp, http, and https (25, 80 443):
+=================================================
+
+For Debian Buster when installing from source:
+
+  $ sudo iptables -A IN_public_allow -p tcp -m tcp --dport  80 -m conntrack --ctstate NEW,UNTRACKED -j ACCEPT
+  $ sudo iptables -A IN_public_allow -p tcp -m tcp --dport 443 -m conntrack --ctstate NEW,UNTRACKED -j ACCEPT
+
+Similarly for smtp port 25 if need be:
+
+  $ sudo iptables -A IN_public_allow -p tcp -m tcp --dport  25 -m conntrack --ctstate NEW,UNTRACKED -j ACCEPT
+
+Use ss to check:
+===============
+
+ss --listening --info
+
+ss --all --info --ipv4 --tcp
