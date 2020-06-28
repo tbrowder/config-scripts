@@ -35,7 +35,8 @@ aptitude install \
   libcurl4-openssl-dev \
   fail2ban \
   apt-file \
-  libsqlite3-dev
+  libsqlite3-dev \
+  libgdbm-compat-dev \
+  libgdbm-dev
 
 # end of command list
-
