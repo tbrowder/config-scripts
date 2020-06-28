@@ -37,6 +37,7 @@ aptitude install \
   apt-file \
   libsqlite3-dev \
   libgdbm-compat-dev \
-  libgdbm-dev
+  libgdbm-dev \
+  pwgen
 
 # end of command list
