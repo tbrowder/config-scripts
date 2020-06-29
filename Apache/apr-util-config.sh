@@ -84,8 +84,8 @@ fi
 ./configure                \
 --with-apr=$APRPATH        \
 --with-openssl=$OPENSSLDIR \
---with-pgsql=/usr/lib/postgresql/12 \
---with-sqlite3=/usr/lib/x86_64-linux-gnu \
+--with-pgsql \
+--with-sqlite3 \
 --with-dbm=db \
 --with-berkeley-db \
 --with-crypto                     
@@ -93,8 +93,6 @@ fi
 # make
 # make test
 # sudo make install
-# make distclean
-
 # create file
 #   /etc/ld.so.conf.d/apr.conf
 # containing the line:
