@@ -39,6 +39,7 @@ aptitude install \
   libgdbm-compat-dev \
   libgdbm-dev \
   libdb5.3-dev \
+  postgresql-server-dev-all \
   pwgen
 
 # end of command list
