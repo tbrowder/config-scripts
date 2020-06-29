@@ -8,6 +8,8 @@ APRPATH=/usr/local/apr
 # debian packages:
 #   libgdbm-dev
 #   libxml2-dev
+#   libdb5.3-dev # for db_185.h Berkeley db
+
 
 if [ -z "$1" ] ; then
   echo "Usage: $0 go"
@@ -84,6 +86,8 @@ fi
 --with-openssl=$OPENSSLDIR \
 --with-pgsql=/usr/lib/postgresql/12/lib \
 --with-sqlite3=/usr/lib/x86_64-linux-gnu \
+--with-dbm=db \
+--with-berkeley-db \
 --with-crypto                     
 
 # make
