@@ -84,7 +84,7 @@ fi
 ./configure                \
 --with-apr=$APRPATH        \
 --with-openssl=$OPENSSLDIR \
---with-pgsql=/usr/lib/postgresql/12/lib \
+--with-pgsql=/usr/lib/postgresql/12 \
 --with-sqlite3=/usr/lib/x86_64-linux-gnu \
 --with-dbm=db \
 --with-berkeley-db \
