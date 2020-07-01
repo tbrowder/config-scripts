@@ -11,6 +11,9 @@ fi
 aptitude update
 
 aptitude install \
-  postgis
+  postgis \
+  postgresql-contrib \
+  osm2pgsql
+
 
 # end of command list
