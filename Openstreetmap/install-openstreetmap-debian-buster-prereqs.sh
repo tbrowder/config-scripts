@@ -10,10 +10,11 @@ fi
 
 aptitude update
 
+#  osm2pgsql \ # need v1.2.0+ # compiles from src fine
 aptitude install \
   postgis \
   postgresql-contrib \
-  osm2pgsql
+  libmapnik-dev
 
 
 # end of command list
