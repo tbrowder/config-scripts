@@ -14,7 +14,11 @@ aptitude update
 aptitude install \
   postgis \
   postgresql-contrib \
-  libmapnik-dev
-
+  libmapnik-dev \
+  build-essential
+  curl \
+  unzip \
+  gdal-bin \
+  mapnik-utils
 
 # end of command list

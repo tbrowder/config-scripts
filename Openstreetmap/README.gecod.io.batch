@@ -1,0 +1,12 @@
+One should normally use batch requests for geocoding
+
+Example:
+
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '["1109 N Highland St, Arlington VA", \
+       "525 University Ave, Toronto, ON, Canada", \
+       "4410 S Highway 17 92, Casselberry FL", \
+       "15000 NE 24th Street, Redmond WA", \
+       "17015 Walnut Grove Drive, Morgan Hill CA"]' \
+  https://api.geocod.io/v1.6/geocode?api_key=YOUR_API_KEY
