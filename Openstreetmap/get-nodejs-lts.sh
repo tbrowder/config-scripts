@@ -10,7 +10,7 @@ if [[ -z $1 ]] ; then
     exit
 fi
 
-curl -sL https://deb.nodesource.com/setup_lts.x | bash -
 #curl -o setup_lts.x -sL https://deb.nodesource.com/setup_lts.x 
-
 #apt-get install nodejs
+curl -sL https://deb.nodesource.com/setup_lts.x | bash -
+
