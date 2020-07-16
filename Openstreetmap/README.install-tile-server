@@ -217,8 +217,20 @@ Install required packages.
 
 [for Debian]
 
-  install nodejs (see bash helper script)
+  install nodejs and npm
 
+  Following instructions from:
+     https://github.com/nodesource/distributions/blob/master/README.md#debinstall
+
+    # Using Debian, as root
+    curl -sL https://deb.nodesource.com/setup_14.x | bash -
+    apt-get install -y nodejs
+
+  install carto
+
+    # npm install -g carto
+
+COMPLETED ABOVE AS OF 2020-07-16
 
 Switch to the osm user.
 
