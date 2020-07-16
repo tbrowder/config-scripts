@@ -234,7 +234,7 @@ COMPLETED ABOVE AS OF 2020-07-16
 
 Switch to the osm user.
 
-  su - osm
+  sudo -u osm -i
 
 Cd into the carto style directory.
 
