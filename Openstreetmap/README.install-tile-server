@@ -1,10 +1,18 @@
-Article source:
-  https://www.linuxbabe.com/linux-server/openstreetmap-tile-server-ubuntu-16-04#comments
-=========================================================
+Article sources:
+---------------
 
-=======================================================================
-NOTE: Typos and grammar corrections. Modified to work on Debian Buster.
-=======================================================================
+The inspiration and initial text came from this:
+
+  https://www.linuxbabe.com/linux-server/openstreetmap-tile-server-ubuntu-16-04#comments
+
+It was modified for typos and grammar corrections and modified to work
+on Debian Buster. Later modifications and updates were made from the
+text here:
+
+  https://github.com/gravitystorm/openstreetmap-carto/blob/master/INSTALL.md
+
+
+=========================================================
 
 Recent stats:
 
@@ -87,11 +95,7 @@ First switch to the osm user
 Download the latest CartoCSS map stylesheets to the osm user’s home
 directory.
 
-  wget https://github.com/gravitystorm/openstreetmap-carto/archive/v5.2.0.tar.gz
-
-Extract it.
-
-  tar -xvzf v5.2.0.tar.gz
+  git clone https://github.com/gravitystorm/openstreetmap-carto.git
 
 Next, download map data to the osm user's home directory. Use the
 below command to download the map data of the whole planet (32G).
@@ -166,7 +170,7 @@ the gis Database. Replace great-britain-latest.osm.pbf with your own
 map data file.
 
   osm2pgsql --slim -d gis -C 3600 --hstore \
-     -S openstreetmap-carto-5.2.0/openstreetmap-carto.style \
+     -S openstreetmap-carto/openstreetmap-carto.style \
      planet-latest.osm.pbf
 
 osm2gpsql will run in slim mode which is recommended over the normal
@@ -238,15 +242,15 @@ Switch to the osm user.
 
 Cd into the carto style directory.
 
-  cd openstreetmap-carto-5.2.0/
+  cd openstreetmap-carto/
 
 Get shapefiles.
 
-  ./script/get*??
+  ./scripts/get-external-data.py
 
 Now build the Mapnik xml stylesheet.
 
-  carto project.mml > style.xml
+  carto project.mml > mapnik.xml
 
 Exit from the osm user.
 
