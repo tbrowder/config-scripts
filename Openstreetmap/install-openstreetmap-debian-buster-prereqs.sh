@@ -19,6 +19,15 @@ aptitude install \
   curl \
   unzip \
   gdal-bin \
-  mapnik-utils
+  mapnik-utils \
+  python3-yaml \
+  python3-psycop2 \
+  python3-requests \
+  gdal-bin
+  fonts-noto-cjk \
+  fonts-noto-hinted \
+  fonts-noto-unhinted \
+  fonts-hanazono \
+  ttf-unifont
 
-# end of command list
+  # end of command list
