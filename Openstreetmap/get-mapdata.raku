@@ -41,7 +41,7 @@ for @*ARGS {
     when /^ :i ce/ { $key = 'central-america' }
     when /^ :i eu/ { $key = 'europe' }
     when /^ :i no/ { $key = 'north-america' }
-    when /^ :i sa/ { $key = 'south-america' }
+    when /^ :i so/ { $key = 'south-america' }
     default {
         note "FATAL: Unknown arg '$_'";
         exit;
