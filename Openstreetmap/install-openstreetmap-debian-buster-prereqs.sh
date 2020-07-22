@@ -28,6 +28,8 @@ aptitude install \
   fonts-noto-hinted \
   fonts-noto-unhinted \
   fonts-hanazono \
-  ttf-unifont
+  ttf-unifont \
+  mapnik-vector-tile \
+  python3-mapnik
 
   # end of command list
