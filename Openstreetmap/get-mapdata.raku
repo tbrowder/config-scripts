@@ -21,7 +21,7 @@ if !@*ARGS {
                       and importing
 
     For example, create scripts for North American data:
-      
+
       \$ {$*PROGRAM.basename} sc no
 
     HERE
@@ -143,32 +143,26 @@ sub build-import-script($basename) {
     HERE
 
     # set run params
-    my $cache-size = 3600; # Mb
-    my $style-file = 'openstreetmap-carto-2.41.0/openstreetmap-carto.style';
+    my $cache-size  = 16000; # Mb
+    my $num-threads =    16; #
+    my $tag-script  = 'openstreetmap-carto/openstreetmap-carto.lua';
+    my $style-file  = 'openstreetmap-carto/openstreetmap-carto.style';
+
+    # see this format at:
+    #   https://switch2osm.org/serving-tiles/manually-building-a-tile-server-20-04-lts/
+
     $fh.say: qq:to/HERE/;
-    osm2pgsql --slim -d gis -C $cache-size  --hstore \\
-        -S $style-file \\
-        $fnam
+    osm2pgsql -d gis --create --slim  -G --hstore \\
+      --tag-transform-script  $tag-script \\
+      -C $cache-size \\
+      --number-processes $num-threads \\
+      -S $style-file
+      $fnam
     HERE
-
-=begin comment
-  osm2pgsql --slim -d gis -C 3600 --hstore \
-     -S openstreetmap-carto-2.41.0/openstreetmap-carto.style \
-     planet-latest.osm.pbf
-
-osm2gpsql will run in slim mode which is recommended over the normal
-mode. The '-d' is short for '--database'. The '-C' flag specifys the
-cache size in MB. Bigger cache size results in faster import speed but
-you need to have enough RAM to use cache. The '-S' flag specifies the
-style file. And, finally, you need to specify the map data file.
-=end comment
 
     $fh.close;
     shell "chmod +x $snam";
     say "See output file: $snam";
-}
-
-sub build-get-script() {
 }
 
 sub get-basename($s) {
