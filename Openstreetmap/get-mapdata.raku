@@ -156,7 +156,7 @@ sub build-import-script($basename) {
       --tag-transform-script  $tag-script \\
       -C $cache-size \\
       --number-processes $num-threads \\
-      -S $style-file
+      -S $style-file \\
       $fnam
     HERE
 
