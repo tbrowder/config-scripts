@@ -166,18 +166,66 @@ Switch to osm user again.
   sudo -u osm -i
 
 Run the following command to load the map stylesheet and map data into
-the gis Database. Replace great-britain-latest.osm.pbf with your own
+the gis Database. Replace X-latest.osm.pbf with your own
 map data file.
 
-  osm2pgsql --slim -d gis -C 3600 --hstore \
-     -S openstreetmap-carto/openstreetmap-carto.style \
-     planet-latest.osm.pbf
+#==================================================================================
+[note the following is current and modified for paths from:
+  https://switch2osm.org/serving-tiles/manually-building-a-tile-server-20-04-lts/]
 
-osm2gpsql will run in slim mode which is recommended over the normal
-mode. The '-d' is short for '--database'. The '-C' flag specifys the
-cache size in MB. Bigger cache size results in faster import speed but
-you need to have enough RAM to use cache. The '-S' flag specifies the
-style file. And, finally, you need to specify the map data file.
+    osm2pgsql -d gis --create --slim  -G --hstore \
+      --tag-transform-script openstreetmap-carto/openstreetmap-carto.lua \
+        -C 16000 --number-processes 16 \
+        -S openstreetmap-carto/openstreetmap-carto.style \
+           X-latest.osm.pbf
+
+It’s worth explaining a little bit about what those options mean:
+
+-d gis
+     The database to work with (“gis” used to be the default; now it
+     must be specified).
+
+--create
+     Load data into an empty database rather than trying to append to
+     an existing one.
+
+--slim
+     osm2pgsql can use different table layouts; “slim” tables works
+     for rendering.
+
+-G
+     Determines how multipolygons are processed.
+
+--hstore
+     Allows tags for which there are no explicit database columns to
+     be used for rendering.
+
+--tag-transform-script
+     Defines the lua script used for tag processing. This an easy is a
+     way to process OSM tags before the style itself processes them,
+     making the style logic potentially much simpler.
+
+-C 2500
+     Allocate 16.0 Gb of memory to osm2pgsql to the import process. If
+     you have less memory you could try a smaller number, and if the
+     import process is killed because it runs out of memory you’ll
+     need to try a smaller number or a smaller OSM extract.
+
+--number-processes N
+
+     Use N CPU. If you have more cores available you can use more.
+
+     Create the database columns in this file (actually these are
+     unchanged from “openstreetmap-carto”)
+
+-S
+     Create the database columns in this file (actually these are
+     unchanged from “openstreetmap-carto”)
+
+The final argument is the data file to load. That command will
+complete with something like “Osm2pgsql took 238s
+
+#==================================================================================
 
 Once the import is complete, exit from the osm user.
 
