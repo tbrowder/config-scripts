@@ -8,7 +8,6 @@
 # Place a copy of this file into:
 #   /etc/systemd/system/
 #
-
 # After creating or modifying any unit files, we must tell systemd
 # that we want it to look for new things:
 #
@@ -44,9 +43,9 @@ After=network.target remote-fs.target nss-lookup.target
 [Service]
 Type=forking
 Environment=APACHE_STARTED_BY_SYSTEMD=true
-ExecStart=/usr/local/apache2/bin/apachectl start
-ExecStop=/usr/local/apache2/bin/apachectl stop
-ExecReload=/usr/local/apache2/bin/apachectl graceful
+ExecStart=/usr/local/apache2/bin/apachectl -k start
+ExecStop=/usr/local/apache2/bin/apachectl -k stop
+ExecReload=/usr/local/apache2/bin/apachectl -k graceful
 PrivateTmp=true
 Restart=on-abort
 
