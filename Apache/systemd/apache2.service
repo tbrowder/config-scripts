@@ -1,3 +1,42 @@
+# Debian installation instructions:
+#
+# See systemd documentation in:
+#
+#   man systemd.unit
+#   man systemd.service
+#
+# Place a copy of this file into:
+#   /etc/systemd/system/
+#
+
+# After creating or modifying any unit files, we must tell systemd
+# that we want it to look for new things:
+#
+#   # systemctl daemon-reload
+#
+# Our new service should be recognized at this point, but it won't run
+# yet. We need to do two more things. First, tell systemd to enable
+# it, so that it will start every time we boot:
+#
+#   # systemctl enable apache2.service
+#
+# Second, start it now:
+#
+#   # systemctl start apache2.service
+#
+# Note that you don't get feedback from this command, because all it
+# does it send a message to systemd telling it to start your
+# service. The command you typed doesn't hang around to see what
+# happens next. You may use systemctl status myservice.service (or
+# systemctl status myservice) to check on your service, to make sure
+# it seems OK.
+#
+#   # systemctl status apache2.service
+#   # systemctl status apache2
+#
+# Also note that systemctl status myservice gives more information if
+# you run it as root, compared to running it as a normal user.
+
 [Unit]
 Description=The Apache HTTP Server
 After=network.target remote-fs.target nss-lookup.target
