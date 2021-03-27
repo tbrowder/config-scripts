@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-KNOWN_VERS="1.1.1g"
+KNOWN_VERS="1.1.1k"
 if [ -z "$1" ] ; then
   echo "Usage: $0 <openssl version>"
   echo

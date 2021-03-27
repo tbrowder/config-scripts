@@ -1,12 +1,12 @@
 #!/usr/bin/env raku
 
-# the file collection that has been dowloaded:
+# the file collection that has been downloaded:
 my @fils = <
-openssl-1.1.1g.tar.gz
-openssl-1.1.1g.tar.gz.sha256
+openssl-1.1.1k.tar.gz
+openssl-1.1.1k.tar.gz.sha256
 
-httpd-2.4.43.tar.gz
-httpd-2.4.43.tar.gz.sha256
+httpd-2.4.46.tar.gz
+httpd-2.4.46.tar.gz.sha256
 
 apr-1.7.0.tar.gz
 apr-1.7.0.tar.gz.sha256

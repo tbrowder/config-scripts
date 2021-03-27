@@ -18,11 +18,11 @@ Ensure you have the necessary Debian packages:
 
 Download and confirm the source packages (update links as required):
 
-  https://www.openssl.org/source/openssl-1.1.1g.tar.gz
-  https://www.openssl.org/source/openssl-1.1.1g.tar.gz.sha256
+  https://www.openssl.org/source/openssl-1.1.1k.tar.gz
+  https://www.openssl.org/source/openssl-1.1.1k.tar.gz.sha256
 
-  https://downloads.apache.org//httpd/httpd-2.4.43.tar.gz
-  https://downloads.apache.org/httpd/httpd-2.4.43.tar.gz.sha256
+  https://downloads.apache.org//httpd/httpd-2.4.46.tar.gz
+  https://downloads.apache.org/httpd/httpd-2.4.46.tar.gz.sha256
 
   https://downloads.apache.org//apr/apr-1.7.0.tar.gz
   https://www.apache.org/dist/apr/apr-1.7.0.tar.gz.sha256
@@ -38,11 +38,11 @@ Steps for compiling the four sources required:
 Compile and install in this order:
 
 Install openssl from source and install in:
-    /opt/openssl-x.y.z.a
+    /opt/openssl-x.y.za
 
     cd into the source directory
     use the local script:
-    $ ../openssl-config-no-fips.sh 1.1.1g
+    $ ../openssl-config-no-fips.sh x.y.zk
 
 Install APR from source and install in:
     /usr/local   # default
@@ -63,7 +63,7 @@ Install apache2 from source and install in:
 
     cd into the source directory
     use the local script:
-    $ ../apache2-config-user-openssl.sh 1.1.1g
+    $ ../apache2-config-user-openssl.sh x.y.za
 
 Post installation:
 -----------------

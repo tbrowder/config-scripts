@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+KNOWN_VERS="1.1.1k"
+
 # NOTE: THIS CONFIGURATION IS FOR A USER-INSTALLED OPENSSL,
 #       AND IT USES THE LATEST INSTALLED APR AND APR-UTILS.
 
@@ -8,7 +10,6 @@
 
 USAGE="Usage: $0 <openssl version>"
 
-KNOWN_VERS="1.1.1g"
 APRPATH=/usr/local/apr
 
 # and apr
@@ -25,7 +26,14 @@ if [[ -z $1 ]] ; then
   echo "    from known versions: '$KNOWN_VERS'"
   echo "    and the latest Apr and Apr-util"
   echo "    located in '$APRPATH'."
-  echo
+  echo 
+  echo "  After configuring run:"
+  echo "    make"
+  echo "    sudo make install"
+  echo 
+  echo "  Some apache commands to be run as root:"
+  echo "    apachectl -k graceful-stop"
+  echo "    apachectl -k start"
   exit
 fi
 

@@ -26,7 +26,7 @@ if !@*ARGS {
     say qq:to/HERE/;
     Usage: {$*program.basename} go
 
-    Downloads sources for Apache2 and pre-regs from:
+    Downloads sources for Apache2 and pre-reqs from:
 
     HERE
 }
