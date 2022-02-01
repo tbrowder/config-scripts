@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-KNOWN_VERS="1.1.1k"
+KNOWN_OPENSSL_VERS="
+1.1.1k
+1.1.1m
+3.0.1
+"
 
 # NOTE: THIS CONFIGURATION IS FOR A USER-INSTALLED OPENSSL,
 #       AND IT USES THE LATEST INSTALLED APR AND APR-UTILS.
@@ -23,14 +27,14 @@ if [[ -z $1 ]] ; then
   echo $USAGE
   echo "  Uses SSL/TLS without FIPS."
   echo "  Builds httpd with openssl"
-  echo "    from known versions: '$KNOWN_VERS'"
+  echo "    from known versions: '$KNOWN_OPENSSL_VERS'"
   echo "    and the latest Apr and Apr-util"
   echo "    located in '$APRPATH'."
-  echo 
+  echo
   echo "  After configuring run:"
   echo "    make"
   echo "    sudo make install"
-  echo 
+  echo
   echo "  Some apache commands to be run as root:"
   echo "    apachectl -k graceful-stop"
   echo "    apachectl -k start"
@@ -46,7 +50,7 @@ if [[ ! -d $SSLDIR ]] ; then
 fi
 
 GOODVER=
-for ver in $KNOWN_VERS
+for ver in $KNOWN_OPENSSL_VERS
 do
     if [[ $1 = $ver ]] ; then
         GOODVER=$ver

@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-KNOWN_VERS="1.1.1k"
+KNOWN_VERS="
+1.1.1g
+1.1.1k
+1.1.1m
+3.0.1
+"
 if [ -z "$1" ] ; then
   echo "Usage: $0 <openssl version>"
   echo
@@ -26,6 +31,7 @@ do
 done
 if [[ -z $GOODVER ]] ; then
     echo "FATAL:  Openssl version $VER is not known."
+    echo "        Modify this script as necessary."
     exit
 fi
 
