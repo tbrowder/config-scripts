@@ -38,8 +38,15 @@ Steps for compiling the four sources required:
 
 Compile and install in this order:
 
+Stop the currently running httpd:
+    sudo apachectl graceful-stop
+
 Install openssl from source and install in:
     /opt/openssl-x.y.za
+
+    NOTE: For some reason, httpd-2.4.52 configures to use any openssl lib
+          in the /opt directory. Thus, until I can find out why and get
+          help, as root, move away any installed openssl dirs.
 
     cd into the source directory
     use the local script:
