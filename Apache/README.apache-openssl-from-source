@@ -3,10 +3,10 @@ Procedures for installing Apache2
 
 NOTE:
 
-The information in this directory applies specifically
-to installation from source on a Debian 10 Buster amd64
-host. Apache2 is not well-documented and, while these
-instructions work for me, your mileage may vary.
+The information in this directory applies specifically to installation
+from source on a Debian 10 Buster amd64 host. Apache2 is not
+well-documented and, while these instructions work for me, your
+mileage may vary.
 
 Pre-installation preparation:
 ----------------------------
@@ -18,11 +18,11 @@ Ensure you have the necessary Debian packages:
 
 Download and confirm the source packages (update links as required):
 
-  https://www.openssl.org/source/openssl-1.1.1k.tar.gz
-  https://www.openssl.org/source/openssl-1.1.1k.tar.gz.sha256
+  https://www.openssl.org/source/openssl-1.1.1m.tar.gz
+  https://www.openssl.org/source/openssl-1.1.1m.tar.gz.sha256
 
-  https://downloads.apache.org//httpd/httpd-2.4.46.tar.gz
-  https://downloads.apache.org/httpd/httpd-2.4.46.tar.gz.sha256
+  https://downloads.apache.org//httpd/httpd-2.4.52.tar.gz
+  https://downloads.apache.org/httpd/httpd-2.4.52.tar.gz.sha512
 
   https://downloads.apache.org//apr/apr-1.7.0.tar.gz
   https://www.apache.org/dist/apr/apr-1.7.0.tar.gz.sha256
@@ -30,7 +30,8 @@ Download and confirm the source packages (update links as required):
   https://downloads.apache.org//apr/apr-util-1.6.1.tar.gz
   https://www.apache.org/dist/apr/apr-util-1.6.1.tar.gz.sha256
 
-Unpack them into their own directory.
+Unpack them into their own directory;
+  tar -xvzf <file>.gz
 
 Steps for compiling the four sources required:
 ---------------------------------------------
@@ -43,6 +44,8 @@ Install openssl from source and install in:
     cd into the source directory
     use the local script:
     $ ../openssl-config-no-fips.sh x.y.zk
+    # note you may have to add your openssl version if it's not there already
+    $ make && make test && sudo make install
 
 Install APR from source and install in:
     /usr/local   # default
@@ -64,6 +67,11 @@ Install apache2 from source and install in:
     cd into the source directory
     use the local script:
     $ ../apache2-config-user-openssl.sh x.y.za
+    # note you may have to add your openssl version if it's not there already
+    make && sudo make iinstall
+    sudo su
+    apachectl -k graceful stop
+    apachectl -k start
 
 Post installation:
 -----------------
