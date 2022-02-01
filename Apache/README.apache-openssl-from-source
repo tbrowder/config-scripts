@@ -68,7 +68,7 @@ Install apache2 from source and install in:
     use the local script:
     $ ../apache2-config-user-openssl.sh x.y.za
     # note you may have to add your openssl version if it's not there already
-    make && sudo make iinstall
+    make && sudo make install
     sudo su
     apachectl -k graceful stop
     apachectl -k start
