@@ -1,0 +1,48 @@
+# File: /etc/systemd/system/cro-gbumc.service
+# Date: 2022-03-03
+#
+# This service file allows user 'tom' to run
+# a Raku Cro app behind an Apache reverse
+# proxy.
+#
+# After creating and putting this file in
+# the path above, as root:
+#
+#   update changes:         sudo systemctl daemon-reload
+#   enable the new service: sudo systemctl enable cro-gbumc
+#   start the new service:  sudo service cro-gbumc restart
+#   check runnungbservices: service --status-all
+#       + running
+#       - stopped
+#
+# Note the executable needs environment variable RAKUDOLIB
+# (or RAKULIB) set to the lib dir where the app is.
+
+[Unit]
+Description=Cro GBUMC Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+
+# an ordinary user:
+User=tom
+Group=tom
+
+ExecStartPre=
+
+# Do all work out of the user's base website directory:
+WorkingDirectory=/home/tom/web-sites/gbumc.church/deploy
+Environment=RAKULIB="/home/tom/web-sites/gbumc.church/deploy/lib"
+# The actual Raku Cro app:
+ExecStart=/home/tom/web-sites/gbumc.church/deploy/cro-gbumc.raku
+
+ExecStartPost=
+ExecStop=
+ExecReload=
+
+[Install]
+WantedBy=multi-user.target
