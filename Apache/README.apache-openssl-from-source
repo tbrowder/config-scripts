@@ -4,7 +4,7 @@ Procedures for installing Apache2
 NOTE:
 
 The information in this directory applies specifically to installation
-from source on a Debian 10 Buster amd64 host. Apache2 is not
+from source on a Debian 11 Bullsye amd64 host. Apache2 is not
 well-documented and, while these instructions work for me, your
 mileage may vary.
 
@@ -14,27 +14,25 @@ Pre-installation preparation:
 Ensure you have the necessary Debian packages:
 
   as root execute bash script:
-    install-debian-buster-apache2-prereqs.sh
+    $ sudo ./install-debian-bullsye-apache2-prereqs.sh
+
+One more prerequisite is the Raku programming language. If you know
+you have it, you are all set. Otherwise, you can install the Debian
+package which contain the 'raku' executable:
+
+    $ sudo apt install rakudo
 
 Download and confirm the source packages (update links as required):
 
-  https://www.openssl.org/source/openssl-1.1.1m.tar.gz
-  https://www.openssl.org/source/openssl-1.1.1m.tar.gz.sha256
-
-  https://downloads.apache.org//httpd/httpd-2.4.52.tar.gz
-  https://downloads.apache.org/httpd/httpd-2.4.52.tar.gz.sha512
-
-  https://downloads.apache.org//apr/apr-1.7.0.tar.gz
-  https://www.apache.org/dist/apr/apr-1.7.0.tar.gz.sha256
-
-  https://downloads.apache.org//apr/apr-util-1.6.1.tar.gz
-  https://www.apache.org/dist/apr/apr-util-1.6.1.tar.gz.sha256
+    $ ./download-apache2-and-prereqs.sh
+    $ ./confirm-apache2-and-prereqs.sh
 
 Unpack them into their own directory;
-  tar -xvzf <file>.gz
 
-Steps for compiling the four sources required:
----------------------------------------------
+    $ ./unpack-archive-files
+
+Steps for compiling the sources required:
+-----------------------------------------
 
 Compile and install in this order:
 
@@ -44,13 +42,13 @@ Stop the currently running httpd:
 Install openssl from source and install in:
     /opt/openssl-x.y.za
 
-    NOTE: For some reason, httpd-2.4.52 configures to use any openssl lib
+    NOTE: For some reason, httpd-2.4.+ configures to use any openssl lib
           in the /opt directory. Thus, until I can find out why and get
           help, as root, move away any installed openssl dirs.
 
     cd into the source directory
     use the local script:
-    $ ../openssl-config-no-fips.sh x.y.zk
+    $ ../openssl-config-no-fips.sh x.y.z[o]
     # note you may have to add your openssl version if it's not there already
     $ make && make test && sudo make install
 
@@ -63,6 +61,8 @@ Install APR from source and install in:
 
 Install APR-UTIL from source and install in:
     /usr/local   # default
+
+WARNING: Ensure the OPENSSLDIR is set correctly
 
     cd into the source directory
     use the local script:

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
+#1.1.1o
+
 KNOWN_OPENSSL_VERS="
-1.1.1k
-1.1.1m
-3.0.1
+3.0.3
 "
 
 # NOTE: THIS CONFIGURATION IS FOR A USER-INSTALLED OPENSSL,

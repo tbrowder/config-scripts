@@ -5,6 +5,7 @@ KNOWN_VERS="
 1.1.1k
 1.1.1m
 3.0.1
+3.0.3
 "
 if [ -z "$1" ] ; then
   echo "Usage: $0 <openssl version>"
