@@ -9,7 +9,7 @@ KNOWN_OPENSSL_VERS="
 # NOTE: THIS CONFIGURATION IS FOR A USER-INSTALLED OPENSSL,
 #       AND IT USES THE LATEST INSTALLED APR AND APR-UTILS.
 
-# see Ivan Ristics "Bulletproof SSL and TLS," p. 382
+# see Ivan Ristic's "Bulletproof SSL and TLS," p. 382
 # using static openssl with Apache
 
 USAGE="Usage: $0 <openssl version>"
