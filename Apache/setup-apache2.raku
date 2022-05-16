@@ -165,17 +165,19 @@ if $unpack {
     exit;
 }
 
-if $ config {
+if $config {
     for %fils.keys.sort -> $f {
         my $idx = rindex $f, '.tar.gz';
         unless $idx.defined {
             die "FATAL: Unknown file '$f'";
         }
         my $dir = $f.substr: 0, $idx;
-        say "Configuring '$dir';
+        say "Configuring '$dir'";
     }
     exit;
 }
+
+=finish
 
 
     =begin comment
