@@ -1,18 +1,15 @@
 #!/usr/bin/env raku
 
 # the file collection that has been downloaded:
+# (must be consistent: *.tar.gz)
 my @fils = <
-openssl-1.1.1k.tar.gz
-openssl-1.1.1k.tar.gz.sha256
+openssl-3.0.3.tar.gz
+openssl-3.0.3.tar.gz.sha256
+openssl-3.0.3.tar.gz.asc
 
-httpd-2.4.46.tar.gz
-httpd-2.4.46.tar.gz.sha256
-
-apr-1.7.0.tar.gz
-apr-1.7.0.tar.gz.sha256
-
-apr-util-1.6.1.tar.gz
-apr-util-1.6.1.tar.gz.sha256
+httpd-2.4.53.tar.gz
+httpd-2.4.53.tar.gz.sha512
+httpd-2.4.53.tar.gz.asc
 >;
 
 
@@ -20,7 +17,7 @@ if !@*ARGS {
     print qq:to/HERE/;
     Usage: {$*PROGRAM.basename} go | list
 
-    Checks sha256 hashes for Apache2 and pre-regs
+    Checks shasum hashes for Apache2 and pre-regs
 
     HERE
     exit;
@@ -41,19 +38,86 @@ for @*ARGS {
 
 # work in pairs
 my $nf = @fils.elems;
-if $nf mod 2 {
-    note "FATAL: Number of files ($nf) is an odd number, we must consider pairs.";
+if $nf mod 3 {
+    note "FATAL: Number of files ($nf) is not a triplet, we must consider sets of three.";
     exit;
 }
 
 if $list {
-    say "File pairs:";
+    say "File triplets:";
     say "    $_" for @fils;
     exit;
 }
 
-while @fils.elems {
-    my $file = @fils.shift;
+my %h;
+#my $key;
+for @fils {
+    my $fil = $_;
+    say "Working file '$fil'...";
+    my ($k, $typ, $f);
+
+    with $fil {
+        when /(.*) '.' (sha256) $/ {
+            $k   = ~$0;
+            $typ = ~$1;
+            $f   = $fil;
+        }
+        when /(.*) '.' (sha512) $/ {
+            $k   = ~$0;
+            $typ = ~$1;
+            $f   = $fil;
+        }
+        when /(.*) '.' (asc) $/ {
+            $k   = ~$0;
+            $typ = ~$1;
+            $f   = $fil;
+        }
+        when /(.* '.' gz) $/ {
+            $k = ~$0;
+        }
+        default {
+            say "WARNING: Unexpected file name '$_'";
+            say "         Skipping it...";
+        } 
+    }
+    
+    if $k.defined {
+        print "  Found key '$k'";
+        if $typ.defined and $f.defined {
+            say " and found type '$typ' and file '$f'.";
+            %h{$k}{$typ} = $f;
+        }
+        else {
+            say ".";
+        }
+    }
+}
+
+say %h.raku if $debug;
+
+for %h.keys -> $fil {
+    my $asc = %h{$fil}<asc>:exists ?? %h{$fil}<asc> !! 0;
+    my $sha = %h{$fil}<sha256>:exists ?? 'sha256'
+                                      !! (%h{$fil}<sha512>:exists) ?? 'sha512' !! 0;
+    my $sha-fil = %h{$fil}{$sha};
+
+    # check the shasum
+    # if it's an openssl one, the file is probably bad
+    if $fil ~~ /openssl/ {
+        my $s = slurp $sha-fil;
+        my @w = $s.words;
+        if @w.elems == 1 {
+            $s .= chomp;
+            $s ~= " $fil";
+            spurt $sha-fil, $s; 
+        }
+    }
+    # now check the file
+    shell "{$sha}sum --check $sha-fil";
+
+}
+
+    =begin comment
     my $hash = @fils.shift;
     if $hash !~~ /sha256$/ {
         #  we expect them is a certain order
@@ -88,4 +152,4 @@ while @fils.elems {
             .resume;
         }
     }
-}
+    =end comment
