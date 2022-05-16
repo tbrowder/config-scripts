@@ -153,12 +153,10 @@ for %h.keys -> $fil {
     }
     # now check the file
     shell "{$sha}sum --check $sha-fil";
-
-    # unpack the archive
 }
 
 if $unpack {
-    for %fils.keys.sort -> $f {
+    for %h.keys.sort -> $f {
         say "Unpacking '$f'";
         shell "tar -xvzf $f";
     }
