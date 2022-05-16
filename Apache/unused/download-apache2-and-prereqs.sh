@@ -12,20 +12,12 @@ if [[ -z $1 ]] ; then
 fi
 
 FILS="
-  https://www.openssl.org/source/openssl-1.1.1o.tar.gz
-  https://www.openssl.org/source/openssl-1.1.1o.tar.gz.sha256
-
   https://www.openssl.org/source/openssl-3.0.3.tar.gz
   https://www.openssl.org/source/openssl-3.0.3.tar.gz.sha256
-
-  https://downloads.apache.org//httpd/httpd-2.4.53.tar.gz
+  https://www.openssl.org/source/openssl-3.0.3.tar.gz.asc
+  https://downloads.apache.org/httpd/httpd-2.4.53.tar.gz
   https://downloads.apache.org/httpd/httpd-2.4.53.tar.gz.sha512
-
-  https://downloads.apache.org//apr/apr-1.7.0.tar.gz
-  https://www.apache.org/dist/apr/apr-1.7.0.tar.gz.sha256
-
-  https://downloads.apache.org//apr/apr-util-1.6.1.tar.gz
-  https://www.apache.org/dist/apr/apr-util-1.6.1.tar.gz.sha256
+  https://downloads.apache.org/httpd/httpd-2.4.53.tar.gz.asc
 "
 
 for f in $FILS

@@ -16,12 +16,11 @@ USAGE="Usage: $0 <openssl version>"
 
 APRPATH=/usr/local/apr
 
-# and apr
-if [[ ! -d $APRPATH ]] ; then
-    echo "FATAL:  Apr and Apr-util dir '$APRPATH' doesn't exist."
-    exit
-fi
-
+# use local apr and apr-util? uncomment below
+# if [[ ! -d $APRPATH ]] ; then
+#     echo "FATAL:  Apr and Apr-util dir '$APRPATH' doesn't exist."
+#     exit
+# fi
 
 if [[ -z $1 ]] ; then
   echo $USAGE
@@ -138,11 +137,11 @@ fi
 
 # we build all modules for now (all shared except mod_ssl)
 
+#    --with-apr=$APRPATH                    \
+#    --with-apr-util=$APRPATH               \
 export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
 ./configure                                \
     --prefix=/usr/local/apache2            \
-    --with-apr=$APRPATH                    \
-    --with-apr-util=$APRPATH               \
 \
     --enable-ssl                           \
     --enable-mods-static=ssl               \

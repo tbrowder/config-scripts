@@ -41,6 +41,9 @@ aptitude install \
   libdb5.3-dev \
   postgresql-server-dev-all \
   pwgen \
-  zlib1g-dev
+  zlib1g-dev \
+  libapr1-dev \
+  libaprutil1-dev
+
 
 # end of command list

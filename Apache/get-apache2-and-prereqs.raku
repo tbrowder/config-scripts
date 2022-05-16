@@ -1,16 +1,44 @@
 #!/usr/bin/env raku
 
+use Text::Utils :strip-comment;
+
 # the file collection that has been downloaded:
 # (must be consistent: *.tar.gz)
+my $flist = 'file-list.dat';
+my @lines = $flist.IO.lines;
+my %fils;
+for @lines -> $line is copy {
+    $line = strip-comment $line;
+    next if $line !~~ /\S/;
+
+    # the source of the file is first
+    my ($src, $f);
+    my $idx = rindex $line, '/';
+    if $idx.defined {
+        $f = $line.substr: $idx+1;
+        $src = $line.substr: 0, $idx; 
+        if not $f.IO.r {
+            say "File '$f' not found, fetching it from '$src'";
+            shell "curl $line -O";
+        }
+    }
+    else {
+        die "FATAL: Unrecognized line '$line'";
+    }
+
+    %fils{$f} = $src;
+}
+
+=begin comment
 my @fils = <
 openssl-3.0.3.tar.gz
 openssl-3.0.3.tar.gz.sha256
 openssl-3.0.3.tar.gz.asc
-
 httpd-2.4.53.tar.gz
 httpd-2.4.53.tar.gz.sha512
 httpd-2.4.53.tar.gz.asc
 >;
+=end comment
 
 
 if !@*ARGS {
@@ -23,21 +51,24 @@ if !@*ARGS {
     exit;
 }
 
-my $list  = 0;
-my $debug = 0;
-my $exe   = 0;
+my $list   = 0;
+my $get    = 0;
+my $debug  = 0;
+my $unpack = 0;
+my $config = 0;
 for @*ARGS {
-    when /^g/ { ++$exe }
+    when /^g/ { ++$get}
     when /^d/ { ++$debug }
-    when /^l/ { ++$list; $exe = 0 }
+    when /^l/ { ++$list }
+    when /^u/ { ++$unpack }
+    when /^c/ { ++$config }
     default {
         note "FATAL: Input arg '$_' is not recognized.";
         exit;
     }
 }
 
-# work in pairs
-my $nf = @fils.elems;
+my $nf = %fils.elems;
 if $nf mod 3 {
     note "FATAL: Number of files ($nf) is not a triplet, we must consider sets of three.";
     exit;
@@ -45,13 +76,12 @@ if $nf mod 3 {
 
 if $list {
     say "File triplets:";
-    say "    $_" for @fils;
+    say "    $_" for %fils.keys.sort;
     exit;
 }
 
 my %h;
-#my $key;
-for @fils {
+for %fils.keys.sort {
     my $fil = $_;
     say "Working file '$fil'...";
     my ($k, $typ, $f);
@@ -115,7 +145,29 @@ for %h.keys -> $fil {
     # now check the file
     shell "{$sha}sum --check $sha-fil";
 
+    # unpack the archive
 }
+
+if $unpack {
+    for %fils.keys.sort -> $f {
+        say "Unpacking '$f'";
+        shell "tar -xvzf $f";
+    }
+    exit;
+}
+
+if $ config {
+    for %fils.keys.sort -> $f {
+        my $idx = rindex $f, '.tar.gz';
+        unless $idx.defined {
+            die "FATAL: Unknown file '$f'";
+        }
+        my $dir = $f.substr: 0, $idx;
+        say "Configuring '$dir';
+    }
+    exit;
+}
+
 
     =begin comment
     my $hash = @fils.shift;
