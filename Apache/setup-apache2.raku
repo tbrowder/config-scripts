@@ -29,38 +29,47 @@ for @lines -> $line is copy {
     %fils{$f} = $src;
 }
 
-=begin comment
-my @fils = <
-openssl-3.0.3.tar.gz
-openssl-3.0.3.tar.gz.sha256
-openssl-3.0.3.tar.gz.asc
-httpd-2.4.53.tar.gz
-httpd-2.4.53.tar.gz.sha512
-httpd-2.4.53.tar.gz.asc
->;
-=end comment
-
-
 if !@*ARGS {
     print qq:to/HERE/;
-    Usage: {$*PROGRAM.basename} go | list
+    Usage: {$*PROGRAM.basename} <opt> 
 
-    Checks shasum hashes for Apache2 and pre-regs
+    Provides sequential steps to install Openssl and Apache2:
 
+        list    - lists the required files
+        get     - gets, confirms, and lists the required files
+        unpack  - unpacks the archive files
+
+        config  - configures each directory
+        build   - builds and tests each component
+        install - as root, installs each component
+        clean   - removes component directories
+        purge   - removes component directories and downloaded files
     HERE
     exit;
 }
 
-my $list   = 0;
-my $get    = 0;
-my $debug  = 0;
-my $unpack = 0;
-my $config = 0;
+my $debug   = 0;
+
+my $list    = 0;
+my $get     = 0;
+my $unpack  = 0;
+my $config  = 0;
+my $build   = 0;
+my $install = 0;
+my $clean   = 0;
+my $purge   = 0;
 for @*ARGS {
-    when /^g/ { ++$get}
     when /^d/ { ++$debug }
     when /^l/ { ++$list }
+    when /^g/ { ++$get}
     when /^u/ { ++$unpack }
+
+    when /^cl/ { ++$clean }
+    when /^c/ { ++$config }
+
+    when /^b/ { ++$build }
+    when /^i/ { ++$install }
+    when /^p/ { ++$purge }
     when /^c/ { ++$config }
     default {
         note "FATAL: Input arg '$_' is not recognized.";

@@ -22,51 +22,32 @@ package which contain the 'raku' executable:
 
     $ sudo apt install rakudo
 
-Download and confirm the source packages (update links as required):
+Stop the currently running httpd:
 
-    $ ./download-apache2-and-prereqs.sh
-    $ ./confirm-apache2-and-prereqs.sh
+    $ sudo apachectl graceful-stop
+
+Obtain and install the source archives
+--------------------------------------
+
+Download and confirm the source packages:
+
+    $ ./setup-apache2.raku get
 
 Unpack them into their own directory;
 
-    $ ./unpack-archive-files
+    $ ./setup-apache2.raku unpack
 
-Steps for compiling the sources required:
------------------------------------------
+Configure the packages:
 
-Compile and install in this order:
+    $ ./setup-apache2.raku config
 
-Stop the currently running httpd:
-    sudo apachectl graceful-stop
+Build and test the packages:
 
-Install openssl from source and install in:
-    /opt/openssl-x.y.za
+    $ ./setup-apache2.raku build
 
-    NOTE: For some reason, httpd-2.4.+ configures to use any openssl lib
-          in the /opt directory. Thus, until I can find out why and get
-          help, as root, move away any installed openssl dirs.
+Install the packages:
 
-    cd into the source directory
-    use the local script:
-    $ ../openssl-config-no-fips.sh x.y.z[o]
-    # note you may have to add your openssl version if it's not there already
-    $ make && make test && sudo make install
-
-Install APR from source and install in:
-    /usr/local   # default
-
-    cd into the source directory
-    use the local script:
-    $ ../apr-config.sh go
-
-Install APR-UTIL from source and install in:
-    /usr/local   # default
-
-WARNING: Ensure the OPENSSLDIR is set correctly
-
-    cd into the source directory
-    use the local script:
-    $ ../apr-util-config.sh go
+    $ sudo ./setup-apache2.raku install
 
 Install apache2 from source and install in:
     /usr/local/apache2 # default
