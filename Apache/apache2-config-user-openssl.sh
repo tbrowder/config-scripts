@@ -1,20 +1,11 @@
 #!/usr/bin/env bash
 
-#1.1.1o
-
-KNOWN_OPENSSL_VERS="
-3.0.3
-"
-
 # NOTE: THIS CONFIGURATION IS FOR A USER-INSTALLED OPENSSL,
-#       AND IT USES THE LATEST INSTALLED APR AND APR-UTILS.
 
 # see Ivan Ristic's "Bulletproof SSL and TLS," p. 382
 # using static openssl with Apache
 
 USAGE="Usage: $0 <openssl version>"
-
-APRPATH=/usr/local/apr
 
 # use local apr and apr-util? uncomment below
 # if [[ ! -d $APRPATH ]] ; then
@@ -26,9 +17,6 @@ if [[ -z $1 ]] ; then
   echo $USAGE
   echo "  Uses SSL/TLS without FIPS."
   echo "  Builds httpd with openssl"
-  echo "    from known versions: '$KNOWN_OPENSSL_VERS'"
-  echo "    and the latest Apr and Apr-util"
-  echo "    located in '$APRPATH'."
   echo
   echo "  After configuring run:"
   echo "    make"
@@ -45,18 +33,6 @@ SSLDIR=/opt/openssl-$VER
 # make sure openssl exists
 if [[ ! -d $SSLDIR ]] ; then
     echo "FATAL:  openssl directory '$SSLDIR' doesn't exist."
-    exit
-fi
-
-GOODVER=
-for ver in $KNOWN_OPENSSL_VERS
-do
-    if [[ $1 = $ver ]] ; then
-        GOODVER=$ver
-    fi
-done
-if [[ -z $GOODVER ]] ; then
-    echo "FATAL:  Openssl version $VER is not known."
     exit
 fi
 
