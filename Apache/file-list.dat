@@ -3,6 +3,6 @@ https://www.openssl.org/source/openssl-3.0.3.tar.gz           # openssl archive 
 https://www.openssl.org/source/openssl-3.0.3.tar.gz.sha256    #   its sha checksum
 https://www.openssl.org/source/openssl-3.0.3.tar.gz.asc       #   its crypo signature
 https://downloads.apache.org/httpd/httpd-2.4.53.tar.gz        # httpd archive file
-https://downloads.apache.org/httpd/httpd-2.4.53.tar.gz.sha512 #   its sha check sum
+https://downloads.apache.org/httpd/httpd-2.4.53.tar.gz.sha256 #   its sha check sum
 https://downloads.apache.org/httpd/httpd-2.4.53.tar.gz.asc    #   its crypo signature
 
