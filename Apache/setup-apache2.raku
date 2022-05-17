@@ -53,12 +53,16 @@ for @*ARGS {
     when /^u/  { ++$unpack  }
 
     when /^cl/ { ++$clean   }
-    when /^c/  { ++$config  }
+    when /^p/  { ++$purge   }
 
+    # these three options need an o or a to select which component to operate on
+    when /^c/  { ++$config  }
     when /^b/  { ++$build   }
     when /^i/  { ++$install }
-    when /^p/  { ++$purge   }
-    when /^c/  { ++$config  }
+
+    when /^o/  { ++$o; $a = 0 }
+    when /^a/  { ++$a; $o = 0 }
+
     default {
         note "FATAL: Input arg '$_' is not recognized.";
         exit;
@@ -77,7 +81,6 @@ if $list {
     exit;
 }
 
-
 if $unpack {
     for %data<fils>.keys.sort -> $f {
         say "Unpacking '$f'";
@@ -86,7 +89,11 @@ if $unpack {
     exit;
 }
 
-if $config {
+if $build and ($o or $a) {
+}
+if $install and ($o or $a) {
+}
+if $config and ($o or $a) {
     for %data<fils>.keys.sort -> $f {
         my $idx = rindex $f, '.tar.gz';
         unless $idx.defined {
@@ -262,7 +269,23 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
                                                 !! (%h<fils>{$fil}<sha512>:exists) ?? 'sha512' !! 0;
         my $sha-fil = %h<fils>{$fil}{$sha};
 
-        # check the shasum
+        # check the shasums
+        if $fil ~~ /httpd/ {
+            # pick up the httpd version
+            unless %h<aver>:exists {
+                # remove the 'httpd-' from the front
+                # remove the '.tar.gz' from the rear
+                if $fil ~~ /^ 'httpd-' (\S+) '.tar.gz' / {
+                    my $ver   = ~$0;
+                    %h<aver>  = $ver;
+                    %h<aldir> = 'httpd-' ~ $ver;
+                    %h<aidir> = '/usr/local/apache2';
+                }
+                else {
+                    die "FATAL: Unexpected Apache2 file archive format: '$fil'";
+                }
+            }
+        }
         # if it's an openssl one, the file is probably bad
         if $fil ~~ /openssl/ {
             my $s = slurp $sha-fil;
@@ -273,11 +296,14 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
                 spurt $sha-fil, $s; 
             }
             # also pick up the openssl version
-            unless %h<openssl-version>:exists {
+            unless %h<over>:exists {
                 # remove the 'openssl-' from the front
                 # remove the '.tar.gz' from the rear
                 if $fil ~~ /^ 'openssl-' (\S+) '.tar.gz' / {
-                    %h<openssl-version> = ~$0;
+                    my $ver   = ~$0;
+                    %h<over>  = $ver;
+                    %h<oldir> = 'openssl-' ~ $ver;
+                    %h<oidir> = '/opt/openssl-' ~ $ver;
                 }
                 else {
                     die "FATAL: Unexpected Openssl file archive format: '$fil'";
