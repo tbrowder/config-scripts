@@ -390,10 +390,28 @@ sub get-check-files(%data, :$refresh) {
     # check presence, download if missing
 
     for %data<fils>.keys -> $f {
+        my $src = %data<fils>{$f}<src>; # source for all the supporting files
         my $s = %data<fils>{$f}<sha256>;
         my $a = %data<fils>{$f}<asc>;
-        say "    $s";
-        say "    $a";
+
+        for $f, $s, $a -> $dfil {
+            next if $dfil.IO.f and not $refresh;
+
+            my $line = "{$src}/{$dfil}";
+            shell "curl $line -O";
+            # openssl sha256 files may be bad
+            if $dfil ~~ /openssl/ and $dfil ~~ /sha256/ {
+                my $str = slurp $dfil;
+                my @w = $str.words;
+                if @w.elems == 1 {
+                    $str .= chomp;
+                    $str ~= " $f";
+                    spurt $dfil, $str; 
+                }
+            }
+        }
+        # check the validity of the archive in any event
+        shell "sha256sum --check $s";
     }
 
     exit;
