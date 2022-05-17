@@ -1,17 +1,9 @@
 #!/usr/bin/env bash
 
-KNOWN_VERS="
-1.1.1g
-1.1.1k
-1.1.1m
-3.0.1
-3.0.3
-"
 if [ -z "$1" ] ; then
   echo "Usage: $0 <openssl version>"
   echo
   echo "  Configures openssl source (without FIPS)"
-  echo "    from known versions: '$KNOWN_VERS'"
   echo "    and installs it into directory"
   echo "    '/opt/openssl-<version>'."
   echo "  Note this script is designed to be in the directory"
@@ -23,18 +15,6 @@ if [ -z "$1" ] ; then
 fi
 
 VER=$1
-GOODVER=
-for ver in $KNOWN_VERS
-do
-    if [[ $1 = $ver ]] ; then
-        GOODVER=$ver
-    fi
-done
-if [[ -z $GOODVER ]] ; then
-    echo "FATAL:  Openssl version $VER is not known."
-    echo "        Modify this script as necessary."
-    exit
-fi
 
 SSLDIR=/opt/openssl-$VER
 
