@@ -86,16 +86,13 @@ for @*ARGS {
 nmf-warning($nmf) if $nmf and not $get;
 
 if $get {
-    say "Getting and checking required files...";
-    get-check-files :$refresh;
+    print "Getting and checking required files";
+    print " (using 'refresh')" if $refresh;
+    say "...";
+
+    get-check-files %data, :$refresh;
     exit;
 
-    # do we have all the files needed?
-    for %data<fils>.keys.sort -> $f {
-        say "Unpacking '$f'";
-        shell "tar -xvzf $f";
-    }
-    exit;
 }
 
 if $list {
@@ -388,7 +385,38 @@ sub show-infiles-format($f) {
     exit;
 } # sub show-infiles-format
 
-sub get-check-files(:$refresh) {
+sub get-check-files(%data, :$refresh) {
+    # do we have all the files needed?
+    # check presence, download if missing
+
+    for %data<fils>.keys -> $f {
+        my $s = %data<fils>{$f}<sha256>;
+        my $a = %data<fils>{$f}<asc>;
+        say "    $s";
+        say "    $a";
+    }
+
+    exit;
+            =begin comment
+            if not $f.IO.r {
+                say "File '$f' not found, fetching it from '$src'";
+                shell "curl $line -O";
+            }
+            =end comment
+            =begin comment
+            # if it's an openssl one, the file is probably bad
+            my $s = slurp $sha-fil;
+            my @w = $s.words;
+            if @w.elems == 1 {
+                $s .= chomp;
+                $s ~= " $fil";
+                spurt $sha-fil, $s; 
+            }
+            =end comment
+        =begin comment
+        # now check the file
+        shell "{$sha}sum --check $sha-fil";
+        =end comment
 } # get-check-files
 
 sub create-jfil(:$flist, :$jfil, :$debug) {
@@ -415,12 +443,6 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
                   f   = '$f'
                 HERE
             }
-            =begin comment
-            if not $f.IO.r {
-                say "File '$f' not found, fetching it from '$src'";
-                shell "curl $line -O";
-            }
-            =end comment
         }
         else {
             die "FATAL: Unrecognized line '$line'";
@@ -436,8 +458,8 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
     }
 
     my %h;
-    for %downfils.keys.sort {
-        my $fil = $_;
+    for %downfils.keys.sort -> $fil {
+        my $src = %downfils{$fil};
         say "Working file '$fil'..." if $debug;
         my ($k, $typ, $f);
         with $fil {
@@ -471,6 +493,7 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
             if $typ.defined and $f.defined {
                 say " and found type '$typ' and file '$f'.";
                 %h<fils>{$k}{$typ} = $f;
+                %h<fils>{$k}<src> = $src;
             }
             else {
                 say ".";
@@ -502,18 +525,8 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
                 }
             }
         }
-        # if it's an openssl one, the file is probably bad
         if $fil ~~ /openssl/ {
-            =begin comment
-            my $s = slurp $sha-fil;
-            my @w = $s.words;
-            if @w.elems == 1 {
-                $s .= chomp;
-                $s ~= " $fil";
-                spurt $sha-fil, $s; 
-            }
-            =end comment
-            # also pick up the openssl version
+            # pick up the openssl version
             unless %h<over>:exists {
                 # remove the 'openssl-' from the front
                 # remove the '.tar.gz' from the rear
@@ -529,10 +542,6 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
             }
         }
 
-        =begin comment
-        # now check the file
-        shell "{$sha}sum --check $sha-fil";
-        =end comment
     }
     my $jstr = to-json %h;
     spurt $jfil, $jstr;
