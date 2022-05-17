@@ -10,29 +10,39 @@ my $jfil  = '.apache-setup.json';  # formatted hash with all data
 show-infiles-format($flist) if not $flist.IO.r; # exits from sub
 create-jfil(:$flist, :$jfil, :debug(0)) if not $jfil.IO.r or $flist.IO.modified > $jfil.IO.modified;
 my %data = from-json(slurp $jfil);
+my $nmf = check-files %data;
 
-if !@*ARGS {
+if not @*ARGS.elems {
     print qq:to/HERE/;
-    Usage: {$*PROGRAM.basename} <opt> [o|a] [help, debug]
+    Usage: {$*PROGRAM.basename} <opt> [o|a] [help, force, debug]
 
     Provides sequential steps to install Openssl and Apache2.
     Note: You MUST install Openssl BEFORE Apache2.
 
         list    - lists the required files
-        get     - gets, confirms, and lists the required files
+        get [r] - gets, confirms, and lists the required files
+                  (add the 'r' option to refresh any existing file)
         unpack  - unpacks the archive files
 
         config  o|a - configures a directory
         build   o|a - builds and tests a component
+        dclean  o|a - runs 'make distclean' in a component directory
         install o|a - as root, installs a component
 
-        clean   - removes component directories
-        purge   - removes component directories and downloaded files
+        clean   - removes all local component directories
+        purge   - removes all local component directories and downloaded files
+
     HERE
+
+    nmf-warning($nmf, :indent) if $nmf;
+
     exit;
 }
 
+
 my $debug   = 0;
+my $force   = 0;
+my $refresh = 0;
 
 my $list    = 0;
 my $get     = 0;
@@ -41,12 +51,16 @@ my $config  = 0;
 my $build   = 0;
 my $install = 0;
 my $clean   = 0;
+my $dclean  = 0;
 my $purge   = 0;
 my $o       = 0;
 my $a       = 0;
 for @*ARGS {
-    when /^d/  { ++$debug   }
+    when /^de/ { ++$debug   }
+    when /^d/  { ++$dclean  }
     when /^h/  { help       } # exits from the sub
+    when /^f/  { ++$force   }
+    when /^r/  { ++$refresh }
 
     when /^l/  { ++$list    }
     when /^g/  { ++$get     }
@@ -69,6 +83,21 @@ for @*ARGS {
     }
 }
 
+nmf-warning($nmf) if $nmf and not $get;
+
+if $get {
+    say "Getting and checking required files...";
+    get-check-files :$refresh;
+    exit;
+
+    # do we have all the files needed?
+    for %data<fils>.keys.sort -> $f {
+        say "Unpacking '$f'";
+        shell "tar -xvzf $f";
+    }
+    exit;
+}
+
 if $list {
     say "File triplets:";
     for %data<fils>.keys.sort.reverse -> $f {
@@ -89,35 +118,217 @@ if $unpack {
     exit;
 }
 
-if $build and ($o or $a) {
-}
-if $install and ($o or $a) {
-}
-if $config and ($o or $a) {
-    for %data<fils>.keys.sort -> $f {
-        my $idx = rindex $f, '.tar.gz';
-        unless $idx.defined {
-            die "FATAL: Unknown file '$f'";
-        }
-        my $dir = $f.substr: 0, $idx;
-        unless $dir.IO.d {
-            die "FATAL: Unable to find directory '$dir'";
-        }
-        say "Configuring directory '$dir'";
-
-        my $sprog;
-        if $dir ~~ /apache/ {
-            $sprog = 'apache2-config-user-openssl.sh';
-            # need the openssl version
-            my $idx = index 
-            shell "cd $dir; ../$sprog";
+if $dclean and ($o or $a) {
+    my $dir;
+    # apache, so openssl must be installed
+    my $odir = %data<oidir>;
+    if $a and not $odir.IO.d  {
+        if not $force {
+            note "FATAL: Openssl has not been installed in dir '$odir'";
+            note "       Use the 'force' option to override.";
+            exit;
         }
         else {
-            $sprog = 'openssl-config-no-fips.sh';
-            shell "cd $dir; ../$sprog";
+            note "WARNING: Openssl has not been installed in dir '$odir'";
         }
-
     }
+
+    if $a {
+        $dir = %data<aldir>;
+        say "Running 'make distclean' in dir '$dir'";
+    }
+    elsif $o {
+        $dir = %data<oldir>;
+        say "Running 'make distclean' in dir '$dir'";
+    }
+    else { die "FATAL: Neither $a nor $o has been selected"; }
+    shell "cd $dir; make distclean";
+    note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
+
+    exit;
+}
+
+if $build  {
+    if not ($o or $a) {
+        say "FATAL: With 'build' you must also enter 'o' (for 'openssl') or 'a' (for 'apache').";
+        exit;
+    }
+    my $dir;
+    # apache, so openssl must be installed
+    my $odir = %data<oidir>;
+    if $a and not $odir.IO.d  {
+        if not $force {
+            note "FATAL: Openssl has not been installed in dir '$odir'";
+            note "       Use the 'force' option to override.";
+            exit;
+        }
+        else {
+            note "WARNING: Openssl has not been installed in dir '$odir'";
+        }
+    }
+
+    if $a {
+        $dir = %data<aldir>;
+        say "Building Apache in dir '$dir'";
+    }
+    elsif $o {
+        $dir = %data<oldir>;
+        say "Building Openssl in dir '$dir'";
+    }
+    else { die "FATAL: Neither $a nor $o has been selected"; }
+    
+    shell "cd $dir; make";
+    shell "cd $dir; make test" if $o;
+    note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
+
+    exit;
+}
+
+if $install {
+    if not ($o or $a) {
+        say "FATAL: With 'install' you must also enter 'o' (for 'openssl') or 'a' (for 'apache').";
+        exit;
+    }
+    my $dir;
+    # apache, so openssl must be installed
+    my $odir = %data<oidir>;
+    if $a and not $odir.IO.d  {
+        if not $force {
+            note "FATAL: Openssl has not been installed in dir '$odir'";
+            note "       Use the 'force' option to override.";
+            exit;
+        }
+        else {
+            note "WARNING: Openssl has not been installed in dir '$odir'";
+        }
+    }
+
+    if $a {
+        $dir = %data<aidir>;
+        say "Installing Apache in dir '$dir'";
+    }
+    elsif $o {
+        $dir = %data<oidir>;
+        say "Installing Openssl in dir '$dir'";
+    }
+    else { die "FATAL: Neither $a nor $o has been selected"; }
+    note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
+
+    exit;
+}
+
+if $config  {
+    if not ($o or $a) {
+        say "FATAL: With 'config' You must also enter 'o' (for 'openssl') or 'a' (for 'apache').";
+        exit;
+    }
+    my $dir;
+    my $sprog;
+    # apache, so openssl must be installed
+    my $odir = %data<oidir>;
+    if $a and not $odir.IO.d  {
+        if not $force {
+            note "FATAL: Openssl has not been installed in dir '$odir'";
+            note "       Use the 'force' option to override.";
+            exit;
+        }
+        else {
+            note "WARNING: Openssl has not been installed in dir '$odir'";
+        }
+    }
+
+    if $a {
+        $dir = %data<aldir>;
+        say "Configuring Apache in dir '$dir'";
+        # apache, so openssl must be installed
+        my $odir = %data<oidir>;
+        note "WARNING: Openssl has not been installed in dir '$odir'" if not $odir.IO.d;
+        $sprog = 'apache2-config-user-openssl.sh';
+    }
+    elsif $o {
+        $dir = %data<oldir>;
+        say "Configuring Openssl in dir '$dir'";
+        $sprog = 'openssl-config-no-fips.sh';
+    }
+
+    unless $dir.IO.d {
+        die "FATAL: Unable to find directory '$dir'";
+    }
+
+    # need the openssl version
+    my $over = %data<over>;
+    shell "cd $dir; ../$sprog $over";
+    note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
+
+    exit;
+}
+
+if $clean {
+    # clean - removes all local component directories
+    # require 'force' to actually remove anything
+
+    my $odir = %data<oldir>;
+    my $adir = %data<aldir>;
+
+    if not $force {
+        print qq:to/HERE/;
+        With option 'force', the following commands will be executed:
+            \$ rm -rf {$odir}
+            \$ rm -rf {$adir}
+        HERE
+    }
+    else {
+        shell "rm -rf {$odir}";
+        shell "rm -rf {$adir}";
+    }
+}
+
+if $purge {
+    # purge - removes all local component directories and downloaded files
+    # require 'force' to actually remove anything
+
+    my $odir = %data<oldir>;
+    my $adir = %data<aldir>;
+
+    if not $force {
+        print qq:to/HERE/;
+        With option 'force', the following commands will be executed:
+            \$ rm -rf {$odir}
+            \$ rm -rf {$adir}
+        HERE
+
+        for %data<fils>.keys.sort.reverse -> $f {
+            say "    \$ rm $f";
+            my $s = %data<fils>{$f}<sha256>;
+            my $a = %data<fils>{$f}<asc>;
+            say "    \$ rm $s";
+            say "    \$ rm $a";
+        }
+    }
+    else {
+        shell "rm -rf {$odir}";
+        shell "rm -rf {$adir}";
+
+        for %data<fils>.keys.sort.reverse -> $f {
+            shell "rm $f";
+            my $s = %data<fils>{$f}<sha256>;
+            my $a = %data<fils>{$f}<asc>;
+            shell "rm $s";
+            shell "rm $a";
+        }
+    }
+
+
+    =begin commemt
+    for %data<fils>.keys.sort.reverse -> $f {
+        say "  $f";
+        my $s = %data<fils>{$f}<sha256>;
+        my $a = %data<fils>{$f}<asc>;
+        say "    $s";
+        say "    $a";
+    }
+    =end commemt
+
     exit;
 }
 
@@ -177,6 +388,9 @@ sub show-infiles-format($f) {
     exit;
 } # sub show-infiles-format
 
+sub get-check-files(:$refresh) {
+} # get-check-files
+
 sub create-jfil(:$flist, :$jfil, :$debug) {
     # reads formatted file $flist, creates the desired
     # data hash, and saves it as a JSON string file
@@ -201,10 +415,12 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
                   f   = '$f'
                 HERE
             }
+            =begin comment
             if not $f.IO.r {
                 say "File '$f' not found, fetching it from '$src'";
                 shell "curl $line -O";
             }
+            =end comment
         }
         else {
             die "FATAL: Unrecognized line '$line'";
@@ -288,6 +504,7 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
         }
         # if it's an openssl one, the file is probably bad
         if $fil ~~ /openssl/ {
+            =begin comment
             my $s = slurp $sha-fil;
             my @w = $s.words;
             if @w.elems == 1 {
@@ -295,6 +512,7 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
                 $s ~= " $fil";
                 spurt $sha-fil, $s; 
             }
+            =end comment
             # also pick up the openssl version
             unless %h<over>:exists {
                 # remove the 'openssl-' from the front
@@ -310,8 +528,11 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
                 }
             }
         }
+
+        =begin comment
         # now check the file
         shell "{$sha}sum --check $sha-fil";
+        =end comment
     }
     my $jstr = to-json %h;
     spurt $jfil, $jstr;
@@ -326,3 +547,26 @@ sub help() {
     exit;
 } # sub help
 
+sub check-files(%data) {
+    # checks presence of required files
+    my $err = 0;
+    for %data<fils>.keys.sort.reverse -> $f {
+        ++$err if not $f.IO.r;
+        my $s = %data<fils>{$f}<sha256>;
+        my $a = %data<fils>{$f}<asc>;
+        ++$err if not $s.IO.r;
+        ++$err if not $a.IO.r;
+    }
+    $err;
+}
+
+sub nmf-warning($nmf, :$indent) {
+    my $spaces = '';
+    $spaces = (' ' x 4) if $indent;
+
+    say "{$spaces}WARNING: $nmf required source files are missing.";
+    say "{$spaces}         Use the 'get' mode to restore and confirm them.";
+    say "{$spaces}         Use the 'refresh' option to get and confirm all of them.";
+    say "{$spaces}         Expect unhandled exceptions without a complete file set.";
+    say();
+} # sub nmf-warning
