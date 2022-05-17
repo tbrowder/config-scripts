@@ -8,7 +8,7 @@ use JSON::Fast;
 my $flist = 'file-list.dat';       # desired files to be used
 my $jfil  = '.apache-setup.json';  # formatted hash with all data
 show-infiles-format($flist) if not $flist.IO.r; # exits from sub
-create-jfil(:$flist, :$jfil, :debug(1)) if not $jfil.IO.r or $flist.IO.modified > $jfil.IO.modified;
+create-jfil(:$flist, :$jfil, :debug(0)) if not $jfil.IO.r or $flist.IO.modified > $jfil.IO.modified;
 my %data = from-json(slurp $jfil);
 
 if !@*ARGS {
@@ -67,11 +67,10 @@ for @*ARGS {
 
 if $list {
     say "File triplets:";
-    for %data.keys.sort.reverse -> $f {
-        next if $f ~~ /version/;
+    for %data<fils>.keys.sort.reverse -> $f {
         say "  $f";
-        my $s = %data{$f}<sha256>;
-        my $a = %data{$f}<asc>;
+        my $s = %data<fils>{$f}<sha256>;
+        my $a = %data<fils>{$f}<asc>;
         say "    $s";
         say "    $a";
     }
@@ -80,7 +79,7 @@ if $list {
 
 
 if $unpack {
-    for %data.keys.sort -> $f {
+    for %data<fils>.keys.sort -> $f {
         say "Unpacking '$f'";
         shell "tar -xvzf $f";
     }
@@ -88,7 +87,7 @@ if $unpack {
 }
 
 if $config {
-    for %data.keys.sort -> $f {
+    for %data<fils>.keys.sort -> $f {
         my $idx = rindex $f, '.tar.gz';
         unless $idx.defined {
             die "FATAL: Unknown file '$f'";
@@ -216,7 +215,7 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
     my %h;
     for %downfils.keys.sort {
         my $fil = $_;
-        say "Working file '$fil'...";
+        say "Working file '$fil'..." if $debug;
         my ($k, $typ, $f);
         with $fil {
             when /(.*) '.' (sha256) $/ {
@@ -248,7 +247,7 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
             print "  Found key '$k'";
             if $typ.defined and $f.defined {
                 say " and found type '$typ' and file '$f'.";
-                %h{$k}{$typ} = $f;
+                %h<fils>{$k}{$typ} = $f;
             }
             else {
                 say ".";
@@ -257,11 +256,11 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
     }
 
     say %h.raku if $debug;
-    for %h.keys -> $fil {
-        my $asc = %h{$fil}<asc>:exists ?? %h{$fil}<asc> !! 0;
-        my $sha = %h{$fil}<sha256>:exists ?? 'sha256'
-                                          !! (%h{$fil}<sha512>:exists) ?? 'sha512' !! 0;
-        my $sha-fil = %h{$fil}{$sha};
+    for %h<fils>.keys -> $fil {
+        my $asc = %h<fils>{$fil}<asc>:exists ?? %h<fils>{$fil}<asc> !! 0;
+        my $sha = %h<fils>{$fil}<sha256>:exists ?? 'sha256'
+                                                !! (%h<fils>{$fil}<sha512>:exists) ?? 'sha512' !! 0;
+        my $sha-fil = %h<fils>{$fil}{$sha};
 
         # check the shasum
         # if it's an openssl one, the file is probably bad
@@ -284,7 +283,6 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
                     die "FATAL: Unexpected Openssl file archive format: '$fil'";
                 }
             }
-
         }
         # now check the file
         shell "{$sha}sum --check $sha-fil";
