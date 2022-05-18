@@ -14,12 +14,18 @@ run "rm", "-f", $wrd, :cwd($dir);
 my ($arg0, $cmd, @args);
 
 $cmd = "../$prog $wrd"; # :cwd($dir);
-run |$cmd.words, :cwd($dir);
+run $cmd.words.flat, :cwd($dir);
 
 $cmd = "../$prog $wrd2"; # :cwd($dir);
-run |$cmd.words, :cwd($dir);
+run $cmd.words.flat, :cwd($dir);
 
 $cmd = "rm -f $wrd"; # :cwd($dir);
-run |$cmd.words, :cwd($dir);
+run $cmd.words.flat, :cwd($dir);
 
 
+run "../$prog $wrd".words.flat, :cwd($dir);
+run "../$prog $wrd2".words.flat, :cwd($dir);
+run "rm -f $wrd".words.flat, :cwd($dir);
+
+my $wrd3 = "baz";
+run "echo 'boo' '>' $wrd3".words.flat;
