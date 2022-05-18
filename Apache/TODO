@@ -1,1 +1,9 @@
 Add details of signing keys to enable good authentication.
+
++ add keys from Openssl
++ add kets from Apache2
+
+Convert "shell" to "run"
+
+Convert to a published module
+
