@@ -329,43 +329,6 @@ if $purge {
     exit;
 }
 
-    =begin comment
-    my $hash = @fils.shift;
-    if $hash !~~ /sha256$/ {
-        #  we expect them is a certain order
-        note "DEBUG: swapping files: file was: '$file', hash was '$hash'" if $debug;
-        ($file, $hash) = $hash, $file;
-    }
-    my $fnam = $file;
-    my $hnam = $hash;
-    $hnam ~~ s/'.sha256'$//;
-    if $fnam ne $hnam {
-        note "FATAL: file and hash pair ('$file', '$hash') don't match";
-        exit;
-    }
-    try {
-        shell "sha256sum --check $hash";
-        CATCH {
-            my $msg = .Str;
-            note "DEBUG: err is: $msg" if $debug;
-            when /openssl/ {
-                note "Correcting incorrect format of openssl sha256sum file...";
-                # rewrite the file and test it again
-                my $sha = slurp $hash;
-                $sha .= trim;
-                note "  Original:  $sha";
-                my $sha256 = "$sha $file";
-                note "  Corrected: $sha256";
-                spurt $hash, $sha256;
-                shell "sha256sum --check $hash";
-                .resume;
-            } 
-            note "Skipping...";
-            .resume;
-        }
-    }
-    =end comment
-
 sub show-infiles-format($f) {
     say qq:to/HERE/;
     You must create a file named '$f' consisting of a list of
