@@ -110,7 +110,8 @@ if $list {
 if $unpack {
     for %data<fils>.keys.sort -> $f {
         say "Unpacking '$f'";
-        shell "tar -xvzf $f";
+        #shell "tar -xvzf $f";
+        run "tar", "-xvzf", $f;
     }
     exit;
 }
@@ -139,7 +140,9 @@ if $dclean and ($o or $a) {
         say "Running 'make distclean' in dir '$dir'";
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
-    shell "cd $dir; make distclean";
+
+    #shell "make distclean", :cwd($dir);
+    run "make", "distclean", :cwd($dir);
     note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
 
     exit;
@@ -174,8 +177,11 @@ if $build  {
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
     
-    shell "cd $dir; make";
-    shell "cd $dir; make test" if $o;
+    #shell "make", :cwd($dir);
+    #shell("make test", :cwd($dir)) if $o;
+    run "make", :cwd($dir);
+    run("make", "test", :cwd($dir)) if $o;
+
     note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
 
     exit;
@@ -254,7 +260,8 @@ if $config  {
 
     # need the openssl version
     my $over = %data<over>;
-    shell "cd $dir; ../$sprog $over";
+    #shell "../$sprog $over", :cwd($dir);
+    run "../$sprog", $over, :cwd($dir);
     note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
 
     exit;
@@ -270,13 +277,15 @@ if $clean {
     if not $force {
         print qq:to/HERE/;
         With option 'force', the following commands will be executed:
-            \$ rm -rf {$odir}
-            \$ rm -rf {$adir}
+            \$ rm -rf $odir
+            \$ rm -rf $adir
         HERE
     }
     else {
-        shell "rm -rf {$odir}";
-        shell "rm -rf {$adir}";
+        #shell "rm -rf $odir";
+        #shell "rm -rf $adir";
+        run "rm", "-rf", $odir;
+        run "rm", "-rf", $adir;
     }
 }
 
@@ -303,15 +312,20 @@ if $purge {
         }
     }
     else {
-        shell "rm -rf {$odir}";
-        shell "rm -rf {$adir}";
+        #shell "rm -rf $odir";
+        #shell "rm -rf $adir";
+        run "rm", "-rf", $odir;
+        run "rm", "-rf", $adir;
 
         for %data<fils>.keys.sort.reverse -> $f {
-            shell "rm $f";
+            #shell "rm $f";
+            run "rm", $f;
             my $s = %data<fils>{$f}<sha256>;
             my $a = %data<fils>{$f}<asc>;
-            shell "rm $s";
-            shell "rm $a";
+            #shell "rm $s";
+            #shell "rm $a";
+            run "rm", $s;
+            run "rm", $a;
         }
     }
 
@@ -364,7 +378,8 @@ sub get-check-files(%data, :$refresh) {
             say "Fetching file '$dfil' from '$src'";
 
             my $line = "{$src}/{$dfil}";
-            shell "curl $line -O";
+            #shell "curl $line -O";
+            run "curl", $line "-O";
             # openssl sha256 files may be bad
             if $dfil ~~ /openssl/ and $dfil ~~ /sha256/ {
                 my $str = slurp $dfil;
@@ -380,7 +395,9 @@ sub get-check-files(%data, :$refresh) {
         # TODO check sig
         # TODO check sha512 if available
         # check the validity of the archive in any event
-        shell "sha256sum --check $s";
+        #shell "sha256sum --check $s";
+        run "sha256sum", "--check", $s;
+
     }
 
     exit;
