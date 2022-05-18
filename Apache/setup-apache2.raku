@@ -53,6 +53,7 @@ my $install = 0;
 my $clean   = 0;
 my $dclean  = 0;
 my $purge   = 0;
+my $keys    = 0;
 my $o       = 0;
 my $a       = 0;
 for @*ARGS {
@@ -69,10 +70,11 @@ for @*ARGS {
     when /^cl/ { ++$clean   }
     when /^p/  { ++$purge   }
 
-    # these three options need an o or a to select which component to operate on
+    # these options need an o or a to select which component to operate on
     when /^c/  { ++$config  }
     when /^b/  { ++$build   }
     when /^i/  { ++$install }
+    when /^k/  { ++$keys }
 
     when /^o/  { ++$o; $a = 0 }
     when /^a/  { ++$a; $o = 0 }
@@ -176,7 +178,7 @@ if $build  {
         say "Building Openssl in dir '$dir'";
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
-    
+
     #shell "make", :cwd($dir);
     #shell("make test", :cwd($dir)) if $o;
     run "make", :cwd($dir);
@@ -343,6 +345,21 @@ if $purge {
     exit;
 }
 
+if $keys  {
+    say "THIS MODE IS CURRENTLY INOPT";
+    exit;
+    if not ($o or $a) {
+        say "FATAL: With 'keys' You must also enter 'o' (for 'openssl') or 'a' (for 'apache').";
+        exit;
+    }
+    my $dir;
+    my $sprog;
+
+    exit;
+}
+
+
+##### subroutines #####
 sub show-infiles-format($f) {
     say qq:to/HERE/;
     You must create a file named '$f' consisting of a list of
@@ -387,7 +404,7 @@ sub get-check-files(%data, :$refresh) {
                 if @w.elems == 1 {
                     $str .= chomp;
                     $str ~= " $f";
-                    spurt $dfil, $str; 
+                    spurt $dfil, $str;
                 }
             }
         }
@@ -419,7 +436,7 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
         my $idx = rindex $line, '/';
         if $idx.defined {
             $f = $line.substr: $idx+1;
-            $src = $line.substr: 0, $idx; 
+            $src = $line.substr: 0, $idx;
             if $debug {
                 note qq:to/HERE/;
                 DEBUG file-list.dat line '$line'
@@ -469,9 +486,9 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
             default {
                 say "WARNING: Unexpected file name '$_'";
                 say "         Skipping it...";
-            } 
+            }
         }
-    
+
         if $k.defined {
             print "  Found key '$k'";
             if $typ.defined and $f.defined {
@@ -563,3 +580,8 @@ sub nmf-warning($nmf, :$indent) {
     say "{$spaces}         Expect unhandled exceptions without a complete file set.";
     say();
 } # sub nmf-warning
+
+sub get-key-fingerprints() {
+    # apache
+    run "curl https://downloads.apache.org/httpd/KEYS".words.flat;
+}
