@@ -96,7 +96,7 @@ if $get {
 }
 
 if $list {
-    say "File triplets:";
+    say "File sets:";
     for %data<fils>.keys.sort.reverse -> $f {
         say "  $f";
         my $s = %data<fils>{$f}<sha256>;
@@ -388,7 +388,8 @@ sub show-infiles-format($f) {
 sub get-check-files(%data, :$refresh) {
     # do we have all the files needed?
     # check presence, download if missing
-
+    # (download all if refreshing)
+    # always validate the archive files
     for %data<fils>.keys -> $f {
         my $src = %data<fils>{$f}<src>; # source for all the supporting files
         my $s = %data<fils>{$f}<sha256>;
@@ -396,6 +397,8 @@ sub get-check-files(%data, :$refresh) {
 
         for $f, $s, $a -> $dfil {
             next if $dfil.IO.f and not $refresh;
+            say "File '$dfil' not found." if not $refresh;
+            say "Fetching file '$dfil' from '$src'";
 
             my $line = "{$src}/{$dfil}";
             shell "curl $line -O";
@@ -410,31 +413,14 @@ sub get-check-files(%data, :$refresh) {
                 }
             }
         }
+
+        # TODO check sig
+        # TODO check sha512 if available
         # check the validity of the archive in any event
         shell "sha256sum --check $s";
     }
 
     exit;
-            =begin comment
-            if not $f.IO.r {
-                say "File '$f' not found, fetching it from '$src'";
-                shell "curl $line -O";
-            }
-            =end comment
-            =begin comment
-            # if it's an openssl one, the file is probably bad
-            my $s = slurp $sha-fil;
-            my @w = $s.words;
-            if @w.elems == 1 {
-                $s .= chomp;
-                $s ~= " $fil";
-                spurt $sha-fil, $s; 
-            }
-            =end comment
-        =begin comment
-        # now check the file
-        shell "{$sha}sum --check $sha-fil";
-        =end comment
 } # get-check-files
 
 sub create-jfil(:$flist, :$jfil, :$debug) {
