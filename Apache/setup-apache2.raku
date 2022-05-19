@@ -396,7 +396,7 @@ sub get-check-files(%data, :$refresh) {
 
             my $line = "{$src}/{$dfil}";
             #shell "curl $line -O";
-            run "curl", $line "-O";
+            run "curl", $line, "-O";
             # openssl sha256 files may be bad
             if $dfil ~~ /openssl/ and $dfil ~~ /sha256/ {
                 my $str = slurp $dfil;
