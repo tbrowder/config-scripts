@@ -125,7 +125,7 @@ if $dclean and ($o or $a) {
     if $a and not $odir.IO.d  {
         if not $force {
             note "FATAL: Openssl has not been installed in dir '$odir'";
-            note "       Use the 'force' option to override.";
+            note "       Use the 'force' option to override this restriction.";
             exit;
         }
         else {
@@ -161,7 +161,7 @@ if $build  {
     if $a and not $odir.IO.d  {
         if not $force {
             note "FATAL: Openssl has not been installed in dir '$odir'";
-            note "       Use the 'force' option to override.";
+            note "       Use the 'force' option to override this restriction.";
             exit;
         }
         else {
@@ -190,6 +190,11 @@ if $build  {
 }
 
 if $install {
+    my $is-root = $*USER eq 'root' ?? True !! False;
+    if not $is-root {
+        say "WARNING: Install commands are only executed for the root user.";
+    }
+
     if not ($o or $a) {
         say "FATAL: With 'install' you must also enter 'o' (for 'openssl') or 'a' (for 'apache').";
         exit;
@@ -197,10 +202,10 @@ if $install {
     my $dir;
     # apache, so openssl must be installed
     my $odir = %data<oidir>;
-    if $a and not $odir.IO.d  {
+    if $is-root and $a and not $odir.IO.d  {
         if not $force {
             note "FATAL: Openssl has not been installed in dir '$odir'";
-            note "       Use the 'force' option to override.";
+            note "       Use the 'force' option to override this restriction.";
             exit;
         }
         else {
@@ -210,14 +215,24 @@ if $install {
 
     if $a {
         $dir = %data<aidir>;
-        say "Installing Apache in dir '$dir'";
+        if $is-root {
+            say "Installing Apache in dir '$dir'";
+        }
+        else {
+            say "As a non-root user, you cannot install Apache in dir '$dir'";
+        }
     }
     elsif $o {
         $dir = %data<oidir>;
-        say "Installing Openssl in dir '$dir'";
+        if $is-root {
+            say "Installing Openssl in dir '$dir'";
+        }
+        else {
+            say "As a non-root user, you cannot install OpenSSL in dir '$dir'";
+        }
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
-    note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
+    note "WARNING: Openssl has not been installed in dir '$odir'" if $is-root and $a and not $odir.IO.d;
 
     exit;
 }
@@ -234,7 +249,7 @@ if $config  {
     if $a and not $odir.IO.d  {
         if not $force {
             note "FATAL: Openssl has not been installed in dir '$odir'";
-            note "       Use the 'force' option to override.";
+            note "       Use the 'force' option to override this restriction.";
             exit;
         }
         else {
