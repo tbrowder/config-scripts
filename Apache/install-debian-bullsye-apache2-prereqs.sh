@@ -3,7 +3,7 @@
 if [[ -z $1 ]] ; then
     echo "Usage: $0 go"
     echo
-    echo "Run as root to install Apache2 prereq packages for Debian 10 Buster amd64"
+    echo "Run as root to install Apache2 prereq packages for Debian amd64"
     echo
     exit
 fi
