@@ -4,7 +4,6 @@ RLINKS="
 /usr/local/bin/rakudo
 /usr/local/bin/raku
 /usr/local/bin/perl6
-/usr/local/bin/zef
 "
 
 RMODS="
@@ -39,17 +38,16 @@ if [ -z "$1" ] ; then
 fi
 
 if [[ $UID -ne 0 ]] ; then
-  echo "User '$USER' is not the root user...exiting without installation."
+  echo "User '$USER' is not the root user...exiting without uninstalling anything."
   exit
 fi
 
 for f in $RMODS
 do
     echo "UNINSTALLING Raku module '$f'"
-    /usr/local/bin/zef install $f
+    zef uinstall $f
 done
 
 rm -f /usr/local/bin/rakudo
 rm -f /usr/local/bin/raku
 rm -f /usr/local/bin/perl6
-rm -f /usr/local/bin/zef
