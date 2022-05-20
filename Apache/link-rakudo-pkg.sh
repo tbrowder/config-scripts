@@ -4,7 +4,8 @@ if [ -z "$1" ] ; then
   echo "Usage: $0 go"
   echo
   echo "  For users of 'rakudo-pkg' installations: installs"
-  echo "    the 'raku' executable as a sym link to '/usr/local/raku'."
+  echo "    the 'raku' executable as a sym link to    '/usr/local/raku'."
+  echo "    and the 'zef' executable as a sym link to '/usr/local/zef'."
   echo
   echo "  (This must be executed as the root user.)"
   echo
