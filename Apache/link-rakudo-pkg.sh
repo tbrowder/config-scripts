@@ -11,4 +11,5 @@ if [ -z "$1" ] ; then
   exit
 fi
 
-ln -sf /opt/rakudo-pkg/bin/raku /usr/local/bin/raku
+ln -sf /opt/rakudo-pkg/bin/raku         /usr/local/bin/raku
+ln -sf /opt/rakudo-pkg/var/zef/bin/zef  /usr/local/bin/zef
