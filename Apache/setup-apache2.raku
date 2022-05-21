@@ -211,6 +211,8 @@ if $install {
         else {
             note "WARNING: Openssl has not been installed in dir '$odir'";
         }
+        # run the script as root
+        run "make install", :cwd($dir);
     }
 
     if $a {
@@ -221,6 +223,8 @@ if $install {
         else {
             say "As a non-root user, you cannot install Apache in dir '$dir'";
         }
+        # run the script as root
+        run "make install", :cwd($dir);
     }
     elsif $o {
         $dir = %data<oidir>;
@@ -230,6 +234,8 @@ if $install {
         else {
             say "As a non-root user, you cannot install OpenSSL in dir '$dir'";
         }
+        # run the script as root
+        run "make install", :cwd($dir);
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
     note "WARNING: Openssl has not been installed in dir '$odir'" if $is-root and $a and not $odir.IO.d;
