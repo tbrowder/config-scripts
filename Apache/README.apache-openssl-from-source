@@ -36,6 +36,10 @@ Stop any currently running httpd:
 
     $ sudo apachectl graceful-stop
 
+Note in the following examples only the 
+unique leading letters of the commands need be
+entered.
+
 Obtain and install the source archives
 --------------------------------------
 
