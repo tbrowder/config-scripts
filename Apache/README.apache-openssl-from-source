@@ -21,6 +21,10 @@ as well as the the user.
 Pre-installation preparation:
 ----------------------------
 
+Ensure root has the necessary paths. Edit /root/.profile
+and /root/.bashrc as follows:
+
+    
 Ensure you have the necessary Debian packages:
 
   as root execute bash script:
@@ -55,13 +59,19 @@ Install OpenSSL first:
 
     $ ./setup-apache2.raku config openssl
     $ ./setup-apache2.raku build  openssl
-    $ sudo ./setup-apache2.raku install openssl
+    $ sudo su
+    # ./setup-apache2.raku install openssl
+    # <control-d>
+    $
 
 Install Apache2 second:
 
     $ ./setup-apache2.raku config apache
     $ ./setup-apache2.raku build  apache
-    $ sudo ./setup-apache2.raku install apache
+    $ sudo su
+    # ./setup-apache2.raku install apache
+    # <control-d>
+    $
 
 Post installation:
 -----------------
