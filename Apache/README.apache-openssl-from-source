@@ -47,7 +47,7 @@ Unpack them into their own directory;
 
     $ ./setup-apache2.raku unpack
 
-Install Openssl first:
+Install OpenSSL first:
 
     $ ./setup-apache2.raku config openssl
     $ ./setup-apache2.raku build  openssl

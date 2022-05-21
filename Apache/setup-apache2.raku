@@ -16,7 +16,7 @@ if not @*ARGS.elems {
     print qq:to/HERE/;
     Usage: {$*PROGRAM.basename} <opt> [o|a] [help, force, debug]
 
-    Provides sequential steps to install Openssl and Apache2.
+    Provides sequential steps to install OpenSSL and Apache2.
     Note: You MUST install Openssl BEFORE Apache2.
 
         list    - lists the required files
