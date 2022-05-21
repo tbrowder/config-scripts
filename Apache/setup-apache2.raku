@@ -1,4 +1,4 @@
-#!/usr/bin/env raku
+#!/opt/rakudo-pkg/bin/raku
 
 use Text::Utils :strip-comment;
 use JSON::Fast;

@@ -1,12 +1,22 @@
 Procedures for installing Apache2
 =================================
 
-NOTE:
+NOTES:
 
 The information in this directory applies specifically to installation
 from source on a Debian 11 Bullsye amd64 host. Apache2 is not
 well-documented and, while these instructions work for me, your
 mileage may vary.
+
+Until I can find the correct solution, the Raku Openssl/Apache
+installation program's shebang line
+has a fixed, absolute path to the installed Raku compiler.
+It currently points the the binary installed with the 'rakudo-pkg'
+and it should be changed to the apprpriate absolute path for
+an installation by the official Debian 'raku' package.
+Additionally, the user must ensure that the module dependencies,
+Text::Utils and JSON::Fast, are installed for the root user
+as well as the the user.
 
 Pre-installation preparation:
 ----------------------------
@@ -22,7 +32,7 @@ package which contain the 'raku' executable:
 
     $ sudo apt install rakudo
 
-Stop the currently running httpd:
+Stop any currently running httpd:
 
     $ sudo apachectl graceful-stop
 
@@ -37,29 +47,17 @@ Unpack them into their own directory;
 
     $ ./setup-apache2.raku unpack
 
-Configure the packages:
+Install Openssl first:
 
-    $ ./setup-apache2.raku config
+    $ ./setup-apache2.raku config openssl
+    $ ./setup-apache2.raku build  openssl
+    $ sudo ./setup-apache2.raku install openssl
 
-Build and test the packages:
+Install Apache2 second:
 
-    $ ./setup-apache2.raku build
-
-Install the packages:
-
-    $ sudo ./setup-apache2.raku install
-
-Install apache2 from source and install in:
-    /usr/local/apache2 # default
-
-    cd into the source directory
-    use the local script:
-    $ ../apache2-config-user-openssl.sh x.y.za
-    # note you may have to add your openssl version if it's not there already
-    make && sudo make install
-    sudo su
-    apachectl -k graceful stop
-    apachectl -k start
+    $ ./setup-apache2.raku config apache
+    $ ./setup-apache2.raku build  apache
+    $ sudo ./setup-apache2.raku install apache
 
 Post installation:
 -----------------
