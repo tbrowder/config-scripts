@@ -250,6 +250,8 @@ if $uninstall {
 }
 
 if $install {
+    my $odir = %data<oidir>;
+    my $adir = %data<aidir>;
     my $is-root = $*USER eq 'root' ?? True !! False;
     if not $is-root {
         say "WARNING: Install commands are only executed for the root user.";
@@ -260,9 +262,7 @@ if $install {
         exit;
     }
 
-    my $dir;
     # apache, so openssl must be installed
-    my $odir = %data<oidir>;
     if $is-root and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
             note "FATAL: OpenSSL has not been installed in dir '$odir'";
@@ -273,27 +273,28 @@ if $install {
             note "WARNING: OpenSSL has not been installed in dir '$odir'";
         }
         # run the script as root
+        my $dir = %data<oldir>;
         run "make install", :cwd($dir);
     }
 
     if $a {
-        $dir = %data<aidir>;
+        $dir = %data<aldir>;
         if $is-root {
-            say "Installing Apache in dir '$dir'";
+            say "Installing Apache in dir '$adir'";
         }
         else {
-            say "As a non-root user, you cannot install Apache in dir '$dir'";
+            say "As a non-root user, you cannot install Apache in dir '$adir'";
         }
         # run the script as root
         run "make install", :cwd($dir);
     }
     elsif $o {
-        $dir = %data<oidir>;
+        $dir = %data<oldir>;
         if $is-root {
             say "Installing OpenSSL in dir '$dir'";
         }
         else {
-            say "As a non-root user, you cannot install OpenSSL in dir '$dir'";
+            say "As a non-root user, you cannot install OpenSSL in dir '$odir'";
         }
         # run the script as root
         run "make install", :cwd($dir);
