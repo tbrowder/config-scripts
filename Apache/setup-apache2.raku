@@ -16,7 +16,7 @@ if not @*ARGS.elems {
     print qq:to/HERE/;
     Usage: {$*PROGRAM.basename} <opt> [o|a] [help, force, debug]
 
-    Provides sequential steps to install OpenSSL and Apache2.
+    Provides sequential steps to install (and uninstall) OpenSSL and Apache2.
     Note: You MUST install OpenSSL BEFORE Apache2.
 
         list    - lists the required files
@@ -24,10 +24,11 @@ if not @*ARGS.elems {
                   (add the 'r' option to refresh any existing file)
         unpack  - unpacks the archive files
 
-        config  o|a - configures a directory
-        build   o|a - builds and tests a component
-        dclean  o|a - runs 'make distclean' in a component directory
-        install o|a - as root, installs a component
+        config    o|a - configures a directory
+        build     o|a - builds and tests a component
+        dclean    o|a - runs 'make distclean' in a component directory
+        install   o|a - as root, installs a component
+        Uninstall o|a - as root, uninstalls a component
 
         clean   - removes all local component directories
         purge   - removes all local component directories and downloaded files
@@ -40,41 +41,43 @@ if not @*ARGS.elems {
 }
 
 
-my $debug   = 0;
-my $force   = 0;
-my $refresh = 0;
+my $debug     = 0;
+my $force     = 0;
+my $refresh   = 0;
 
-my $list    = 0;
-my $get     = 0;
-my $unpack  = 0;
-my $config  = 0;
-my $build   = 0;
-my $install = 0;
-my $clean   = 0;
-my $dclean  = 0;
-my $purge   = 0;
-my $keys    = 0;
-my $o       = 0;
-my $a       = 0;
+my $list      = 0;
+my $get       = 0;
+my $unpack    = 0;
+my $config    = 0;
+my $build     = 0;
+my $install   = 0;
+my $uninstall = 0;
+my $clean     = 0;
+my $dclean    = 0;
+my $purge     = 0;
+my $keys      = 0;
+my $o         = 0;
+my $a         = 0;
 for @*ARGS {
-    when /^de/ { ++$debug   }
-    when /^d/  { ++$dclean  }
-    when /^h/  { help       } # exits from the sub
-    when /^f/  { ++$force   }
-    when /^r/  { ++$refresh }
+    when /^de/ { ++$debug     }
+    when /^d/  { ++$dclean    }
+    when /^h/  { help         } # exits from the sub
+    when /^f/  { ++$force     }
+    when /^r/  { ++$refresh   }
 
-    when /^l/  { ++$list    }
-    when /^g/  { ++$get     }
-    when /^u/  { ++$unpack  }
+    when /^l/  { ++$list      }
+    when /^g/  { ++$get       }
+    when /^u/  { ++$unpack    }
 
-    when /^cl/ { ++$clean   }
-    when /^p/  { ++$purge   }
+    when /^cl/ { ++$clean     }
+    when /^p/  { ++$purge     }
 
     # these options need an o or a to select which component to operate on
-    when /^c/  { ++$config  }
-    when /^b/  { ++$build   }
-    when /^i/  { ++$install }
-    when /^k/  { ++$keys }
+    when /^c/  { ++$config    }
+    when /^b/  { ++$build     }
+    when /^i/  { ++$install   } # requires root
+    when /^U/  { ++$uninstall } # requires root
+    when /^k/  { ++$keys      }
 
     when /^o/  { ++$o; $a = 0 }
     when /^a/  { ++$a; $o = 0 }
@@ -90,11 +93,10 @@ nmf-warning($nmf) if $nmf and not $get;
 if $get {
     print "Getting and checking required files";
     print " (using 'refresh')" if $refresh;
-    say "...";
+    say   "...";
 
     get-check-files %data, :$refresh;
     exit;
-
 }
 
 if $list {
@@ -190,6 +192,64 @@ if $build  {
     exit;
 }
 
+if $uninstall {
+    my $odir = %data<oidir>;
+    my $adir = %data<aidir>;
+    if not ($adir.IO.d or $odir,IO.d) {
+        say "No installed code remains.";
+        exit;
+    }
+    my $is-root = $*USER eq 'root' ?? True !! False;
+    if not $is-root {
+        say "WARNING: Uninstall commands are only executed for the root user.";
+        exit;
+    }
+
+    if not ($o or $a) {
+        say "FATAL: With 'uninstall' you must also enter 'o' (for 'openssl') or 'a' (for 'apache').";
+        exit;
+    }
+
+    if $o and $odir.IO.d {
+        my $dir = %data<oldir>
+        # ask if the user REALLY wants to uninstall OpenSSL
+        my $resp = prompt "Really uninstall OpenSSL (y/N)? ";
+        if $resp !~~ /:i y/ {
+            say "Okay, leaving all code in place.";
+            exit;
+        }
+
+        say "Removing all installed OpenSSL code from '$odir'...";
+        # pause a bit
+        sleep 2; # seconds
+        run "make uninstall", :cwd($dir);
+        say "Removing directory '$odir'...";
+        run "rm", "-rf", $odir;
+        say "OpenSSL removal completed.";
+    }
+
+    if $a and $adir.IO.d {
+        # ask if the user REALLY wants to uninstall Apache
+        die "Tom, do we want to remove intalled code????";
+
+        my $resp = prompt "Really uninstall Apache (y/N)? ";
+        if $resp !~~ /:i y/ {
+            say "Okay, leaving all code in place.";
+            exit;
+        }
+
+        say "Removing all installed OpenSSL code from '$odir'...";
+        # pause a bit
+        sleep 2; # seconds
+        run "make uninstall", :cwd($dir);
+        say "Removing directory '$odir'...";
+        run "rm", "-rf", $odir;
+        say "OpenSSL removal completed.";
+    }
+
+    exit;
+}
+
 if $install {
     my $is-root = $*USER eq 'root' ?? True !! False;
     if not $is-root {
@@ -200,6 +260,7 @@ if $install {
         say "FATAL: With 'install' you must also enter 'o' (for 'openssl') or 'a' (for 'apache').";
         exit;
     }
+
     my $dir;
     # apache, so openssl must be installed
     my $odir = %data<oidir>;
