@@ -211,7 +211,7 @@ if $uninstall {
     }
 
     if $o and $odir.IO.d {
-        my $dir = %data<oldir>
+        my $dir = %data<oldir>;
         # ask if the user REALLY wants to uninstall OpenSSL
         my $resp = prompt "Really uninstall OpenSSL (y/N)? ";
         if $resp !~~ /:i y/ {
@@ -230,7 +230,7 @@ if $uninstall {
 
     if $a and $adir.IO.d {
         # ask if the user REALLY wants to uninstall Apache
-        die "Tom, do we want to remove intalled code????";
+        die "Tom, do we want to remove intalled Apache code????";
 
         my $resp = prompt "Really uninstall Apache (y/N)? ";
         if $resp !~~ /:i y/ {
