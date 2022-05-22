@@ -1,6 +1,6 @@
 Provide uninstall for OpenSSL
-+ find a good file check other the the install dir for checking installation
-+ provide uninstall all to remove the OpenSSL directoty
++ find a good file check other the install dir for checking installation
++ provide uninstall all to remove the OpenSSL directory
 
 Note httpd does NOT have testing nor uninstall in its Makefile 
 (but I haven't checked the configure to see if that's possible).
