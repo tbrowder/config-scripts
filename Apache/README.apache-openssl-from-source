@@ -8,13 +8,8 @@ from source on a Debian 11 Bullsye amd64 host. Apache2 is not
 well-documented and, while these instructions work for me, your
 mileage may vary.
 
-Until I can find the correct solution, the Raku Openssl/Apache
-installation program's shebang line
-has a fixed, absolute path to the installed Raku compiler.
-It currently points the the binary installed with the 'rakudo-pkg'
-and it should be changed to the apprpriate absolute path for
-an installation by the official Debian 'raku' package.
-Additionally, the user must ensure that the module dependencies,
+Until I can find the correct solution, 
+the user must ensure that the module dependencies,
 Text::Utils and JSON::Fast, are installed for the root user
 as well as the the user.
 
@@ -24,7 +19,6 @@ Pre-installation preparation:
 Ensure root has the necessary paths. Edit /root/.profile
 and /root/.bashrc as follows:
 
-    
 Ensure you have the necessary Debian packages:
 
   as root execute bash script:
@@ -32,9 +26,9 @@ Ensure you have the necessary Debian packages:
 
 One more prerequisite is the Raku programming language. If you know
 you have it, you are all set. Otherwise, you can install the Debian
-package which contain the 'raku' executable:
+packages which contain the 'raku' and 'zef' executables:
 
-    $ sudo apt install rakudo
+    $ sudo apt install rakudo zef
 
 Stop any currently running httpd:
 
@@ -59,19 +53,13 @@ Install OpenSSL first:
 
     $ ./setup-apache2.raku config openssl
     $ ./setup-apache2.raku build  openssl
-    $ sudo su
-    # ./setup-apache2.raku install openssl
-    # <control-d>
-    $
+    $ sudo -i ./setup-apache2.raku install openssl
 
 Install Apache2 second:
 
     $ ./setup-apache2.raku config apache
     $ ./setup-apache2.raku build  apache
-    $ sudo su
-    # ./setup-apache2.raku install apache
-    # <control-d>
-    $
+    $ sudo -i ./setup-apache2.raku install apache
 
 Post installation:
 -----------------
