@@ -211,7 +211,7 @@ if $uninstall {
     }
 
     if $o and $odir.IO.d {
-        my $dir = %data<oldir>;
+        my $ldir = %data<oldir>;
         # ask if the user REALLY wants to uninstall OpenSSL
         my $resp = prompt "Really uninstall OpenSSL (y/N)? ";
         if $resp !~~ /:i y/ {
@@ -222,7 +222,7 @@ if $uninstall {
         say "Removing all installed OpenSSL code from '$odir'...";
         # pause a bit
         sleep 2; # seconds
-        run "make uninstall", :cwd($dir);
+        run "make uninstall", :cwd($ldir);
         say "Removing directory '$odir'...";
         run "rm", "-rf", $odir;
         say "OpenSSL removal completed.";
@@ -238,13 +238,12 @@ if $uninstall {
             exit;
         }
 
-        say "Removing all installed OpenSSL code from '$odir'...";
+        say "Removing all installed Apache code from '$adir'...";
         # pause a bit
         sleep 2; # seconds
-        run "make uninstall", :cwd($dir);
-        say "Removing directory '$odir'...";
-        run "rm", "-rf", $odir;
-        say "OpenSSL removal completed.";
+        say "Removing directory '$adir'...";
+        run "rm", "-rf", $adir;
+        say "Apache removal completed.";
     }
 
     exit;
