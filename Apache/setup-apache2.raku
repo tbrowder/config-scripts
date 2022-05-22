@@ -17,7 +17,7 @@ if not @*ARGS.elems {
     Usage: {$*PROGRAM.basename} <opt> [o|a] [help, force, debug]
 
     Provides sequential steps to install OpenSSL and Apache2.
-    Note: You MUST install Openssl BEFORE Apache2.
+    Note: You MUST install OpenSSL BEFORE Apache2.
 
         list    - lists the required files
         get [r] - gets, confirms, and lists the required files
@@ -122,14 +122,14 @@ if $dclean and ($o or $a) {
     my $dir;
     # apache, so openssl must be installed
     my $odir = %data<oidir>;
-    if $a and not $odir.IO.d  {
+    if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
-            note "FATAL: Openssl has not been installed in dir '$odir'";
+            note "FATAL: OpenSSL has not been installed in dir '$odir'";
             note "       Use the 'force' option to override this restriction.";
             exit;
         }
         else {
-            note "WARNING: Openssl has not been installed in dir '$odir'";
+            note "WARNING: OpenSSL has not been installed in dir '$odir'";
         }
     }
 
@@ -145,7 +145,8 @@ if $dclean and ($o or $a) {
 
     #shell "make distclean", :cwd($dir);
     run "make", "distclean", :cwd($dir);
-    note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
+
+    note "WARNING: OpenSSL has not been installed in dir '$odir'" if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
 
     exit;
 }
@@ -158,14 +159,14 @@ if $build  {
     my $dir;
     # apache, so openssl must be installed
     my $odir = %data<oidir>;
-    if $a and not $odir.IO.d  {
+    if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
-            note "FATAL: Openssl has not been installed in dir '$odir'";
+            note "FATAL: OpenSSL has not been installed in dir '$odir'";
             note "       Use the 'force' option to override this restriction.";
             exit;
         }
         else {
-            note "WARNING: Openssl has not been installed in dir '$odir'";
+            note "WARNING: OpenSSL has not been installed in dir '$odir'";
         }
     }
 
@@ -175,7 +176,7 @@ if $build  {
     }
     elsif $o {
         $dir = %data<oldir>;
-        say "Building Openssl in dir '$dir'";
+        say "Building OpenSSL in dir '$dir'";
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
 
@@ -184,7 +185,7 @@ if $build  {
     run "make", :cwd($dir);
     run("make", "test", :cwd($dir)) if $o;
 
-    note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
+    note "WARNING: OpenSSL has not been installed in dir '$odir'" if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
 
     exit;
 }
@@ -202,14 +203,14 @@ if $install {
     my $dir;
     # apache, so openssl must be installed
     my $odir = %data<oidir>;
-    if $is-root and $a and not $odir.IO.d  {
+    if $is-root and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
-            note "FATAL: Openssl has not been installed in dir '$odir'";
+            note "FATAL: OpenSSL has not been installed in dir '$odir'";
             note "       Use the 'force' option to override this restriction.";
             exit;
         }
         else {
-            note "WARNING: Openssl has not been installed in dir '$odir'";
+            note "WARNING: OpenSSL has not been installed in dir '$odir'";
         }
         # run the script as root
         run "make install", :cwd($dir);
@@ -229,7 +230,7 @@ if $install {
     elsif $o {
         $dir = %data<oidir>;
         if $is-root {
-            say "Installing Openssl in dir '$dir'";
+            say "Installing OpenSSL in dir '$dir'";
         }
         else {
             say "As a non-root user, you cannot install OpenSSL in dir '$dir'";
@@ -238,7 +239,8 @@ if $install {
         run "make install", :cwd($dir);
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
-    note "WARNING: Openssl has not been installed in dir '$odir'" if $is-root and $a and not $odir.IO.d;
+
+    note "WARNING: OpenSSL has not been installed in dir '$odir'" if $is-root and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
 
     exit;
 }
@@ -252,14 +254,14 @@ if $config  {
     my $sprog;
     # apache, so openssl must be installed
     my $odir = %data<oidir>;
-    if $a and not $odir.IO.d  {
+    if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
-            note "FATAL: Openssl has not been installed in dir '$odir'";
+            note "FATAL: OpenSSL has not been installed in dir '$odir'";
             note "       Use the 'force' option to override this restriction.";
             exit;
         }
         else {
-            note "WARNING: Openssl has not been installed in dir '$odir'";
+            note "WARNING: OpenSSL has not been installed in dir '$odir'";
         }
     }
 
@@ -268,12 +270,12 @@ if $config  {
         say "Configuring Apache in dir '$dir'";
         # apache, so openssl must be installed
         my $odir = %data<oidir>;
-        note "WARNING: Openssl has not been installed in dir '$odir'" if not $odir.IO.d;
+        note "WARNING: OpenSSL has not been installed in dir '$odir'" if not $odir.IO.d;
         $sprog = 'apache2-config-user-openssl.sh';
     }
     elsif $o {
         $dir = %data<oldir>;
-        say "Configuring Openssl in dir '$dir'";
+        say "Configuring OpenSSL in dir '$dir'";
         $sprog = 'openssl-config-no-fips.sh';
     }
 
@@ -285,7 +287,8 @@ if $config  {
     my $over = %data<over>;
     #shell "../$sprog $over", :cwd($dir);
     run "../$sprog", $over, :cwd($dir);
-    note "WARNING: Openssl has not been installed in dir '$odir'" if $a and not $odir.IO.d;
+
+    note "WARNING: OpenSSL has not been installed in dir '$odir'" if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
 
     exit;
 }
@@ -388,7 +391,7 @@ sub show-infiles-format($f) {
     signature data as in the following example. Comments are
     ignored:
 
-        # latest Openssl and Apache2 source files as of 2022-05-16
+        # latest OpenSSL and Apache2 source files as of 2022-05-16
         https://www.openssl.org/source/openssl-3.0.3.tar.gz           # openssl archive file
         https://www.openssl.org/source/openssl-3.0.3.tar.gz.sha256    #   its sha checksum
         https://www.openssl.org/source/openssl-3.0.3.tar.gz.asc       #   its crypo signature
@@ -559,7 +562,7 @@ sub create-jfil(:$flist, :$jfil, :$debug) {
                     %h<oidir> = '/opt/openssl-' ~ $ver;
                 }
                 else {
-                    die "FATAL: Unexpected Openssl file archive format: '$fil'";
+                    die "FATAL: Unexpected OpenSSL file archive format: '$fil'";
                 }
             }
         }
