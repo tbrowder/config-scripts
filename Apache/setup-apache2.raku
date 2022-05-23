@@ -278,7 +278,7 @@ if $install {
     }
 
     if $a {
-        $dir = %data<aldir>;
+        my $dir = %data<aldir>;
         if $is-root {
             say "Installing Apache in dir '$adir'";
         }
@@ -289,7 +289,7 @@ if $install {
         run "make install", :cwd($dir);
     }
     elsif $o {
-        $dir = %data<oldir>;
+        my $dir = %data<oldir>;
         if $is-root {
             say "Installing OpenSSL in dir '$dir'";
         }
