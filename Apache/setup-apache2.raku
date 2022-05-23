@@ -114,7 +114,6 @@ if $list {
 if $unpack {
     for %data<fils>.keys.sort -> $f {
         say "Unpacking '$f'";
-        #shell "tar -xvzf $f";
         run "tar", "-xvzf", $f;
     }
     exit;
@@ -145,7 +144,6 @@ if $dclean and ($o or $a) {
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
 
-    #shell "make distclean", :cwd($dir);
     run "make", "distclean", :cwd($dir);
 
     note "WARNING: OpenSSL has not been installed in dir '$odir'" if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
@@ -182,8 +180,6 @@ if $build  {
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
 
-    #shell "make", :cwd($dir);
-    #shell("make test", :cwd($dir)) if $o;
     run "make", :cwd($dir);
     run("make", "test", :cwd($dir)) if $o;
 
@@ -346,7 +342,6 @@ if $config  {
 
     # need the openssl version
     my $over = %data<over>;
-    #shell "../$sprog $over", :cwd($dir);
     run "../$sprog", $over, :cwd($dir);
 
     note "WARNING: OpenSSL has not been installed in dir '$odir'" if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
@@ -369,8 +364,6 @@ if $clean {
         HERE
     }
     else {
-        #shell "rm -rf $odir";
-        #shell "rm -rf $adir";
         run "rm", "-rf", $odir;
         run "rm", "-rf", $adir;
     }
@@ -399,18 +392,13 @@ if $purge {
         }
     }
     else {
-        #shell "rm -rf $odir";
-        #shell "rm -rf $adir";
         run "rm", "-rf", $odir;
         run "rm", "-rf", $adir;
 
         for %data<fils>.keys.sort.reverse -> $f {
-            #shell "rm $f";
             run "rm", $f;
             my $s = %data<fils>{$f}<sha256>;
             my $a = %data<fils>{$f}<asc>;
-            #shell "rm $s";
-            #shell "rm $a";
             run "rm", $s;
             run "rm", $a;
         }
@@ -480,7 +468,6 @@ sub get-check-files(%data, :$refresh) {
             say "Fetching file '$dfil' from '$src'";
 
             my $line = "{$src}/{$dfil}";
-            #shell "curl $line -O";
             run "curl", $line, "-O";
             # openssl sha256 files may be bad
             if $dfil ~~ /openssl/ and $dfil ~~ /sha256/ {
@@ -497,7 +484,6 @@ sub get-check-files(%data, :$refresh) {
         # TODO check sig
         # TODO check sha512 if available
         # check the validity of the archive in any event
-        #shell "sha256sum --check $s";
         run "sha256sum", "--check", $s;
 
     }
