@@ -274,7 +274,7 @@ if $install {
         }
         # run the script as root
         my $dir = %data<oldir>;
-        run "make install", :cwd($dir);
+        run "make", "install", :cwd($dir);
     }
 
     if $a {
@@ -286,7 +286,7 @@ if $install {
             say "As a non-root user, you cannot install Apache in dir '$adir'";
         }
         # run the script as root
-        run "make install", :cwd($dir);
+        run "make", "install", :cwd($dir);
     }
     elsif $o {
         my $dir = %data<oldir>;
@@ -297,7 +297,7 @@ if $install {
             say "As a non-root user, you cannot install OpenSSL in dir '$odir'";
         }
         # run the script as root
-        run "make install", :cwd($dir);
+        run "make", "install", :cwd($dir);
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
 
