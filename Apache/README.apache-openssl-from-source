@@ -53,20 +53,13 @@ Install OpenSSL first:
 
     $ ./setup-apache2.raku config openssl
     $ ./setup-apache2.raku build  openssl
-    $ sudo su
-    # ./setup-apache2.raku install openssl
-    <ctrl-d>
-    $
-
+    $ sudo -s --preserve-env=PATH ./setup-apache2.raku install openssl
 
 Install Apache2 second:
 
     $ ./setup-apache2.raku config apache
     $ ./setup-apache2.raku build  apache
-    $ sudo su 
-    # ./setup-apache2.raku install apache
-    <ctrl-d>
-    $
+    $ sudo -s --preserve-env=PATH ./setup-apache2.raku install apache
 
 Post installation:
 -----------------
