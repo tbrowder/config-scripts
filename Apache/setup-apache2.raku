@@ -32,6 +32,8 @@ if not @*ARGS.elems {
 
         clean   - removes all local component directories
         purge   - removes all local component directories and downloaded files
+        read    - read and show the contents of the Debian systemd files
+                    for Apache
 
     HERE
 
@@ -56,6 +58,7 @@ my $clean     = 0;
 my $dclean    = 0;
 my $purge     = 0;
 my $keys      = 0;
+my $read      = 0;
 my $o         = 0;
 my $a         = 0;
 for @*ARGS {
@@ -64,6 +67,7 @@ for @*ARGS {
     when /^h/  { help         } # exits from the sub
     when /^f/  { ++$force     }
     when /^r/  { ++$refresh   }
+    when /^R/  { ++$read      }
 
     when /^l/  { ++$list      }
     when /^g/  { ++$get       }
@@ -431,6 +435,9 @@ if $keys  {
     exit;
 }
 
+if $read {
+}
+
 
 ##### subroutines #####
 sub show-infiles-format($f) {
@@ -655,4 +662,23 @@ sub nmf-warning($nmf, :$indent) {
 sub get-key-fingerprints() {
     # apache
     run "curl https://downloads.apache.org/httpd/KEYS".words.flat;
+} # sub get-key-footprints
+
+sub read-systemd-files() {
+    my @fils = <
+        /etc/systemd/system/multi-user.target.wants/apache2.service
+        /run/systemd/units/invocation:apache2.service
+        /usr/lib/systemd/system/apache2.service
+        /var/lib/systemd/deb-systemd-helper-enabled/apache2.service.dsh-also
+        /var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/apache2.service
+    >;
+
+    say "Reading Debian 11 systemd files for Apache:":
+    for @fils -> $f {
+        say "  $f:";
+        for $f.IO.lines -> $line {
+            say "    $line";
+        }
+    }
 }
+
