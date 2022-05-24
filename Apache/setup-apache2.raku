@@ -3,21 +3,23 @@
 use Text::Utils :strip-comment;
 use JSON::Fast;
 
+my $is-root = $*USER eq 'root' ?? True !! False;
 # the file collection that has been downloaded:
 # (must be consistent: *.tar.gz)
 my $flist = 'file-list.dat';       # desired files to be used
 my $jfil  = '.apache-setup.json';  # formatted hash with all data
 show-infiles-format($flist) if not $flist.IO.r; # exits from sub
-create-jfil(:$flist, :$jfil, :debug(0)) if not $jfil.IO.r or $flist.IO.modified > $jfil.IO.modified;
+create-jfil(:$flist, :$jfil, :$is-root, :debug(0)) if not $jfil.IO.r or $flist.IO.modified > $jfil.IO.modified;
 my %data = from-json(slurp $jfil);
 my $nmf = check-files %data;
 
 if not @*ARGS.elems {
     print qq:to/HERE/;
-    Usage: {$*PROGRAM.basename} <opt> [o|a] [help, force, debug]
+    Usage: {$*PROGRAM.basename} <mode> [o|a] [help, force, debug]
 
     Provides sequential steps to install (and uninstall) OpenSSL and Apache2.
     Note: You MUST install OpenSSL BEFORE Apache2.
+    Note: '*' indicates a mode that must be run by root.
 
         list    - lists the required files
         get [r] - gets, confirms, and lists the required files
@@ -27,8 +29,8 @@ if not @*ARGS.elems {
         config    o|a - configures a directory
         build     o|a - builds and tests a component
         dclean    o|a - runs 'make distclean' in a component directory
-        install   o|a - as root, installs a component
-        Uninstall o|a - as root, uninstalls a component
+       *install   o|a - as root, installs a component
+       *Uninstall o|a - as root, uninstalls a component
 
         clean   - removes all local component directories
         purge   - removes all local component directories and downloaded files
@@ -92,6 +94,11 @@ for @*ARGS {
     }
 }
 
+unless ($install or $uninstall) and $is-root {
+    say "FATAL: The root user can only install or uninstall.";
+    exit;
+}
+
 nmf-warning($nmf) if $nmf and not $get;
 
 if $get {
@@ -99,7 +106,7 @@ if $get {
     print " (using 'refresh')" if $refresh;
     say   "...";
 
-    get-check-files %data, :$refresh;
+    get-check-files %data, :$refresh, :$is-root;
     exit;
 }
 
@@ -252,7 +259,8 @@ if $uninstall {
 if $install {
     my $odir = %data<oidir>;
     my $adir = %data<aidir>;
-    my $is-root = $*USER eq 'root' ?? True !! False;
+    my $oldir = %data<oldir>;
+    my $aldir = %data<aldir>;
     if not $is-root {
         say "WARNING: Install commands are only executed for the root user.";
     }
@@ -459,11 +467,14 @@ sub show-infiles-format($f) {
     exit;
 } # sub show-infiles-format
 
-sub get-check-files(%data, :$refresh) {
+sub get-check-files(%data, :$refresh, :$is-root!) {
     # do we have all the files needed?
     # check presence, download if missing
     # (download all if refreshing)
     # always validate the archive files
+    if $is-root {
+        die "FATAL: sub get-check-files is NOT designed to be created by roort.";
+    }
     for %data<fils>.keys -> $f {
         my $src = %data<fils>{$f}<src>; # source for all the supporting files
         my $s = %data<fils>{$f}<sha256>;
@@ -492,15 +503,17 @@ sub get-check-files(%data, :$refresh) {
         # TODO check sha512 if available
         # check the validity of the archive in any event
         run "sha256sum", "--check", $s;
-
     }
 
     exit;
 } # get-check-files
 
-sub create-jfil(:$flist, :$jfil, :$debug) {
+sub create-jfil(:$flist, :$jfil, :$is-root!, :$debug) {
     # reads formatted file $flist, creates the desired
     # data hash, and saves it as a JSON string file
+    if $is-root {
+        die "FATAL: sub create-jfil is NOT designed to be created by roort.";
+    }
 
     my @lines = $flist.IO.lines;
     my %downfils;
