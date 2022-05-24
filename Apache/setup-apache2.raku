@@ -34,7 +34,7 @@ if not @*ARGS.elems {
 
         clean   - removes all local component directories
         purge   - removes all local component directories and downloaded files
-        read    - read and show the contents of the Debian systemd files
+        Read    - read and show the contents of the Debian systemd files
                     for Apache
 
     HERE
@@ -43,7 +43,6 @@ if not @*ARGS.elems {
 
     exit;
 }
-
 
 my $debug     = 0;
 my $force     = 0;
@@ -63,6 +62,7 @@ my $keys      = 0;
 my $read      = 0;
 my $o         = 0;
 my $a         = 0;
+
 for @*ARGS {
     when /^de/ { ++$debug     }
     when /^d/  { ++$dclean    }
@@ -94,8 +94,8 @@ for @*ARGS {
     }
 }
 
-unless ($install or $uninstall) and $is-root {
-    say "FATAL: The root user can only install or uninstall.";
+if ($install or $uninstall) and not $is-root {
+    say "FATAL: Only the root user can install or uninstall.";
     exit;
 }
 
@@ -444,6 +444,8 @@ if $keys  {
 }
 
 if $read {
+    read-systemd-files();
+    exit;
 }
 
 
@@ -686,7 +688,7 @@ sub read-systemd-files() {
         /var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/apache2.service
     >;
 
-    say "Reading Debian 11 systemd files for Apache:":
+    say "Reading Debian 11 systemd files for Apache:";
     for @fils -> $f {
         say "  $f:";
         for $f.IO.lines -> $line {
