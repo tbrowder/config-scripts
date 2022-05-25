@@ -690,10 +690,18 @@ sub read-systemd-files() {
 
     say "Reading Debian 11 systemd files for Apache:";
     for @fils -> $f {
-        say "  $f:";
+        say   "  ==============";
+        print "  File: $f:";
+        if not $f.IO.r {
+            say " (file not found...)";
+            say   "  ==============";
+            next;
+        }
+        say " contents...";
         for $f.IO.lines -> $line {
             say "    $line";
         }
+        say   "  ==============";
     }
 }
 
