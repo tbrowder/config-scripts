@@ -63,3 +63,16 @@ Install Apache2 second:
 
 Post installation:
 -----------------
+
+I use an apache user and an apache group.
+For convenience, I add my user name to the apache group.
+
+My setup (your user and group numbers may vary):
+
+/etc/passwd file:
+  apache:x:108:65534::/home/apache:/usr/sbin/nologin
+
+/etc/group file:
+  apache:x:115:apache,myusername
+
+
