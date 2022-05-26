@@ -68,16 +68,17 @@ fi
 
 #
 #   The following are NOT needed if APR is installed from source:
-#     libaprutil1-dbd-pgsql
-#     libaprutil1-dbd-sqlite3
-#     libaprutil1-dbd-ldap
+#
+#     libapache2-mod-apreq2 
 #     libapr1-dev 
 #     libapreq2-dev 
+#     libaprutil1-dbd-ldap
+#     libaprutil1-dbd-pgsql
+#     libaprutil1-dbd-sqlite3
 #     libaprutil1-dev 
-#     lua-apr-dev
-#     libapache2-mod-apreq2 
 #     lksctp-tools
-#
+#     lua-apr-dev
+
 # post installation:
 #
 #     In /etc/ntp.conf make sure you have the US time servers.
