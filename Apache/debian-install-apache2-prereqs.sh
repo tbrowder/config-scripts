@@ -42,9 +42,9 @@ aptitude install \
   postgresql-server-dev-all \
   pwgen \
   zlib1g-dev \
+  libbrotli-dev \
   libapr1-dev \
   libaprutil1-dev \
-  libbrotli-dev
 
 
 # end of command list
