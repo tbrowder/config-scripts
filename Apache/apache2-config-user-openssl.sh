@@ -71,8 +71,12 @@ fi
 #     libaprutil1-dbd-pgsql
 #     libaprutil1-dbd-sqlite3
 #     libaprutil1-dbd-ldap
-#     libapr1-dev libapreq2-dev libaprutil1-dev lua-apr-dev
-#     libapache2-mod-apreq2 lksctp-tools
+#     libapr1-dev 
+#     libapreq2-dev 
+#     libaprutil1-dev 
+#     lua-apr-dev
+#     libapache2-mod-apreq2 
+#     lksctp-tools
 #
 # post installation:
 #
