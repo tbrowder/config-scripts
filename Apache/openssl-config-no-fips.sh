@@ -54,7 +54,7 @@ fi
     --openssldir=${SSLDIR}          \
     enable-ec_nistp_64_gcc_128
 
-# should be finished with building the makefils
+# should be finished with building the makefiles
 echo
 echo "===================================================="
 echo "Now execute 'make && make test && sudo make install'"
