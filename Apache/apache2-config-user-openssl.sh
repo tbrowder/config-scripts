@@ -120,7 +120,7 @@ fi
 
 #    --with-apr=$APRPATH                    \
 #    --with-apr-util=$APRPATH               \
-export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
+export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib64"
 export CPPFLAGS="-I${SSLDIR}/include"
 ./configure                                \
     --prefix=/usr/local/apache2            \
