@@ -121,8 +121,12 @@ fi
 #    --with-apr=$APRPATH                    \
 #    --with-apr-util=$APRPATH               \
 export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
+export CPPFLAGS="-I${SSLDIR}/include"
 ./configure                                \
     --prefix=/usr/local/apache2            \
+\
+    --with-apr=/usr/bin/apr-config         \
+    --with-apr-util=/usr/bin/apu-config    \
 \
     --enable-ssl                           \
     --enable-mods-static=ssl               \
