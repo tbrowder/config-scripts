@@ -24,6 +24,12 @@ Ensure you have the necessary Debian packages:
   as root execute bash script:
     $ sudo ./install-debian-bullsye-apache2-prereqs.sh
 
+Openssl testing requires a couple of Perl modules:
+
+  as root execute:
+    $ sudo cpanm Text::Template
+    $ sudo cpanm Test::More
+
 One more prerequisite is the Raku programming language. If you know
 you have it, you are all set. Otherwise, you can install the Debian
 packages which contain the 'raku' and 'zef' executables:

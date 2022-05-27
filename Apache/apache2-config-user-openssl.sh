@@ -30,6 +30,7 @@ fi
 
 VER=$1
 SSLDIR=/opt/openssl-$VER
+SSLLIBDIR=/opt/openssl-$VER/lib64
 # make sure openssl exists
 if [[ ! -d $SSLDIR ]] ; then
     echo "FATAL:  openssl directory '$SSLDIR' doesn't exist."
@@ -120,7 +121,7 @@ fi
 
 #    --with-apr=$APRPATH                    \
 #    --with-apr-util=$APRPATH               \
-export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib64"
+#export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib64"
 export CPPFLAGS="-I${SSLDIR}/include"
 ./configure                                \
     --prefix=/usr/local/apache2            \
@@ -131,7 +132,7 @@ export CPPFLAGS="-I${SSLDIR}/include"
     --enable-ssl                           \
     --enable-mods-static=ssl               \
     --enable-ssl-staticlib-deps            \
-    --with-ssl=${SSLDIR}                   \
+    --with-ssl=${SSLLIBDIR}                   \
     --with-openssl=${SSLDIR}               \
 \
     --enable-mods-shared=reallyall         \

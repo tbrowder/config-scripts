@@ -43,15 +43,15 @@ else
     exit
 fi
 
+# new as of 2022-05-26
 ./config \
+    --prefix=${SSLDIR}              \
+    --openssldir=${SSLDIR}          \
+    no-shared                       \
+    -DOPENSSL_TLS_SECURITY_LEVEL=2  \
     no-ec2m                         \
     no-rc5                          \
     no-idea                         \
-    threads                         \
-    zlib-dynamic                    \
-    shared                          \
-    --prefix=${SSLDIR}              \
-    --openssldir=${SSLDIR}          \
     enable-ec_nistp_64_gcc_128
 
 # should be finished with building the makefiles
