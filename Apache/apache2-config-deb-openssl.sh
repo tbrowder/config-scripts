@@ -115,8 +115,6 @@ export CPPFLAGS="-I${SSLDIR}/include"
     --enable-ssl                           \
     --enable-mods-static=ssl               \
     --enable-ssl-staticlib-deps            \
-    --with-ssl=${SSLLIBDIR}                   \
-    --with-openssl=${SSLDIR}               \
 \
     --enable-mods-shared=reallyall         \
     --with-perl                            \
