@@ -30,6 +30,11 @@ Openssl testing requires a couple of Perl modules:
     $ sudo cpanm Text::Template
     $ sudo cpanm Test::More
 
+NOTE: If unable to build OpenSSL, use the Debian package:
+
+  as root execute:
+    $ sudo aptitude install libssl-dev
+
 One more prerequisite is the Raku programming language. If you know
 you have it, you are all set. Otherwise, you can install the Debian
 packages which contain the 'raku' and 'zef' executables:
