@@ -1,18 +1,29 @@
-Provide uninstall for OpenSSL
-+ provide uninstall all to remove the OpenSSL directory
-
 Note httpd does NOT have testing nor uninstall in its Makefile 
 (but I haven't checked the configure to see if that's possible).
+
 + shall we enable deletion of Apache?
 
 Add details of signing keys to enable good authentication.
 
 Convert to a published module
 
+Use the Debian equiv of OpenSSL
+
+Incorporate systemd
+
+Create a cron job for restarting Apache nightly
+
+Use a separate coonfig file to choose the various options
+
+ + TOML?
+
 Completed:
 =========
 
-+ find a good file check other the install dir for checking installation
+Provide uninstall for OpenSSL
++ provide uninstall all to remove the OpenSSL directory
+
++ find a good file check other than the install dir for checking installation
 
 Convert "shell" to "run"
 
