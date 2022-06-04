@@ -8,13 +8,28 @@ from source on a Debian 11 Bullsye amd64 host. Apache2 is not
 well-documented and, while these instructions work for me, your
 mileage may vary.
 
-Until I can find the correct solution, 
-the user must ensure that the module dependencies,
+One prerequisite is the Raku programming language. If you know
+you have it, you are all set. Otherwise, you can either (1) install 
+the Debian packages which contain the 'raku' and 'zef' executables:
+
+    $ sudo apt install rakudo zef
+
+or (2) for a better experience install Raku and zef following
+the instructions for the Raku Packages rakudo-pkg at Rakudo.org.
+
+The user must ensure that the Raku module dependencies,
 Text::Utils and JSON::Fast, are installed for the root user
-as well as the the user.
+as well as the the normal user. That can be done for
+both if they are available in the Raku local site directory.
+To confirm that run:
+
+    # zef list --installed | grep 'Text::Utils'
+    # zef list --installed | grep 'JSON::Fast''
 
 Pre-installation preparation:
 ----------------------------
+
+Ensure ports 80 and 443 are open
 
 Ensure root has the necessary paths. Edit /root/.profile
 and /root/.bashrc as follows:
@@ -34,12 +49,6 @@ NOTE: If unable to build OpenSSL, use the Debian package:
 
   as root execute:
     $ sudo aptitude install libssl-dev
-
-One more prerequisite is the Raku programming language. If you know
-you have it, you are all set. Otherwise, you can install the Debian
-packages which contain the 'raku' and 'zef' executables:
-
-    $ sudo apt install rakudo zef
 
 Stop any currently running httpd:
 
