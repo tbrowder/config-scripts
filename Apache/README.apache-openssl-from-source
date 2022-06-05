@@ -39,16 +39,27 @@ Ensure you have the necessary Debian packages:
   as root execute bash script:
     $ sudo ./install-debian-bullsye-apache2-prereqs.sh
 
+Note OpenSSL 3.0.3 is currently not building for me
+(as of 2022-06-05). Consequently I am building with
+the libssl library package so, as root, you must
+install it
+
+    $ sudo aptitude install libssl-dev
+
+Ignore the following OpenSSL section
+for now.
+
+=====================================
+Building and using the latest OpenSSL
+=====================================
+
 Openssl testing requires a couple of Perl modules:
 
   as root execute:
     $ sudo cpanm Text::Template
     $ sudo cpanm Test::More
 
-NOTE: If unable to build OpenSSL, use the Debian package:
-
-  as root execute:
-    $ sudo aptitude install libssl-dev
+=====================================
 
 Stop any currently running httpd:
 
@@ -69,11 +80,14 @@ Unpack them into their own directory;
 
     $ ./setup-apache2.raku unpack
 
+=====================================
+IGNORE
 Install OpenSSL first:
 
     $ ./setup-apache2.raku config openssl
     $ ./setup-apache2.raku build  openssl
     $ sudo -s --preserve-env=PATH ./setup-apache2.raku install openssl
+=====================================
 
 Install Apache2 second:
 

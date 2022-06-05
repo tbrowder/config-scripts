@@ -13,6 +13,10 @@ create-jfil(:$flist, :$jfil, :$is-root, :debug(0)) if not $jfil.IO.r or $flist.I
 my %data = from-json(slurp $jfil);
 my $nmf = check-files %data;
 
+# Use of built OpenSSL turned off for now
+constant no-openssl-build = True;
+constant NOB = no-openssl-build;
+
 if not @*ARGS.elems {
     print qq:to/HERE/;
     Usage: {$*PROGRAM.basename} <mode> [o|a] [help, force, debug]
@@ -85,7 +89,7 @@ for @*ARGS {
     when /^U/  { ++$uninstall } # requires root
     when /^k/  { ++$keys      }
 
-    when /^o/  { ++$o; $a = 0 }
+    when /^o/  { ++$o; $a = 0; if NOB { die "FATAL: OpenSSL builds are turned off for now."} }
     when /^a/  { ++$a; $o = 0 }
 
     default {
@@ -132,7 +136,7 @@ if $unpack {
 
 if $dclean and ($o or $a) {
     my $dir;
-    # apache, so openssl must be installed
+    # apache, so openssl must be installed UNLESS
     my $odir = %data<oidir>;
     if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
@@ -271,6 +275,7 @@ if $install {
     }
 
     # apache, so openssl must be installed
+    if not NOB {
     if $is-root and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
             note "FATAL: OpenSSL has not been installed in dir '$odir'";
@@ -284,6 +289,7 @@ if $install {
         my $dir = %data<oldir>;
         run "make", "install", :cwd($dir);
     }
+    }
 
     if $a {
         my $dir = %data<aldir>;
@@ -296,7 +302,7 @@ if $install {
         # run the script as root
         run "make", "install", :cwd($dir);
     }
-    elsif $o {
+    elsif $o and not NOB {
         my $dir = %data<oldir>;
         if $is-root {
             say "Installing OpenSSL in dir '$dir'";
@@ -309,7 +315,11 @@ if $install {
     }
     else { die "FATAL: Neither $a nor $o has been selected"; }
 
-    note "WARNING: OpenSSL has not been installed in dir '$odir'" if $is-root and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
+    if not NOB {
+    if $is-root and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
+        note "WARNING: OpenSSL has not been installed in dir '$odir'"; 
+    }
+    }
 
     exit;
 }
@@ -323,7 +333,7 @@ if $config  {
     my $sprog;
     # apache, so openssl must be installed
     my $odir = %data<oidir>;
-    if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
+    if (not NOB) and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
             note "FATAL: OpenSSL has not been installed in dir '$odir'";
             note "       Use the 'force' option to override this restriction.";
@@ -337,12 +347,18 @@ if $config  {
     if $a {
         $dir = %data<aldir>;
         say "Configuring Apache in dir '$dir'";
-        # apache, so openssl must be installed
         my $odir = %data<oidir>;
-        note "WARNING: OpenSSL has not been installed in dir '$odir'" if not $odir.IO.d;
-        $sprog = 'apache2-config-user-openssl.sh';
+
+        if NOB {
+            $sprog = 'apache2-config-debian-openssl.sh';
+        }
+        else {
+            # apache, so openssl must be installed
+            note "WARNING: OpenSSL has not been installed in dir '$odir'" if not $odir.IO.d;
+            $sprog = 'apache2-config-user-openssl.sh';
+        }
     }
-    elsif $o {
+    elsif (not NOB) and $o {
         $dir = %data<oldir>;
         say "Configuring OpenSSL in dir '$dir'";
         $sprog = 'openssl-config-no-fips.sh';
@@ -352,11 +368,19 @@ if $config  {
         die "FATAL: Unable to find directory '$dir'";
     }
 
-    # need the openssl version
-    my $over = %data<over>;
-    run "../$sprog", $over, :cwd($dir);
+    if not NOB {
+        # using the Debian libssl 
+        run "../$sprog", :cwd($dir);
+    }
+    else {
+        # need the openssl version
+        my $over = %data<over>;
+        run "../$sprog", $over, :cwd($dir);
+    }
 
-    note "WARNING: OpenSSL has not been installed in dir '$odir'" if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
+    if not NOB {
+        note "WARNING: OpenSSL has not been installed in dir '$odir'" if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
+    }
 
     exit;
 }
