@@ -37,7 +37,7 @@ and /root/.bashrc as follows:
 Ensure you have the necessary Debian packages:
 
   as root execute bash script:
-    $ sudo ./install-debian-bullsye-apache2-prereqs.sh
+    $ sudo ./sh/install-debian-bullsye-apache2-prereqs.sh
 
 Note OpenSSL 3.0.3 is currently not building for me
 (as of 2022-06-05). Consequently I am building with

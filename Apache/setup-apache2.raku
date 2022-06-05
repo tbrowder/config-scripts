@@ -350,18 +350,18 @@ if $config  {
         my $odir = %data<oidir>;
 
         if NOB {
-            $sprog = 'apache2-config-debian-openssl.sh';
+            $sprog = 'sh/apache2-config-debian-openssl.sh';
         }
         else {
             # apache, so openssl must be installed
             note "WARNING: OpenSSL has not been installed in dir '$odir'" if not $odir.IO.d;
-            $sprog = 'apache2-config-user-openssl.sh';
+            $sprog = 'sh/apache2-config-user-openssl.sh';
         }
     }
     elsif (not NOB) and $o {
         $dir = %data<oldir>;
         say "Configuring OpenSSL in dir '$dir'";
-        $sprog = 'openssl-config-no-fips.sh';
+        $sprog = 'sh/openssl-config-no-fips.sh';
     }
 
     unless $dir.IO.d {
