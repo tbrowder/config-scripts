@@ -138,7 +138,7 @@ if $dclean and ($o or $a) {
     my $dir;
     # apache, so openssl must be installed UNLESS
     my $odir = %data<oidir>;
-    if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
+    if (not NOB) and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
             note "FATAL: OpenSSL has not been installed in dir '$odir'";
             note "       Use the 'force' option to override this restriction.";
@@ -161,7 +161,7 @@ if $dclean and ($o or $a) {
 
     run "make", "distclean", :cwd($dir);
 
-    note "WARNING: OpenSSL has not been installed in dir '$odir'" if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
+    note "WARNING: OpenSSL has not been installed in dir '$odir'" if (not NOB) and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
 
     exit;
 }
@@ -174,7 +174,7 @@ if $build  {
     my $dir;
     # apache, so openssl must be installed
     my $odir = %data<oidir>;
-    if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
+    if (not NOB) and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
         if not $force {
             note "FATAL: OpenSSL has not been installed in dir '$odir'";
             note "       Use the 'force' option to override this restriction.";
@@ -198,7 +198,7 @@ if $build  {
     run "make", :cwd($dir);
     run("make", "test", :cwd($dir)) if $o;
 
-    note "WARNING: OpenSSL has not been installed in dir '$odir'" if $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
+    note "WARNING: OpenSSL has not been installed in dir '$odir'" if (not NOB) and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f);
 
     exit;
 }
@@ -316,9 +316,9 @@ if $install {
     else { die "FATAL: Neither $a nor $o has been selected"; }
 
     if not NOB {
-    if $is-root and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
-        note "WARNING: OpenSSL has not been installed in dir '$odir'"; 
-    }
+        if $is-root and $a and not ($odir.IO.d and "$odir/bin/openssl".IO.f) {
+            note "WARNING: OpenSSL has not been installed in dir '$odir'"; 
+        }
     }
 
     exit;
