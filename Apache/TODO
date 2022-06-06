@@ -11,9 +11,10 @@ Incorporate systemd
 
 Create a cron job for restarting Apache nightly
 
-Use a separate coonfig file to choose the various options
+Use a separate config file to choose the various options
 
  + TOML?
+ + JSON?
 
 Completed:
 =========
