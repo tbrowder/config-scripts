@@ -39,6 +39,11 @@ Ensure you have the necessary Debian packages:
   as root execute bash script:
     $ sudo ./sh/install-debian-bullsye-apache2-prereqs.sh
 
+An example passwd and group entry for the apache server I use:
+
+    apache:x:108:65534::/home/apache:/usr/sbin/nologin
+    apache:x:115:apache
+
 Note OpenSSL 3.0.3 is currently not building for me
 (as of 2022-06-05). Consequently I am building with
 the libssl library package so, as root, you must
