@@ -1,52 +1,23 @@
 #!/usr/bin/env bash
 
-# NOTE: THIS CONFIGURATION IS FOR A USER-INSTALLED OPENSSL,
-#       AND IT USES THE LATEST INSTALLED APR AND APR-UTILS.
+# NOTE: THIS CONFIGURATION IS FOR A DEBIAN OPENSSL,
 
-# see Ivan Ristics "Bulletproof SSL and TLS," p. 382
+# see Ivan Ristic's "Bulletproof SSL and TLS," p. 382
 # using static openssl with Apache
-
-USAGE="Usage: $0 <openssl version>"
-
-KNOWN_VERS="1.1.1g"
-APRPATH=/usr/local/apr
-
-# and apr
-if [[ ! -d $APRPATH ]] ; then
-    echo "FATAL:  Apr and Apr-util dir '$APRPATH' doesn't exist."
-    exit
-fi
-
 
 if [[ -z $1 ]] ; then
   echo $USAGE
   echo "  Uses SSL/TLS without FIPS."
-  echo "  Builds httpd with openssl"
-  echo "    from known versions: '$KNOWN_VERS'"
-  echo "    and the latest Apr and Apr-util"
-  echo "    located in '$APRPATH'."
+  echo "  Builds httpd with Debian openssl"
   echo
+  echo "  After configuring run:"
+  echo "    make"
+  echo "    sudo make install"
+  echo
+  echo "  Some apache commands to be run as root:"
+  echo "    apachectl -k graceful-stop"
+  echo "    apachectl -k start"
   exit
-fi
-
-VER=$1
-SSLDIR=/opt/openssl-$VER
-# make sure openssl exists
-if [[ ! -d $SSLDIR ]] ; then
-    echo "FATAL:  openssl directory '$SSLDIR' doesn't exist."
-    exit
-fi
-
-GOODVER=
-for ver in $KNOWN_VERS
-do
-    if [[ $1 = $ver ]] ; then
-        GOODVER=$ver
-    fi
-done
-if [[ -z $GOODVER ]] ; then
-    echo "FATAL:  Openssl version $VER is not known."
-    exit
 fi
 
 ## APACHE HAS TO BE BUILT IN THE SOURCE DIR AT THE MOMENT
@@ -81,12 +52,17 @@ fi
 
 #
 #   The following are NOT needed if APR is installed from source:
+#
+#     libapache2-mod-apreq2 
+#     libapr1-dev 
+#     libapreq2-dev 
+#     libaprutil1-dbd-ldap
 #     libaprutil1-dbd-pgsql
 #     libaprutil1-dbd-sqlite3
-#     libaprutil1-dbd-ldap
-#     libapr1-dev libapreq2-dev libaprutil1-dev lua-apr-dev
-#     libapache2-mod-apreq2 lksctp-tools
-#
+#     libaprutil1-dev 
+#     lksctp-tools
+#     lua-apr-dev
+
 # post installation:
 #
 #     In /etc/ntp.conf make sure you have the US time servers.
@@ -126,17 +102,19 @@ fi
 
 # we build all modules for now (all shared except mod_ssl)
 
-export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib"
+#    --with-apr=$APRPATH                    \
+#    --with-apr-util=$APRPATH               \
+#export LDFLAGS="-Wl,-rpath,${SSLDIR}/lib64"
+export CPPFLAGS="-I${SSLDIR}/include"
 ./configure                                \
     --prefix=/usr/local/apache2            \
-    --with-apr=$APRPATH                    \
-    --with-apr-util=$APRPATH               \
+\
+    --with-apr=/usr/bin/apr-config         \
+    --with-apr-util=/usr/bin/apu-config    \
 \
     --enable-ssl                           \
     --enable-mods-static=ssl               \
     --enable-ssl-staticlib-deps            \
-    --with-ssl=${SSLDIR}                   \
-    --with-openssl=${SSLDIR}               \
 \
     --enable-mods-shared=reallyall         \
     --with-perl                            \

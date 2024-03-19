@@ -1,69 +1,117 @@
 Procedures for installing Apache2
 =================================
 
-NOTE:
+NOTES:
 
-The information in this directory applies specifically
-to installation from source on a Debian 10 Buster amd64
-host. Apache2 is not well-documented and, while these
-instructions work for me, your mileage may vary.
+The information in this directory applies specifically to installation
+from source on a Debian 11 Bullsye amd64 host. Apache2 is not
+well-documented and, while these instructions work for me, your
+mileage may vary.
+
+One prerequisite is the Raku programming language. If you know
+you have it, you are all set. Otherwise, you can either (1) install 
+the Debian packages which contain the 'raku' and 'zef' executables:
+
+    $ sudo apt install rakudo zef
+
+or (2) for a better experience install Raku and zef following
+the instructions for the Raku Packages rakudo-pkg at Rakudo.org.
+
+The user must ensure that the Raku module dependencies,
+Text::Utils and JSON::Fast, are installed for the root user
+as well as the the normal user. That can be done for
+both if they are available in the Raku local site directory.
+To confirm that run:
+
+    # zef list --installed | grep 'Text::Utils'
+    # zef list --installed | grep 'JSON::Fast''
 
 Pre-installation preparation:
 ----------------------------
 
+Ensure ports 80 and 443 are open
+
+Ensure root has the necessary paths. Edit /root/.profile
+and /root/.bashrc as follows:
+
 Ensure you have the necessary Debian packages:
 
   as root execute bash script:
-    install-debian-buster-apache2-prereqs.sh
+    $ sudo ./sh/install-debian-bullsye-apache2-prereqs.sh
 
-Download and confirm the source packages (update links as required):
+An example passwd and group entry for the apache server I use:
 
-  https://www.openssl.org/source/openssl-1.1.1g.tar.gz
-  https://www.openssl.org/source/openssl-1.1.1g.tar.gz.sha256
+    apache:x:108:65534::/home/apache:/usr/sbin/nologin
+    apache:x:115:apache
 
-  https://downloads.apache.org//httpd/httpd-2.4.43.tar.gz
-  https://downloads.apache.org/httpd/httpd-2.4.43.tar.gz.sha256
+Note OpenSSL 3.0.3 is currently not building for me
+(as of 2022-06-05). Consequently I am building with
+the libssl library package so, as root, you must
+install it
 
-  https://downloads.apache.org//apr/apr-1.7.0.tar.gz
-  https://www.apache.org/dist/apr/apr-1.7.0.tar.gz.sha256
+    $ sudo aptitude install libssl-dev
 
-  https://downloads.apache.org//apr/apr-util-1.6.1.tar.gz
-  https://www.apache.org/dist/apr/apr-util-1.6.1.tar.gz.sha256
+Ignore the following OpenSSL section
+for now.
 
-Unpack them into their own directory.
+=====================================
+Building and using the latest OpenSSL
+=====================================
 
-Steps for compiling the four sources required:
----------------------------------------------
+Openssl testing requires a couple of Perl modules:
 
-Compile and install in this order:
+  as root execute:
+    $ sudo cpanm Text::Template
+    $ sudo cpanm Test::More
 
-Install openssl from source and install in:
-    /opt/openssl-x.y.z.a
+=====================================
 
-    cd into the source directory
-    use the local script:
-    $ ../openssl-config-no-fips.sh 1.1.1g
+Stop any currently running httpd:
 
-Install APR from source and install in:
-    /usr/local   # default
+    $ sudo apachectl graceful-stop
 
-    cd into the source directory
-    use the local script:
-    $ ../apr-config.sh go
+Note in the following examples only the 
+unique leading letters of the commands need be
+entered.
 
-Install APR-UTIL from source and install in:
-    /usr/local   # default
+Obtain and install the source archives
+--------------------------------------
 
-    cd into the source directory
-    use the local script:
-    $ ../apr-util-config.sh go
+Download and confirm the source packages:
 
-Install apache2 from source and install in:
-    /usr/local/apache2 # default
+    $ ./setup-apache2.raku get
 
-    cd into the source directory
-    use the local script:
-    $ ../apache2-config-user-openssl.sh 1.1.1g
+Unpack them into their own directory;
+
+    $ ./setup-apache2.raku unpack
+
+=====================================
+IGNORE
+Install OpenSSL first:
+
+    $ ./setup-apache2.raku config openssl
+    $ ./setup-apache2.raku build  openssl
+    $ sudo -s --preserve-env=PATH ./setup-apache2.raku install openssl
+=====================================
+
+Install Apache2 second:
+
+    $ ./setup-apache2.raku config apache
+    $ ./setup-apache2.raku build  apache
+    $ sudo -s --preserve-env=PATH ./setup-apache2.raku install apache
 
 Post installation:
 -----------------
+
+I use an apache user and an apache group.
+For convenience, I add my user name to the apache group.
+
+My setup (your user and group numbers may vary):
+
+/etc/passwd file:
+  apache:x:108:65534::/home/apache:/usr/sbin/nologin
+
+/etc/group file:
+  apache:x:115:apache,myusername
+
+

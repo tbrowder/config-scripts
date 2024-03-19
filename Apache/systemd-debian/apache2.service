@@ -1,0 +1,59 @@
+# Debian 10 installation instructions:
+#
+# See systemd documentation in:
+#
+#   man systemd.unit
+#   man systemd.service
+#
+# Place a copy of this file into:
+#   /etc/systemd/system/
+#
+# After creating or modifying any unit files, we must tell systemd
+# that we want it to look for new things:
+#
+#   # systemctl daemon-reload
+#
+# Our new service should be recognized at this point, but it won't run
+# yet. We need to do two more things. First, tell systemd to enable
+# it so that it will start every time we boot:
+#
+#   # systemctl enable apache2.service
+#
+# Second, start it now:
+#
+#   # systemctl start apache2.service
+#
+# Note that you don't get feedback from this command because all it
+# does is send a message to systemd telling it to start your
+# service. The command you typed doesn't hang around to see what
+# happens next. You may use systemctl status myservice.service (or
+# systemctl status myservice) to check on your service to make sure
+# it seems OK.
+#
+#   # systemctl status apache2.service
+#   # systemctl status apache2
+#
+# Also note that systemctl status myservice gives more information if
+# you run it as root (compared to running it as a normal user).
+#
+# Note you still should run "apachectl -t" to get a syntax check BEFORE
+# making Apache configuration changes live with a "systemctl reload apache2"
+# or "systemctl start apache2" command.
+
+[Unit]
+Description=The Apache HTTP Server
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+Environment=APACHE_STARTED_BY_SYSTEMD=true
+ExecStart=/usr/local/apache2/bin/apachectl -k start
+ExecStop=/usr/local/apache2/bin/apachectl -k stop
+ExecReload=/usr/local/apache2/bin/apachectl -k graceful
+PrivateTmp=true
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+
+# EOF

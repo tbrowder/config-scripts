@@ -1,0 +1,32 @@
+Note httpd does NOT have testing nor uninstall in its Makefile 
+(but I haven't checked the configure to see if that's possible).
+
++ shall we enable deletion of Apache?
+
+Add details of signing keys to enable good authentication.
+
+Convert to a published module
+
+Incorporate systemd
+
+Create a cron job for restarting Apache nightly
+
+Use a separate config file to choose the various options
+
+ + TOML?
+ + JSON?
+
+Completed:
+=========
+
+Use the Debian equiv of OpenSSL
+
+Provide uninstall for OpenSSL
++ provide uninstall all to remove the OpenSSL directory
+
++ find a good file check other than the install dir for checking installation
+
+Convert "shell" to "run"
+
++ add keys from Openssl
++ add kets from Apache2

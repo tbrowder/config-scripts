@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-OPENSSLDIR=/opt/openssl-1.1.1g
+OPENSSLDIR=/opt/openssl-3.0.3
 
 # must check for its existence:
 APRPATH=/usr/local/apr
@@ -10,12 +10,12 @@ APRPATH=/usr/local/apr
 #   libxml2-dev
 #   libdb5.3-dev # for db_185.h Berkeley db
 
-
 if [ -z "$1" ] ; then
   echo "Usage: $0 go"
   echo
   echo "  Configures Apache APR-UTIL for /usr/local."
   echo "  Expects Apr in '$APRPATH'."
+  echo "  Using openssl '$OPENSSLDIR'"
   exit
 fi
 
