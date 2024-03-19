@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
-
 if [ -z "$1" ] ; then
-  echo "Usage: $0 go"
+  echo "Usage: $0 <choice>"
   echo
-  echo "  Configures Subversion (last tested on version 1.10.0)."
+  echo "  Choices:"
+  echo "    a"
+  echo "    b"
+  exit
+fi
+
+if [[ "$1" = "a" ]] ; then
+  echo "a"
+elif [[ "$1" = "b" ]] ; then
+  echo "b"
+else 
+  echo "FATAL: Unknown arg " $1
   exit
 fi
 
 
-# make -j8 check      # < ?? min on dedi2 (UNABLE ON DEDI2!!??)
-#   OR
-# make -j4 check      # < 66 min on dedi4
-
-# make install
